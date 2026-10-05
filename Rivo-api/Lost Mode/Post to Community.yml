@@ -1,0 +1,25 @@
+info:
+  name: Post to Community
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/pets/1/lost-reports/post-to-community"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+  body:
+    type: multipart-form
+    data:
+      - name: content
+        type: text
+        value: Please help me find my Simba. Any information will be very helpful.
+
+docs: |
+  **Post to Community Feed**
+  Publishes an active lost pet report to the social community feed with an optional message (content).
+

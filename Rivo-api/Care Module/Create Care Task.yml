@@ -1,0 +1,36 @@
+info:
+  name: Create Care Task
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/pets/:petId/care-tasks"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: petId
+      value: "1"
+      type: path
+  body:
+    type: json
+    data: |-
+      {
+        "type": "medicine",
+        "title": "Heartworm Pill",
+        "description": "Give one pill after dinner",
+        "frequency": "Monthly",
+        "preferred_time": "19:00",
+        "is_reminder_on": true
+      }
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

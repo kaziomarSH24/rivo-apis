@@ -1,0 +1,18 @@
+info:
+  name: Community Lost Pets Feed
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/community/lost-pets"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |
+  **Community Feed**
+  Retrieves a list of all pets in the community that are currently lost.

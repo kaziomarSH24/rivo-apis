@@ -1,0 +1,21 @@
+info:
+  name: Upload Document
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/pets/1/health-vault/documents"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipartForm
+    data:
+      - name: title
+        value: "Vaccination Record"
+      - name: document
+        type: file
+  auth:
+    type: bearer
+    token: "{{userToken}}"

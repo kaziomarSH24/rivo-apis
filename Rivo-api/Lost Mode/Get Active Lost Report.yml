@@ -1,0 +1,18 @@
+info:
+  name: Get Active Lost Report
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/pets/1/lost-reports/active"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |
+  **Get Active Lost Report**
+  Retrieves the active lost report poster details for a pet.

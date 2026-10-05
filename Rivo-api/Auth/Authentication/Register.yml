@@ -1,0 +1,43 @@
+info:
+  name: Register
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/auth/register"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: name
+        type: text
+        value: Omar Faruk
+      - name: email
+        type: text
+        value: kaziomar@yopmail.com
+      - name: password
+        type: text
+        value: "11111111"
+      - name: password_confirmation
+        type: text
+        value: "11111111"
+      - name: phone_number
+        type: text
+        value: "+1234567896"
+      - name: company_name
+        type: text
+        value: Patina Watches
+        disabled: true
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: Registers a new user and sends a verification OTP/Link.

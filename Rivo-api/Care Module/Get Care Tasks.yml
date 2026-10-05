@@ -1,0 +1,25 @@
+info:
+  name: Get Care Tasks
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/pets/:petId/care-tasks"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: petId
+      value: "1"
+      type: path
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,0 +1,21 @@
+info:
+  name: http://api.thedreamdividend.com/api/auth/login
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: http://api.thedreamdividend.com/api/auth/login
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: json
+    data: ""
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

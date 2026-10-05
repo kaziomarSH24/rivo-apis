@@ -1,0 +1,14 @@
+info:
+  name: Toggle Favorite Route
+  type: http
+  seq: 7
+
+http:
+  method: PUT
+  url: "{{base_url}}/v1/walk-routes/1/toggle-favorite"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"

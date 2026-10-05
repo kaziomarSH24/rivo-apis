@@ -1,0 +1,20 @@
+info:
+  name: Mark All Notifications as Read
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/notifications/mark-all-as-read"
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: Marks all unread notifications for the authenticated user as read.

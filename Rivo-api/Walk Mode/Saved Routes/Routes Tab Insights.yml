@@ -1,0 +1,14 @@
+info:
+  name: Routes Tab Insights
+  type: http
+  seq: 7
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/pets/1/walk-routes-tab"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"

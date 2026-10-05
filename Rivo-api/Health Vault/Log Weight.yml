@@ -1,0 +1,20 @@
+info:
+  name: Log Weight
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/pets/1/health-vault/weight"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "weight_kg": 21.5
+      }
+  auth:
+    type: bearer
+    token: "{{userToken}}"

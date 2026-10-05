@@ -1,0 +1,14 @@
+info:
+  name: Delete Route
+  type: http
+  seq: 10
+
+http:
+  method: DELETE
+  url: "{{base_url}}/v1/walk-routes/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"

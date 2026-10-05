@@ -1,0 +1,44 @@
+info:
+  name: Complete Walk
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/pets/1/walks"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: distance_km
+        type: text
+        value: "3.35"
+        description: Distance in km
+      - name: duration_seconds
+        type: text
+        value: "1758"
+        description: Total duration in seconds
+      - name: calories
+        type: text
+        value: "235"
+        description: Calories burned
+      - name: avg_speed_kmh
+        type: text
+        value: "6.2"
+        description: Average speed
+      - name: route_coordinates
+        type: text
+        value: '[{"lat": 23.8103, "lng": 90.4125}, {"lat": 23.8115, "lng": 90.4130}]'
+        description: JSON array of coordinates
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

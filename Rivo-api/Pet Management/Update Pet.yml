@@ -1,0 +1,50 @@
+info:
+  name: Update Pet
+  type: http
+  seq: 4
+http:
+  method: POST
+  url: "{{base_url}}/v1/pets/1?_method=PUT"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: type
+        type: text
+        value: "Dog"
+        description: "Dog, Cat, etc."
+      - name: name
+        type: text
+        value: "Pedro Jr."
+        description: "Name of the pet"
+      - name: breed
+        type: text
+        value: "Golden Retriever"
+        description: "Breed name or Mixed/Other"
+      - name: age_years
+        type: text
+        value: "2"
+        description: "Age in years"
+      - name: age_months
+        type: text
+        value: "4"
+        description: "Age in months (0-11)"
+      - name: weight
+        type: text
+        value: "12.0"
+        description: "Weight in kg"
+      - name: gender
+        type: text
+        value: "Male"
+        description: "Male, Female, or Unknown"
+      - name: photo
+        type: file
+        value: ""
+        description: "Upload pet photo (jpeg, png, jpg, gif)"
+        disabled: true
+  auth:
+  mode: bearer
+auth:bearer:
+  token: {{userToken}}

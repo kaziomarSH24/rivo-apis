@@ -1,0 +1,28 @@
+info:
+  name: List Routes
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/walk-routes"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: filter[search]
+      value: "Loop"
+      type: query
+      description: Global search by route name
+      disabled: true
+    - name: filter[is_favorite]
+      value: "1"
+      type: query
+      disabled: true
+    - name: sort
+      value: -created_at
+      type: query
+      disabled: true
+  auth:
+    type: bearer
+    token: "{{userToken}}"

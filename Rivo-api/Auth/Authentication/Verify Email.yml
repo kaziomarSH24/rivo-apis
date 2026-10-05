@@ -1,0 +1,30 @@
+info:
+  name: Verify Email
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/auth/verify"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: email
+        type: text
+        value: kaziomar@yopmail.com
+      - name: otp
+        type: text
+        value: "569559"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: Verifies a user's account with the OTP or token sent to their email and logs them in.

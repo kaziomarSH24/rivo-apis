@@ -1,0 +1,52 @@
+info:
+  name: Create Appointment
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/appointments"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: pet_id
+        type: text
+        value: "1"
+      - name: title
+        type: text
+        value: Annual Vet Checkup
+      - name: type
+        type: text
+        value: vet_visit
+      - name: vet_name
+        type: text
+        value: Dr. Sarah Chen
+      - name: location
+        type: text
+        value: Happy Paws Veterinary Clinic
+      - name: latitude
+        type: text
+        value: "25.761681"
+      - name: longitude
+        type: text
+        value: "-80.191788"
+      - name: datetime
+        type: text
+        value: 2026-09-20 10:00:00
+      - name: reminder
+        type: text
+        value: 1_day
+        description: "'1_hour', '1_day', '1_week', 'none'"
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

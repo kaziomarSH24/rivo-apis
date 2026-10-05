@@ -1,0 +1,33 @@
+info:
+  name: Create Route
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/walk-routes"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: name
+        type: text
+        value: "Riverside Loop"
+        description: Route Name
+      - name: distance_km
+        type: text
+        value: "3.2"
+        description: Distance in km
+      - name: est_duration_minutes
+        type: text
+        value: "28"
+        description: Estimated duration in minutes
+      - name: route_coordinates
+        type: text
+        value: '[{"lat": 23.8103, "lng": 90.4125}, {"lat": 23.8115, "lng": 90.4130}]'
+        description: JSON array of coordinates
+  auth:
+    type: bearer
+    token: "{{userToken}}"

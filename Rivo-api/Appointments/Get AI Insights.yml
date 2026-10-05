@@ -1,0 +1,14 @@
+info:
+  name: Get AI Insights
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/ai/appointment-insights"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"

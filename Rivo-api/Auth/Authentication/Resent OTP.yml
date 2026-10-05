@@ -1,0 +1,22 @@
+info:
+  name: Resent OTP
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/auth/resend-verification"
+  body:
+    type: multipart-form
+    data:
+      - name: email
+        type: text
+        value: kaziomar@yopmail.com
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

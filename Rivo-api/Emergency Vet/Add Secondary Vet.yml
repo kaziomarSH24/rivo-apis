@@ -1,0 +1,36 @@
+info:
+  name: Add Secondary Vet
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/emergency-contacts"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: type
+        type: text
+        value: secondary
+      - name: name
+        type: text
+        value: Green Paws Veterinary
+      - name: phone_number
+        type: text
+        value: +880 19XX XXX XXX
+      - name: notes
+        type: text
+        value: Backup clinic
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

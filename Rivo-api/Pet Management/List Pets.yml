@@ -1,0 +1,43 @@
+info:
+  name: List Pets
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/pets"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: filter[type]
+      value: dog
+      type: query
+      description: Dog, Cat
+      disabled: true
+    - name: filter[breed]
+      value: ""
+      type: query
+      disabled: true
+    - name: filter[gender]
+      value: ""
+      type: query
+      disabled: true
+    - name: filter[user_id]
+      value: ""
+      type: query
+      disabled: true
+    - name: include
+      value: user
+      type: query
+      disabled: true
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

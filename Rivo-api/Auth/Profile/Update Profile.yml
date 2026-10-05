@@ -1,0 +1,45 @@
+info:
+  name: Update Profile
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/profile/update"
+  headers:
+    - name: Accept
+      value: application/json
+    - name: Authorization
+      value: Bearer {{auth_token}}
+  body:
+    type: multipart-form
+    data:
+      - name: name
+        type: text
+        value: Mehedi
+      - name: phone_number
+        type: text
+        value: "01754563214"
+      - name: company_name
+        type: text
+        value: Patina Watches
+      - name: avatar
+        type: text
+        value: ""
+        disabled: true
+      - name: email
+        type: text
+        value: user@yopmail.com
+        disabled: true
+  auth:
+    type: bearer
+    token: 7|v7N7r6ttgVrKT40LOygPw5EGVFIcB9VYVA7mSOMFf04b28cd
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: Updates the user's profile (name, avatar).

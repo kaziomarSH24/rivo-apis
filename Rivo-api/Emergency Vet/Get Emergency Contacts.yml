@@ -1,0 +1,14 @@
+info:
+  name: Get Emergency Contacts
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/emergency-contacts"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"

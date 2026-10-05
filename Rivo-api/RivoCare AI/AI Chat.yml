@@ -1,0 +1,146 @@
+info:
+  name: AI Chat (Pro Only)
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/ai/chat"
+  body:
+    type: multipart-form
+    data:
+      - name: topic
+        type: text
+        value: symptom
+      - name: pet_id
+        type: text
+        value: "1"
+      - name: prompt
+        type: text
+        value: He has been coughing for 2 days now.
+        disabled: true
+      - name: history[0][role]
+        type: text
+        value: user
+        disabled: true
+      - name: history[0][parts]
+        type: text
+        value: My dog is coughing, what should I do?
+        disabled: true
+      - name: history[1][role]
+        type: text
+        value: model
+        disabled: true
+      - name: history[1][parts]
+        type: text
+        value: I'm sorry to hear that. How long has your dog been coughing?
+        disabled: true
+      - name: prompt
+        type: text
+        value: It sounds very dry and hacking. He mostly coughs when he gets excited. No other symptoms, he is eating well.
+      - name: history[0][role]
+        type: text
+        value: user
+      - name: history[0][parts]
+        type: text
+        value: He has been coughing for 2 days now.
+      - name: history[1][role]
+        type: text
+        value: model
+      - name: history[1][parts]
+        type: text
+        value: 'I am sorry to hear that Pedro has been coughing for the past two days. \n\n*Please note: I am RivoCare AI, an interactive pet health assistant, not a veterinarian. If Pedro is struggling to breathe, breathing very rapidly, has blue or pale gums, or is extremely lethargic, please seek emergency veterinary care immediately.*\n\nTo help me understand what might be going on with Pedro, could you tell me a bit more about his cough? \n\n1. **What does the cough sound like?** Is it a dry, hacking cough (sometimes sounding like a \"goose honk\" or like he has something caught in his throat), or does it sound wet and moist?\n2. **When does it happen most?** Does he cough more after exercise, when he gets excited, or when he is resting/sleeping?\n3. **Are there any other symptoms?** Have you noticed any runny nose, watery eyes, sneezing, fever, lethargy, or a loss of appetite?'
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+examples:
+  - name: ai responce
+    request:
+      url: "{{base_url}}/v1/ai/chat"
+      method: POST
+      body:
+        type: multipart-form
+        data:
+          - name: topic
+            type: text
+            value: symptom
+          - name: pet_id
+            type: text
+            value: "1"
+          - name: prompt
+            type: text
+            value: He has been coughing for 2 days now.
+            disabled: true
+          - name: history[0][role]
+            type: text
+            value: user
+            disabled: true
+          - name: history[0][parts]
+            type: text
+            value: My dog is coughing, what should I do?
+            disabled: true
+          - name: history[1][role]
+            type: text
+            value: model
+            disabled: true
+          - name: history[1][parts]
+            type: text
+            value: I'm sorry to hear that. How long has your dog been coughing?
+            disabled: true
+          - name: prompt
+            type: text
+            value: It sounds very dry and hacking. He mostly coughs when he gets excited. No other symptoms, he is eating well.
+          - name: history[0][role]
+            type: text
+            value: user
+          - name: history[0][parts]
+            type: text
+            value: He has been coughing for 2 days now.
+          - name: history[1][role]
+            type: text
+            value: model
+          - name: history[1][parts]
+            type: text
+            value: 'I am sorry to hear that Pedro has been coughing for the past two days. \n\n*Please note: I am RivoCare AI, an interactive pet health assistant, not a veterinarian. If Pedro is struggling to breathe, breathing very rapidly, has blue or pale gums, or is extremely lethargic, please seek emergency veterinary care immediately.*\n\nTo help me understand what might be going on with Pedro, could you tell me a bit more about his cough? \n\n1. **What does the cough sound like?** Is it a dry, hacking cough (sometimes sounding like a \"goose honk\" or like he has something caught in his throat), or does it sound wet and moist?\n2. **When does it happen most?** Does he cough more after exercise, when he gets excited, or when he is resting/sleeping?\n3. **Are there any other symptoms?** Have you noticed any runny nose, watery eyes, sneezing, fever, lethargy, or a loss of appetite?'
+    response:
+      status: 200
+      statusText: OK
+      headers:
+        - name: server
+          value: nginx/1.29.5
+        - name: content-type
+          value: application/json
+        - name: transfer-encoding
+          value: chunked
+        - name: connection
+          value: keep-alive
+        - name: x-powered-by
+          value: PHP/8.4.25
+        - name: cache-control
+          value: no-cache, private
+        - name: date
+          value: Thu, 17 Sep 2026 06:13:26 GMT
+        - name: x-ratelimit-limit
+          value: "60"
+        - name: x-ratelimit-remaining
+          value: "59"
+        - name: access-control-allow-origin
+          value: "*"
+      body:
+        type: json
+        data: |-
+          {
+            "ok": true,
+            "message": "Chat response generated successfully",
+            "data": {
+              "response": "Thank you for sharing those details. A dry, hacking cough that gets worse with excitement is a very common symptom in young dogs. \n\n*As a reminder, I am an AI assistant and not a veterinarian. If Pedro's condition worsens, or if he starts having trouble breathing, please consult a vet right away.*\n\nBased on what you've described—especially the dry, hacking sound and how it triggers when he gets excited—this often points toward **infectious tracheobronchitis**, commonly known as **Kennel Cough**, or general airway irritation. \n\nTo help narrow this down further, I have a few more questions:\n\n1. **Recent Exposure:** Has Pedro been around other dogs recently? (e.g., at a dog park, boarding facility, groomer, training class, or daycare within the last 1 to 2 weeks?)\n2. **Post-Cough Behavior:** Does he make a gagging or retching sound at the very end of his cough, almost as if he is trying to clear his throat or throw up?\n3. **Vaccination Status:** Is Pedro up to date on his vaccinations, specifically the Bordetella (kennel cough) vaccine?"
+            }
+          }

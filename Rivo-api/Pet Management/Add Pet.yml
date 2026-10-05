@@ -1,0 +1,56 @@
+info:
+  name: Add Pet
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/pets"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: type
+        type: text
+        value: Cat
+        description: Dog,Cat
+      - name: name
+        type: text
+        value: mini
+        description: Name of the pet
+      - name: breed
+        type: text
+        value: Golden Retriever
+        description: Breed name or Mixed/Other
+      - name: age_years
+        type: text
+        value: "2"
+        description: Age in years
+      - name: age_months
+        type: text
+        value: "3"
+        description: Age in months (0-11)
+      - name: weight
+        type: text
+        value: "11.4"
+        description: Weight in kg
+      - name: gender
+        type: text
+        value: Male
+        description: Male, Female, or Unknown
+      - name: photo
+        type: file
+        value: []
+        description: Upload pet photo (jpeg, png, jpg, gif)
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

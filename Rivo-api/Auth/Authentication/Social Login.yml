@@ -1,0 +1,34 @@
+info:
+  name: Social Login
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/auth/social-login"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: provider
+        type: text
+        value: google
+      - name: token
+        type: text
+        value: 2sawwsfasfgsafsadfsafsf
+      - name: fcm_token
+        type: text
+        value: ""
+        disabled: true
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: Logs in or registers a user via Google or Apple token.

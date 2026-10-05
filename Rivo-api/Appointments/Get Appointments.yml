@@ -1,0 +1,91 @@
+info:
+  name: Get Appointments
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/appointments/"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: filter[date]
+      value: 2026-09-21
+      type: query
+      disabled: true
+    - name: sort
+      value: -created_at
+      type: query
+      disabled: true
+    - name: include
+      value: pet,notes
+      type: query
+      disabled: true
+    - name: filter[status]
+      value: upcoming
+      type: query
+      description: upcoming, completed, cancelled
+      disabled: true
+    - name: filter[type]
+      value: vaccination
+      type: query
+      description: vaccination, vet_visit, grooming, surgery
+      disabled: true
+    - name: filter[vet_name]
+      value: vet_visit
+      type: query
+      disabled: true
+    - name: pet_id
+      value: "1"
+      type: query
+      disabled: true
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: "# Get Appointments API
+
+
+  **Most Used Query Parameters:**
+
+
+  - pet_id: Use to filter by pet ID (e.g., pet_id=1).
+
+
+  - filter[type]: Use to filter by type of appointment.
+
+  \  Common types:
+
+  \  * vaccination
+
+  \  * vet_visit
+
+  \  * grooming
+
+  \  * surgery
+
+
+  - filter[status]: Use to filter by status.
+
+  \  * upcoming
+
+  \  * completed
+
+  \  * cancelled
+
+  \ \ 
+
+  - filter[date]: Use to filter by date (Format: YYYY-MM-DD).
+
+
+  **Response Structure:**
+
+  The response includes a stats object containing total counts for upcoming, completed, and this_month (dynamically updated based on your filters). The list is returned in \appointments.data.\n"

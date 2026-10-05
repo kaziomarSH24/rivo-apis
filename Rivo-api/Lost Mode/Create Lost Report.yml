@@ -1,0 +1,49 @@
+info:
+  name: Create Lost Report
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/pets/1/lost-reports"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: last_seen_date
+        type: text
+        value: 2026-08-17
+      - name: last_seen_time
+        type: text
+        value: 16:30
+      - name: last_seen_location
+        type: text
+        value: Miami, FL
+      - name: additional_info
+        type: text
+        value: 5 miles out seen near the key biscayne bridge. He walked away suddenly.
+      - name: reward_amount
+        type: text
+        value: "500"
+      - name: last_seen_photo
+        type: file
+        value:
+          - C:\Users\kazio\OneDrive\Pictures\134155972230871914.jpg
+        contentType: image/jpeg
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |
+  **Create Lost Report**
+  Toggles Lost Mode ON for a pet and creates a poster.
+

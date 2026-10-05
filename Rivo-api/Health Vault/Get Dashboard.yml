@@ -1,0 +1,14 @@
+info:
+  name: Get Dashboard
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/pets/1/health-vault/dashboard"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"

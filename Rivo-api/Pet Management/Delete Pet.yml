@@ -1,0 +1,14 @@
+info:
+  name: Delete Pet
+  type: http
+  seq: 5
+http:
+  method: DELETE
+  url: "{{base_url}}/v1/pets/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+  mode: bearer
+auth:bearer:
+  token: {{userToken}}

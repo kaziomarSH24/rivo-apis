@@ -1,0 +1,46 @@
+info:
+  name: List Walks
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/pets/1/walks?filter[pet_id]=&filter[route_id]="
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: filter[start_time]
+      value: 2026-09-14
+      type: query
+      description: Filter by start time
+      disabled: true
+    - name: include
+      value: route,pet
+      type: query
+      description: pet
+      disabled: true
+    - name: sort
+      value: -created_at
+      type: query
+      disabled: true
+    - name: ""
+      value: ""
+      type: query
+      description: "'pet_id', 'route_id',"
+    - name: filter[pet_id]
+      value: ""
+      type: query
+    - name: filter[route_id]
+      value: ""
+      type: query
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

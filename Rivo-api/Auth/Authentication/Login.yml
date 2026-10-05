@@ -1,0 +1,91 @@
+info:
+  name: Login
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/auth/login"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: password
+        type: text
+        value: "11111111"
+      - name: email
+        type: text
+        value: kaziomar@yopmail.com
+      - name: email
+        type: text
+        value: mehedi@yopmail.com
+        disabled: true
+      - name: email
+        type: text
+        value: admin@patinawatches.com
+        disabled: true
+      - name: fcm_token
+        type: text
+        value: your_device_fcm_token_here
+        disabled: true
+      - name: password
+        type: text
+        value: password
+        disabled: true
+  auth: inherit
+
+runtime:
+  variables:
+    - name: base_url
+      value: http://10.10.28.53:80/api
+  scripts:
+    - type: after-response
+      code: |-
+        try {
+            // Bruno automatically parses the JSON response body
+            const jsonData = res.getBody();
+            console.log("Response data received:", jsonData); 
+
+            if (jsonData && jsonData.data && jsonData.data.access_token) {
+                const token = jsonData.data.access_token;
+                const roles = jsonData.data.user.roles;
+
+                if (roles && Array.isArray(roles) && roles.length > 0) {
+                    roles.forEach(role => {
+                        if (role && role.name) {
+                            const roleName = role.name.toLowerCase();
+                            const varName = `${roleName}Token`; 
+                            
+                            // Bruno: Setting Collection Variable
+                            bru.setVar(varName, token);
+                            
+                            console.log(`Token saved for role '${role.name}'. Collection variable '${varName}' created.`);
+                        } else {
+                            console.warn("Found a role object without a 'name' property:", role);
+                        }
+                    });
+                } else {
+                    console.warn("No roles found for this user or roles is not a non-empty array. Response roles:", roles);
+                }
+            } else {
+                console.error("❌ No access token found in response path 'jsonData.data.access_token'.");
+            }
+        } catch (e) {
+            console.error("❌ Script error:", e);
+        }
+
+        // Example Test
+        test("Successful login", function () {
+            expect(res.getStatus()).to.equal(200);
+        });
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: Logs in a user and returns an auth_token.
