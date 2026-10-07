@@ -1,0 +1,22 @@
+info:
+  name: Get Pending Requests
+  type: http
+  seq: 4
+docs: |
+  **Get Pending Requests**
+  Retrieves a list of friend requests sent TO the current pet that are waiting to be accepted or declined.
+http:
+  method: GET
+  url: "{{base_url}}/v1/social/requests/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

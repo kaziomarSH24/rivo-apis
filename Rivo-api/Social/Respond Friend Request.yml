@@ -1,0 +1,32 @@
+info:
+  name: Respond Friend Request
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/social/request/respond/1"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: requester_pet_id
+        type: text
+        value: "6"
+        description: The ID of the pet who sent the request
+      - name: action
+        type: text
+        value: accepted
+        description: accepted | declined
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

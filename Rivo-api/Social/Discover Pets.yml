@@ -1,0 +1,51 @@
+info:
+  name: Discover Pets
+  type: http
+  seq: 1
+docs: |
+  **Discover Pets API**
+  Fetches a list of pets nearby for Tinder-like swiping.
+  
+  **Filters:**
+  - distance (int): Maximum distance in kilometers (Requires user location to be set).
+  - age (string): puppy, adult, senior.
+  - size (string): small, medium, large.
+  - gender (string): male, female, any.
+
+  **Note:** Pets you have already swiped on, or connected with, or your own pets are automatically excluded.
+http:
+  method: GET
+  url: "{{base_url}}/v1/social/discover/1"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: distance
+      value: "20"
+      type: query
+      disabled: true
+      description: max distance in km
+    - name: age
+      value: puppy
+      type: query
+      disabled: true
+      description: puppy, adult, senior
+    - name: size
+      value: small
+      type: query
+      disabled: true
+      description: small, medium, large
+    - name: gender
+      value: any
+      type: query
+      disabled: true
+      description: male, female, any
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

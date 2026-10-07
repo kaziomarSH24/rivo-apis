@@ -1,0 +1,32 @@
+info:
+  name: Swipe Pet
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/social/swipe/1"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: target_pet_id
+        type: text
+        value: "6"
+        description: The ID of the pet being swiped on
+      - name: action
+        type: text
+        value: liked
+        description: Either liked or passed
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,0 +1,26 @@
+info:
+  name: Send Friend Request
+  type: http
+  seq: 5
+http:
+  method: POST
+  url: "{{base_url}}/v1/social/request/send/1"
+  headers:
+    - name: Accept
+      value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: target_pet_id
+        type: text
+        value: 2
+        description: The ID of the pet you want to send a friend request to
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

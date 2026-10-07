@@ -1,0 +1,23 @@
+info:
+  name: Get Connections
+  type: http
+  seq: 3
+docs: |
+  **Get Connections**
+  Retrieves a list of all accepted friends or matches for a pet.
+  These are pets that have mutually liked each other or accepted a friend request.
+http:
+  method: GET
+  url: "{{base_url}}/v1/social/connections/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
