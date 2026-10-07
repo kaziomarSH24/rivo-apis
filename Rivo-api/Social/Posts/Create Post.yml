@@ -1,0 +1,19 @@
+info:
+  name: Create Post
+  type: http
+  seq: 8
+http:
+  method: POST
+  url: "{{base_url}}/v1/posts"
+  auth:
+    type: bearer
+    token: "{{pet1User}}"
+  body:
+    type: multipartForm
+    multipartForm:
+      - name: content
+        value: "This is my first post!"
+      - name: type
+        value: general
+      - name: pet_id
+        value: 1

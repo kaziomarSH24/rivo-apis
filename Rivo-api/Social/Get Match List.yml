@@ -5,10 +5,14 @@ info:
 
 http:
   method: GET
-  url: "{{base_url}}/v1/social/match-list/15"
+  url: "{{base_url}}/v1/social/match-list/:petId"
   headers:
     - name: Accept
       value: application/json
+  params:
+    - name: petId
+      value: "15"
+      type: path
   auth:
     type: bearer
     token: 19|qfZqIcBjqtkYsMBhxeYpwEJAzB4yEYhjsD5iCGnrcec90bd3
@@ -24,4 +28,3 @@ docs: |
   **Get Connections**
   Retrieves a list of all accepted friends or matches for a pet.
   These are pets that have mutually liked each other or accepted a friend request.
-

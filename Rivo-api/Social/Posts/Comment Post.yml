@@ -1,0 +1,16 @@
+info:
+  name: Comment Post
+  type: http
+  seq: 10
+http:
+  method: POST
+  url: "{{base_url}}/v1/posts/1/comments"
+  auth:
+    type: bearer
+    token: "{{pet15User}}"
+  body:
+    type: json
+    json: |
+      {
+        "content": "Nice post!"
+      }
