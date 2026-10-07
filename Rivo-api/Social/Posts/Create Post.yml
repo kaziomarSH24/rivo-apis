@@ -1,19 +1,23 @@
 info:
   name: Create Post
   type: http
-  seq: 8
+  seq: 2
 http:
   method: POST
-  url: "{{base_url}}/v1/posts"
+  url: "{{base_url}}/v1/social/posts"
   auth:
     type: bearer
     token: "{{pet1User}}"
   body:
-    type: multipartForm
-    multipartForm:
+    type: multipart-form
+    data:
       - name: content
-        value: "This is my first post!"
+        type: text
+        value: "This is my first post with a cute dog!"
       - name: type
+        type: text
         value: general
       - name: pet_id
-        value: 1
+        type: text
+        value: "1"
+        disabled: true

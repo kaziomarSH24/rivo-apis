@@ -1,10 +1,10 @@
 info:
   name: Toggle Like Post
   type: http
-  seq: 9
+  seq: 3
 http:
   method: POST
-  url: "{{base_url}}/v1/posts/1/like"
+  url: "{{base_url}}/v1/social/posts/2/like"
   auth:
     type: bearer
     token: "{{pet15User}}"

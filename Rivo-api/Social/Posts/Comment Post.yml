@@ -1,10 +1,10 @@
 info:
   name: Comment Post
   type: http
-  seq: 10
+  seq: 4
 http:
   method: POST
-  url: "{{base_url}}/v1/posts/1/comments"
+  url: "{{base_url}}/v1/social/posts/2/comments"
   auth:
     type: bearer
     token: "{{pet15User}}"
@@ -12,5 +12,5 @@ http:
     type: json
     json: |
       {
-        "content": "Nice post!"
+        "content": "Wow, so cute! 😍"
       }

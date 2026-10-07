@@ -1,10 +1,34 @@
 info:
   name: Get Posts
   type: http
-  seq: 7
+  seq: 1
+
 http:
   method: GET
-  url: "{{base_url}}/v1/posts?include=user,pet,media,comments,likes"
+  url: "{{base_url}}/v1/social/posts"
+  params:
+    - name: include
+      value: user,pet,media,comments,likes
+      type: query
+      description: Relations to include
+      disabled: true
+    - name: filter[type]
+      value: general
+      type: query
+      description: Filter by post type (general, lost_pet, milestone)
+      disabled: true
+    - name: sort
+      value: -created_at
+      type: query
+      description: Sort by created_at, likes_count, comments_count (prefix with - for descending)
+      disabled: true
   auth:
     type: bearer
-    token: "{{pet1User}}"
+    token: "{{pet15User}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
