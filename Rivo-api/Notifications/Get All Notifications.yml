@@ -17,7 +17,7 @@ http:
       disabled: true
   auth:
     type: bearer
-    token: "{{userToken}}"
+    token: "{{pet15User}}"
 
 settings:
   encodeUrl: true

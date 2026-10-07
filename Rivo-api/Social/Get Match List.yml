@@ -1,11 +1,11 @@
 info:
-  name: Get Pending Requests
+  name: Get Match List
   type: http
-  seq: 4
+  seq: 3
 
 http:
   method: GET
-  url: "{{base_url}}/v1/social/requests/15"
+  url: "{{base_url}}/v1/social/match-list/15"
   headers:
     - name: Accept
       value: application/json
@@ -21,5 +21,7 @@ settings:
   forwardAuthorizationHeader: true
 
 docs: |
-  **Get Pending Requests**
-  Retrieves a list of friend requests sent TO the current pet that are waiting to be accepted or declined.
+  **Get Connections**
+  Retrieves a list of all accepted friends or matches for a pet.
+  These are pets that have mutually liked each other or accepted a friend request.
+

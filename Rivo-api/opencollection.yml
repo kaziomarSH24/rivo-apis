@@ -18,6 +18,8 @@ request:
   variables:
     - name: base_url
       value: http://10.10.28.53:80/api
+    - name: pet15User
+      value: 19|qfZqIcBjqtkYsMBhxeYpwEJAzB4yEYhjsD5iCGnrcec90bd3
 bundled: false
 extensions:
   bruno:

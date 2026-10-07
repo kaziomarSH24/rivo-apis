@@ -2,20 +2,10 @@ info:
   name: Discover Pets
   type: http
   seq: 1
-docs: |
-  **Discover Pets API**
-  Fetches a list of pets nearby for Tinder-like swiping.
-  
-  **Filters:**
-  - distance (int): Maximum distance in kilometers (Requires user location to be set).
-  - age (string): puppy, adult, senior.
-  - size (string): small, medium, large.
-  - gender (string): male, female, any.
 
-  **Note:** Pets you have already swiped on, or connected with, or your own pets are automatically excluded.
 http:
   method: GET
-  url: "{{base_url}}/v1/social/discover/1"
+  url: "{{base_url}}/v1/social/discover/15"
   headers:
     - name: Accept
       value: application/json
@@ -23,29 +13,53 @@ http:
     - name: distance
       value: "20"
       type: query
-      disabled: true
       description: max distance in km
+      disabled: true
     - name: age
       value: puppy
       type: query
-      disabled: true
       description: puppy, adult, senior
+      disabled: true
     - name: size
       value: small
       type: query
-      disabled: true
       description: small, medium, large
+      disabled: true
     - name: gender
-      value: any
+      value: male
+      type: query
+      description: male, female, any
+      disabled: true
+    - name: breed
+      value: ""
       type: query
       disabled: true
-      description: male, female, any
+    - name: vaccinated
+      value: required
+      type: query
+      description: required, not required
+      disabled: true
   auth:
     type: bearer
-    token: "{{userToken}}"
+    token: "{{pet15User}}"
+
 settings:
   encodeUrl: true
   timeout: 0
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
+
+docs: |
+  **Discover Pets API**
+  Fetches a list of pets nearby for Tinder-like swiping.
+
+  **Filters:**
+  - distance (int): Maximum distance in kilometers (Requires user location to be set).
+  - age (string): puppy, adult, senior.
+  - size (string): small, medium, large.
+  - breed (string): e.g. Golden Retriever or Any Breed.
+  - vaccinated (string): required, not required.
+  - gender (string): male, female, any.
+
+  **Note:** Pets you have already swiped on, or connected with, or your own pets are automatically excluded.

@@ -5,16 +5,20 @@ info:
 
 http:
   method: POST
-  url: "{{base_url}}/v1/social/swipe/1"
+  url: "{{base_url}}/v1/social/swipe/:petId"
   headers:
     - name: Accept
       value: application/json
+  params:
+    - name: petId
+      value: "15"
+      type: path
   body:
     type: multipart-form
     data:
       - name: target_pet_id
         type: text
-        value: "6"
+        value: "1"
         description: The ID of the pet being swiped on
       - name: action
         type: text
@@ -22,7 +26,7 @@ http:
         description: Either liked or passed
   auth:
     type: bearer
-    token: "{{userToken}}"
+    token: "{{pet15User}}"
 
 settings:
   encodeUrl: true

@@ -18,14 +18,14 @@ http:
       - name: email
         type: text
         value: kaziomar@yopmail.com
+        disabled: true
       - name: email
         type: text
         value: mehedi@yopmail.com
         disabled: true
       - name: email
         type: text
-        value: admin@patinawatches.com
-        disabled: true
+        value: david@yopmail.com
       - name: fcm_token
         type: text
         value: your_device_fcm_token_here
