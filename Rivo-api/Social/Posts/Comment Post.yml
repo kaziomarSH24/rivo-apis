@@ -19,7 +19,8 @@ http:
     type: json
     data: |-
       {
-        "content": "Wow, so cute!"
+        "content": "Wow, so cute!",
+        "parent_id": null
       }
   auth:
     type: bearer
@@ -31,3 +32,9 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
+
+docs: |-
+  Adds a comment or reply to a post.
+
+  - To post a top-level comment, set `parent_id` to `null` or omit it.
+  - To reply to another comment, set `parent_id` to the ID of that comment.

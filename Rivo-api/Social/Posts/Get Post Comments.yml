@@ -6,6 +6,9 @@ info:
 http:
   method: GET
   url: "{{base_url}}/v1/social/posts/:postId/comments"
+  headers:
+    - name: Accept
+      value: application/json
   params:
     - name: postId
       value: "5"
@@ -14,12 +17,9 @@ http:
       value: user
       type: query
       description: Relations to include
-  headers:
-    - name: Accept
-      value: application/json
   auth:
     type: bearer
-    token: "{{pet1User}}"
+    token: "{{pet15User}}"
 
 settings:
   encodeUrl: true
