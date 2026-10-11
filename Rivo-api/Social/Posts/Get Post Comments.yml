@@ -13,10 +13,11 @@ http:
     - name: postId
       value: "5"
       type: path
+      description: "Post ID from {{base_url}}/v1/social/posts"
     - name: include
-      value: user
+      value: "user,replies.user"
       type: query
-      description: Relations to include
+      description: "Relations to include: user,replies,replies.user"
   auth:
     type: bearer
     token: "{{pet15User}}"

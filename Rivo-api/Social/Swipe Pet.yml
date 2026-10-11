@@ -13,17 +13,22 @@ http:
     - name: petId
       value: "15"
       type: path
+      description: "Active User Pet ID from {{base_url}}/v1/pets"
+    - name: target_pet_id
+      value: "1"
+      type: query
+      disabled: true
   body:
     type: multipart-form
     data:
       - name: target_pet_id
         type: text
         value: "1"
-        description: The ID of the pet being swiped on
+        description: "Target Pet ID from {{base_url}}/v1/social/discover/:petId"
       - name: action
         type: text
-        value: liked
-        description: Either liked or passed
+        value: "liked"
+        description: "Swipe action: liked or passed"
   auth:
     type: bearer
     token: "{{pet15User}}"

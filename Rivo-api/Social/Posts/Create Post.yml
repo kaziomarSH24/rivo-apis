@@ -2,22 +2,50 @@ info:
   name: Create Post
   type: http
   seq: 2
+
 http:
   method: POST
   url: "{{base_url}}/v1/social/posts"
-  auth:
-    type: bearer
-    token: "{{pet1User}}"
   body:
     type: multipart-form
     data:
       - name: content
         type: text
-        value: "This is my first post with a cute dog!"
+        value: "Morning walk with my Pedro! 🐾✨"
+        description: "Caption/text for the post (Optional if media or walk_session_id is provided)"
       - name: type
         type: text
-        value: general
+        value: "walk_summary"
+        description: "Post type: general,lost_pet,milestone,walk_summary,training_achievement"
       - name: pet_id
         type: text
         value: "1"
+        description: "Optional. Pet ID from {{base_url}}/v1/pets (Auto-detected if walk_session_id is provided)"
         disabled: true
+      - name: location
+        type: text
+        value: "Central Dog Park"
+        description: "Optional location name (e.g. Central Dog Park)"
+      - name: visibility
+        type: text
+        value: "public"
+        description: "Post visibility: public,followers,private (Default: public)"
+      - name: walk_session_id
+        type: text
+        value: "34"
+        description: "Required if type=walk_summary. Walk Session ID from {{base_url}}/v1/pets/:petId/walks"
+      - name: media[]
+        type: file
+        value: []
+        description: "Optional image(s)/video(s). Supported: jpeg,png,jpg,gif,mp4,mov (Max 20MB)"
+        disabled: true
+  auth:
+    type: bearer
+    token: "{{pet15User}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

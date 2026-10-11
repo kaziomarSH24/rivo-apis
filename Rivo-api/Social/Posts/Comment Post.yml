@@ -10,18 +10,19 @@ http:
     - name: postId
       value: "5"
       type: path
-  headers:
-    - name: Content-Type
-      value: application/json
-    - name: Accept
-      value: application/json
+      description: Post ID from {{base_url}}/v1/social/posts
   body:
-    type: json
-    data: |-
-      {
-        "content": "Wow, so cute!",
-        "parent_id": null
-      }
+    type: multipart-form
+    data:
+      - name: content
+        type: text
+        value: Wow, so cute! 🐶
+        description: Text content of the comment (Required, max 1000 characters)
+      - name: parent_id
+        type: text
+        value: ""
+        description: Optional. Parent comment ID from {{base_url}}/v1/social/posts/:postId/comments for nested replies
+        disabled: true
   auth:
     type: bearer
     token: "{{pet15User}}"
@@ -32,9 +33,3 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
-
-docs: |-
-  Adds a comment or reply to a post.
-
-  - To post a top-level comment, set `parent_id` to `null` or omit it.
-  - To reply to another comment, set `parent_id` to the ID of that comment.

@@ -8,19 +8,29 @@ http:
   url: "{{base_url}}/v1/social/posts"
   params:
     - name: include
-      value: user,pet,media,comments,likes
+      value: "user,pet,media,comments,likes,postable"
       type: query
-      description: Relations to include
+      description: "Relations to include: user,pet,media,comments,likes,postable"
       disabled: true
     - name: filter[type]
-      value: general
+      value: "walk_summary"
       type: query
-      description: Filter by post type (general, lost_pet, milestone)
+      description: "Filter by type: general,lost_pet,milestone,walk_summary,training_achievement"
+      disabled: true
+    - name: filter[pet_id]
+      value: "1"
+      type: query
+      description: "Filter by Pet ID from {{base_url}}/v1/pets"
+      disabled: true
+    - name: filter[user_id]
+      value: "1"
+      type: query
+      description: "Filter by User ID from {{base_url}}/v1/auth/profile"
       disabled: true
     - name: sort
-      value: -created_at
+      value: "-created_at"
       type: query
-      description: Sort by created_at, likes_count, comments_count (prefix with - for descending)
+      description: "Sort by -created_at, likes_count, comments_count (Prefix with - for descending)"
       disabled: true
   auth:
     type: bearer

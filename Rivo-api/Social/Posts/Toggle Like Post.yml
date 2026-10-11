@@ -10,6 +10,7 @@ http:
     - name: postId
       value: "5"
       type: path
+      description: Post ID from {{base_url}}/v1/social/posts
   auth:
     type: bearer
     token: "{{pet15User}}"

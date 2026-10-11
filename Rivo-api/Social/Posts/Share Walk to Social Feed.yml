@@ -1,0 +1,46 @@
+info:
+  name: Share Walk to Social Feed
+  type: http
+  seq: 6
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/social/posts"
+  body:
+    type: multipart-form
+    data:
+      - name: type
+        type: text
+        value: "walk_summary"
+        description: "Set to walk_summary"
+      - name: walk_session_id
+        type: text
+        value: "34"
+        description: "Required. Walk Session ID from {{base_url}}/v1/pets/:petId/walks"
+      - name: content
+        type: text
+        value: "Morning walk with my Pedro! 🐾✨"
+        description: "Optional caption/text for the walk post"
+      - name: location
+        type: text
+        value: "Central Dog Park"
+        description: "Optional location name"
+      - name: visibility
+        type: text
+        value: "public"
+        description: "Post visibility: public,followers,private (Default: public)"
+      - name: pet_id
+        type: text
+        value: "1"
+        description: "Optional. Pet ID from {{base_url}}/v1/pets (Auto-detected from walk_session_id if omitted)"
+        disabled: true
+  auth:
+    type: bearer
+    token: "{{pet15User}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

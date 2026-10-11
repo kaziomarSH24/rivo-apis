@@ -18,7 +18,6 @@ http:
       - name: email
         type: text
         value: kaziomar@yopmail.com
-        disabled: true
       - name: email
         type: text
         value: mehedi@yopmail.com
@@ -26,6 +25,7 @@ http:
       - name: email
         type: text
         value: david@yopmail.com
+        disabled: true
       - name: fcm_token
         type: text
         value: your_device_fcm_token_here
