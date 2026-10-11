@@ -1,0 +1,23 @@
+info:
+  name: Send Typing Indicator
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/chat/conversations/1/typing"
+  headers:
+    - name: Accept
+      value: application/json
+    - name: Authorization
+      value: Bearer {{auth_token}}
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: Broadcasts a 'typing' event to other members of the conversation. This does not save anything to the database.

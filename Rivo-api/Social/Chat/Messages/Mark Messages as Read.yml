@@ -1,0 +1,29 @@
+info:
+  name: Mark Messages as Read
+  type: http
+  seq: 5
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/chat/messages/read"
+  headers:
+    - name: Accept
+      value: application/json
+    - name: Authorization
+      value: Bearer {{auth_token}}
+  body:
+    type: json
+    data: |-
+      {
+          "conversation_id": 1
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: Marks all unread messages in a specific conversation as 'read' for the authenticated user.

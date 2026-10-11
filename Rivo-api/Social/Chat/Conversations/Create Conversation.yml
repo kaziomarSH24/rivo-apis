@@ -1,0 +1,29 @@
+info:
+  name: Create Direct Conversation
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/chat/conversations"
+  headers:
+    - name: Accept
+      value: application/json
+    - name: Authorization
+      value: Bearer {{pet15User}}
+  body:
+    type: json
+    data: |-
+      {
+          "user_ids": [5]
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: Creates a direct 1-on-1 conversation with the specified user.

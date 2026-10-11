@@ -1,0 +1,42 @@
+info:
+  name: Send Message
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/chat/messages"
+  headers:
+    - name: Authorization
+      value: Bearer {{pet15User}}
+  body:
+    type: multipart-form
+    data:
+      - name: conversation_id
+        type: text
+        value: "3"
+      - name: body
+        type: text
+        value: Hello! This is a test message.
+      - name: media
+        type: file
+        value: []
+        disabled: true
+      - name: parent_message_id
+        type: text
+        value: "1"
+        disabled: true
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  Sends a new message to a conversation.
+
+  - You can send a text message (`body`), a media file (`media`), or both.
+  - To reply to a specific message, provide its ID in `parent_message_id`.

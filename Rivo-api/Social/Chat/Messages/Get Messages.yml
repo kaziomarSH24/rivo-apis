@@ -1,0 +1,29 @@
+info:
+  name: Get Messages
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/chat/conversations/:conversationId/messages"
+  headers:
+    - name: Accept
+      value: application/json
+    - name: Authorization
+      value: Bearer {{auth_token}}
+  params:
+    - name: conversationId
+      value: "3"
+      type: path
+  auth:
+    type: bearer
+    token: "{{pet15User}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: Fetches a paginated list of messages for a specific conversation.

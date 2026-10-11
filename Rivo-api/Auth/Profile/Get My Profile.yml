@@ -13,7 +13,7 @@ http:
       value: Bearer {{auth_token}}
   auth:
     type: bearer
-    token: "{{userToken}}"
+    token: "{{pet15User}}"
 
 runtime:
   variables:

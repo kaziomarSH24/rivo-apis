@@ -1,0 +1,29 @@
+info:
+  name: Update Message
+  type: http
+  seq: 3
+
+http:
+  method: PATCH
+  url: "{{base_url}}/v1/chat/messages/1"
+  headers:
+    - name: Accept
+      value: application/json
+    - name: Authorization
+      value: Bearer {{auth_token}}
+  body:
+    type: json
+    data: |-
+      {
+          "body": "This is the updated message text."
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: Updates the body of a message you have sent.
