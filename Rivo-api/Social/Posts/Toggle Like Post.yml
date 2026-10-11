@@ -2,9 +2,21 @@ info:
   name: Toggle Like Post
   type: http
   seq: 3
+
 http:
   method: POST
-  url: "{{base_url}}/v1/social/posts/2/like"
+  url: "{{base_url}}/v1/social/posts/:postId/like"
+  params:
+    - name: postId
+      value: "5"
+      type: path
   auth:
     type: bearer
     token: "{{pet15User}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

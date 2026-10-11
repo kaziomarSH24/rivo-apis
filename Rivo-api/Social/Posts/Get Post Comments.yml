@@ -2,14 +2,28 @@ info:
   name: Get Post Comments
   type: http
   seq: 5
+
 http:
   method: GET
-  url: "{{base_url}}/v1/social/posts/2/comments"
-  auth:
-    type: bearer
-    token: "{{pet1User}}"
+  url: "{{base_url}}/v1/social/posts/:postId/comments"
   params:
+    - name: postId
+      value: "5"
+      type: path
     - name: include
       value: user
       type: query
       description: Relations to include
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{pet1User}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
