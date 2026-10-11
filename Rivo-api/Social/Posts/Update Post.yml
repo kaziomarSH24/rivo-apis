@@ -1,0 +1,55 @@
+info:
+  name: Update Post
+  type: http
+  seq: 4
+
+http:
+  method: PUT
+  url: "{{base_url}}/v1/social/posts/:postId"
+  params:
+    - name: postId
+      value: "1"
+      type: path
+      description: "Post ID from {{base_url}}/v1/social/posts"
+  body:
+    type: multipart-form
+    data:
+      - name: content
+        type: text
+        value: "Beautiful day for a walk in the park! 🐶💚"
+        description: "Caption/text for post (Max 500 characters)"
+      - name: location
+        type: text
+        value: "Lima Dog Park"
+        description: "Optional location name"
+      - name: visibility
+        type: text
+        value: "public"
+        description: "Post visibility: public, followers, private"
+      - name: hide_like_count
+        type: text
+        value: "true"
+        description: "Toggle to hide like count: true or false"
+      - name: hide_share_count
+        type: text
+        value: "false"
+        description: "Toggle to hide share count: true or false"
+      - name: turn_off_commenting
+        type: text
+        value: "false"
+        description: "Toggle to turn off commenting: true or false"
+      - name: remove_media_ids[]
+        type: text
+        value: "1"
+        description: "Optional media ID from post media to delete"
+        disabled: true
+  auth:
+    type: bearer
+    token: "{{pet15User}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

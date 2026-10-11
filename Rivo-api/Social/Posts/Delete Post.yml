@@ -1,0 +1,23 @@
+info:
+  name: Delete Post
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{base_url}}/v1/social/posts/:postId"
+  params:
+    - name: postId
+      value: "1"
+      type: path
+      description: "Post ID from {{base_url}}/v1/social/posts"
+  auth:
+    type: bearer
+    token: "{{pet15User}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
