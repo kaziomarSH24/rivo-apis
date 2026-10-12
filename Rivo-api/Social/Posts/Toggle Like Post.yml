@@ -29,8 +29,11 @@ settings:
   forwardAuthorizationHeader: true
 
 docs: |-
-  Toggles reaction on a post.
+  Toggles / switches reaction on a post (Facebook model: 1 reaction per user).
   - reaction_type: "bone" (🦴), "fire" (🔥), "paw" (🐾), "heart" (❤️), or "clap" (👏). Default: "bone".
   - If user already reacted with this type, it removes the reaction (unreacts).
+  - If user selects a different reaction, it immediately switches to the new reaction.
+  - Returns: user_reaction ("bone" or null), is_liked (boolean), likes_count (total), and reactions dictionary.
   - Also accessible via {{base_url}}/v1/social/posts/:postId/like (backward compatible, defaults to bone).
+
 
