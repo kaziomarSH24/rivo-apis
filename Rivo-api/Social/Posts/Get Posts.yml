@@ -15,7 +15,7 @@ http:
     - name: filter[type]
       value: "walk_summary"
       type: query
-      description: "Filter by type: general,lost_pet,milestone,walk_summary,training_achievement"
+      description: "Filter by type: general,lost_pet,walk_summary,achievement,milestone,training"
       disabled: true
     - name: filter[pet_id]
       value: "1"

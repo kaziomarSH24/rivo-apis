@@ -1,16 +1,22 @@
 info:
-  name: Toggle Like Post
+  name: React to Post (Bone or Fire)
   type: http
-  seq: 3
+  seq: 6
 
 http:
   method: POST
-  url: "{{base_url}}/v1/social/posts/:postId/like"
+  url: "{{base_url}}/v1/social/posts/:postId/react"
   params:
     - name: postId
-      value: "5"
+      value: "9"
       type: path
-      description: Post ID from {{base_url}}/v1/social/posts
+      description: "Post ID from {{base_url}}/v1/social/posts"
+  body:
+    type: json
+    data: |-
+      {
+        "reaction_type": "bone"
+      }
   auth:
     type: bearer
     token: "{{pet15User}}"
@@ -21,3 +27,9 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
+
+docs: |-
+  Toggles reaction on a post.
+  - reaction_type: "bone" (🦴) or "fire" (🔥). Default: "bone".
+  - If user already reacted with this type, it removes the reaction (unreacts).
+  - Also accessible via {{base_url}}/v1/social/posts/:postId/like
