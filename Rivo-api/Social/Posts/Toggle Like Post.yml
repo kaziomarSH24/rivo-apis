@@ -1,5 +1,5 @@
 info:
-  name: React to Post (Bone or Fire)
+  name: React to Post (Bone, Fire, Paw, Heart, Clap)
   type: http
   seq: 6
 
@@ -30,6 +30,7 @@ settings:
 
 docs: |-
   Toggles reaction on a post.
-  - reaction_type: "bone" (🦴) or "fire" (🔥). Default: "bone".
+  - reaction_type: "bone" (🦴), "fire" (🔥), "paw" (🐾), "heart" (❤️), or "clap" (👏). Default: "bone".
   - If user already reacted with this type, it removes the reaction (unreacts).
-  - Also accessible via {{base_url}}/v1/social/posts/:postId/like
+  - Also accessible via {{base_url}}/v1/social/posts/:postId/like (backward compatible, defaults to bone).
+
