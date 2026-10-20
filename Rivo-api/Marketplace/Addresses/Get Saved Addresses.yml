@@ -1,0 +1,61 @@
+info:
+  name: Get Saved Addresses
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/marketplace/addresses"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Saved Delivery Addresses List
+
+  Returns all saved delivery locations for the authenticated user, prioritized with default address first.
+
+  ## Figma Screen
+  - **Screen:** Delivery Address Selector / Manage Addresses Screen
+  - **UI Elements:** Address cards with radio selector, Default badge, Edit and Delete buttons, "Add New Address" bottom button.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/marketplace/addresses`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "User addresses retrieved successfully.",
+    "data": [
+      {
+        "id": 1,
+        "street_address": "124 Main Street",
+        "house_no": "Apt 4B",
+        "landmark": "Near South Congress Bridge",
+        "city": "Austin",
+        "state": "TX",
+        "zip_code": "78701",
+        "latitude": 30.2648,
+        "longitude": -97.7471,
+        "is_default": true
+      }
+    ]
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

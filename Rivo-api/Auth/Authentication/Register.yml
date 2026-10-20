@@ -14,24 +14,85 @@ http:
     data:
       - name: name
         type: text
-        value: Omar Faruk
+        value: Sarah Mitchell
+        description: "Full name of customer or merchant owner"
       - name: email
         type: text
-        value: kaziomar@yopmail.com
+        value: sarah.vendor@yopmail.com
+        description: "Registration email"
+      - name: phone_number
+        type: text
+        value: "+15125559988"
+        description: "Contact phone number"
+      - name: country_code
+        type: text
+        value: "+1"
+        description: "Country code"
+      - name: user_type
+        type: text
+        value: vendor
+        description: "Pass 'vendor' for merchant store owner, or leave blank / 'user' for pet parent"
       - name: password
         type: text
         value: "11111111"
+        description: "Password (min 8 characters)"
       - name: password_confirmation
         type: text
         value: "11111111"
-      - name: phone_number
-        type: text
-        value: "+1234567896"
-      - name: company_name
-        type: text
-        value: Patina Watches
-        disabled: true
+        description: "Confirm password"
   auth: inherit
+
+docs: |-
+  # User & Vendor Registration API
+
+  Registers a new user account and dispatches an OTP / verification email.
+
+  ## Unified Registration: How to Register as a Vendor vs Customer
+
+  The registration system is **100% unified** through the `user_type` parameter:
+  - **Pet Parent (Customer):** Pass `user_type: "user"` (or omit `user_type`). The system automatically assigns the Spatie `user` role.
+  - **Store Owner (Vendor):** Pass `user_type: "vendor"`. The system automatically assigns the Spatie `vendor` role.
+
+  ### Post-Registration Flow:
+  1. User receives OTP in email.
+  2. Verify email via `POST /api/v1/auth/verify-email`.
+  3. Login via `POST /api/v1/auth/login`.
+  4. If `vendor`, onboard store details via `POST /api/v1/vendor/store`.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/auth/register`
+  - **Authentication:** None (Public)
+
+  ### Request Body (`multipart/form-data` or `application/json`)
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `name` | string | Yes | Full name |
+  | `email` | string | Required* | Email address (unique in users table) |
+  | `phone_number` | string | Required* | Phone number (unique in users table) |
+  | `country_code` | string | No | Country calling code (e.g. `+1`) |
+  | `user_type` | string | No | Role selector: `"user"` (default) or `"vendor"` |
+  | `password` | string | Yes | Minimum 8 characters |
+  | `password_confirmation` | string | Yes | Must match `password` |
+  | `fcm_token` | string | No | Optional push notification token |
+
+  ---
+
+  ## Response Structure (201 Created)
+  ```json
+  {
+    "ok": true,
+    "message": "User registered. Please check your email for verification.",
+    "data": []
+  }
+  ```
+
+  ---
+
+  ## Error Responses
+  - `422 Unprocessable Content`: Email or phone already taken, password mismatch, or missing required fields.
 
 settings:
   encodeUrl: true
@@ -39,5 +100,3 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
-
-docs: Registers a new user and sends a verification OTP/Link.

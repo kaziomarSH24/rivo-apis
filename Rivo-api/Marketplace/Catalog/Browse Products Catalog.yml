@@ -1,0 +1,88 @@
+info:
+  name: Browse Products Catalog
+  type: http
+  seq: 6
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/marketplace/products"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: filter[category_id]
+      value: "1"
+      type: query
+      description: "Filter by category ID"
+      disabled: true
+    - name: filter[brand_id]
+      value: "1"
+      type: query
+      description: "Filter by brand ID"
+      disabled: true
+    - name: filter[pet_type]
+      value: dog
+      type: query
+      description: "Filter: dog, cat, both"
+      disabled: true
+    - name: sort
+      value: -sales_count
+      type: query
+      description: "Sort: -sales_count, -rating, price, -price, created_at"
+      disabled: true
+    - name: include
+      value: "category,brand,variants,store"
+      type: query
+      description: "Eager load relations"
+      disabled: true
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Browse All Marketplace Products
+
+  Global product exploration endpoint powered by `BaseService` and Spatie QueryBuilder.
+
+  ## Figma Screen
+  - **Screen:** All Products / Shop All
+  - **UI Elements:** Multi-facet filters (Category, Brand, Pet Type, Stock status), sorting tabs, search bar, and product card grid.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/marketplace/products`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `filter[category_id]` | integer | No | Category ID filter |
+  | `filter[brand_id]` | integer | No | Brand ID filter |
+  | `filter[pet_type]` | string | No | `dog`, `cat`, `both` |
+  | `filter[active]` | boolean | No | Only active, in-stock items |
+  | `sort` | string | No | `-sales_count`, `-rating`, `price`, `-price` |
+  | `include` | string | No | `category`, `brand`, `variants`, `store` |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Products catalog retrieved successfully.",
+    "data": {
+      "current_page": 1,
+      "data": [...],
+      "total": 6
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

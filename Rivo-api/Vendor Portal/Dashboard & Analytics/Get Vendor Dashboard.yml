@@ -1,0 +1,92 @@
+info:
+  name: Get Vendor Dashboard
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/vendor/dashboard"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+docs: |-
+  # Vendor Dashboard Feed
+
+  Fetches the complete vendor operational dashboard matching the **Figma Vendor Dashboard Screen**:
+  - Store profile summary, ratings, and live status toggle indicator
+  - Fulfillment rate (e.g. `100%`) & average prep time
+  - Order status badge counters (`all`, `new`, `preparing`, `ready`, `out_for_delivery`)
+  - Today's revenue total + 7-day weekly bar chart breakdown
+  - Low stock inventory alert list (<5 units)
+  - Incoming orders queue with quick Accept/Reject actions
+
+  ## Figma Screen
+  - **Screen:** Merchant Dashboard / Store Hub
+  - **UI Elements:** Top store card with status toggle, Order status tabs with badge numbers, Sales bar chart, Low Stock warning banner, Recent Orders list.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/vendor/dashboard`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Vendor dashboard retrieved successfully.",
+    "data": {
+      "store": {
+        "id": 1,
+        "name": "Pawsome Pet Shop",
+        "is_live": true,
+        "is_verified": true,
+        "rating": 4.9,
+        "fulfillment_rate": 100,
+        "avg_prep_time_minutes": 15
+      },
+      "order_overview": {
+        "all": 1,
+        "new": 0,
+        "preparing": 1,
+        "ready": 0,
+        "out_for_delivery": 0
+      },
+      "today_sales": {
+        "amount": 49.11,
+        "growth_percentage": 0,
+        "weekly_chart": [
+          { "day": "Mon", "date": "2026-10-19", "total": 0 },
+          { "day": "Tue", "date": "2026-10-20", "total": 49.11 }
+        ]
+      },
+      "low_stock_alerts": [],
+      "recent_orders": [
+        {
+          "id": 1,
+          "order_number": "RIV-78421",
+          "status": "preparing",
+          "total": 49.11,
+          "user": {
+            "name": "Omar Faruk"
+          },
+          "items": [...]
+        }
+      ]
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

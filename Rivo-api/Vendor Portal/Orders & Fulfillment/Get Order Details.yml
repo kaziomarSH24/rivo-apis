@@ -1,0 +1,60 @@
+info:
+  name: Get Order Details
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/vendor/orders/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+docs: |-
+  # Vendor View Order Details
+
+  Fetches detailed order breakdown for merchant fulfillment:
+  - Customer contact information
+  - Exact delivery address and landmark
+  - Ordered items, selected sizes, quantities
+  - Preparation instructions and notes
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/vendor/orders/:orderId`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `orderId` | integer | Yes | ID of the order |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Order details retrieved successfully.",
+    "data": {
+      "id": 1,
+      "order_number": "RIV-78421",
+      "status": "preparing",
+      "user": { ... },
+      "items": [ ... ],
+      "address": { ... }
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

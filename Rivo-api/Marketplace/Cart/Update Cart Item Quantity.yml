@@ -1,0 +1,66 @@
+info:
+  name: Update Cart Item Quantity
+  type: http
+  seq: 3
+
+http:
+  method: PATCH
+  url: "{{base_url}}/v1/marketplace/cart/items/1"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "quantity": 2
+      }
+
+docs: |-
+  # Update Cart Item Quantity Stepper
+
+  Adjusts the quantity of a specific cart item directly from the cart screen +/- stepper.
+
+  ---
+
+  ## Request Details
+  - **Method:** `PATCH`
+  - **URL:** `{{base_url}}/v1/marketplace/cart/items/:itemId`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `itemId` | integer | Yes | ID of the cart item record |
+
+  ### Request Body Fields
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `quantity` | integer | Yes | New item quantity (minimum: 1) |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Cart item updated.",
+    "data": {
+      "store": { ... },
+      "items": [ ... ],
+      "summary": { ... }
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

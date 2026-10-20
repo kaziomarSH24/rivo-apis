@@ -1,0 +1,66 @@
+info:
+  name: Upload KYC Document
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/vendor/documents"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+  body:
+    type: multipart
+    data:
+      - name: type
+        value: business_license
+        type: text
+      - name: document
+        value: "@file"
+        type: file
+
+docs: |-
+  # Upload KYC Business Document
+
+  Allows the merchant to upload official proof of business documents:
+  - `business_registration_certificate`
+  - `business_license`
+  - `tax_certificate`
+  - `additional_document`
+
+  Uploaded documents enter `pending` verification status for admin review.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/vendor/documents`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ---
+
+  ## Response Structure (201 Created)
+  ```json
+  {
+    "ok": true,
+    "message": "KYC Document uploaded successfully.",
+    "data": {
+      "id": 2,
+      "store_id": 1,
+      "type": "business_license",
+      "file_path": "stores/documents/license.pdf",
+      "original_name": "license.pdf",
+      "status": "pending"
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

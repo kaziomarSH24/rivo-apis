@@ -1,0 +1,86 @@
+info:
+  name: Unified Search
+  type: http
+  seq: 8
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/marketplace/search"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: q
+      value: "Royal Canin"
+      type: query
+      description: "Search keyword (matches products name/description and stores name/city)"
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Marketplace Unified Search
+
+  Provides multi-tab search matching the **Figma Search Screen**:
+  - Automatically records user's search history
+  - Returns user's recent search queries
+  - Popular trending search tags (Royal Canin, Chew Sticks, Puppy Food, Cat Litter)
+  - Matching Products tab with prices, stock, ratings
+  - Matching Stores tab with ratings, delivery time, location
+
+  ## Figma Screen
+  - **Screen:** Search Marketplace (Tabbed Results: Products & Stores)
+  - **UI Elements:** Search bar with clear button, Recent searches chips, Popular tags chips, 2-tab switch (Products / Stores).
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/marketplace/search`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `q` | string | No | Search keyword |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Search results retrieved.",
+    "data": {
+      "recent_searches": [
+        "Royal Canin",
+        "Dog Food"
+      ],
+      "popular_tags": [
+        "Royal Canin",
+        "Chew Sticks",
+        "Puppy Food",
+        "Cat Litter",
+        "Flea Treatment",
+        "Dog Bed"
+      ],
+      "products": {
+        "current_page": 1,
+        "data": [...],
+        "total": 1
+      },
+      "stores": {
+        "current_page": 1,
+        "data": [...],
+        "total": 0
+      }
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

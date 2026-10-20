@@ -1,0 +1,107 @@
+info:
+  name: Get Products by Category
+  type: http
+  seq: 5
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/marketplace/categories/1/products"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: filter[pet_type]
+      value: dog
+      type: query
+      description: "Filter by pet type: dog, cat, both"
+      disabled: true
+    - name: filter[brand_id]
+      value: "1"
+      type: query
+      description: "Filter by brand ID (e.g. 1 for Royal Canin)"
+      disabled: true
+    - name: sort
+      value: -rating
+      type: query
+      description: "Sort order: -sales_count, -rating, price, -price, created_at"
+      disabled: true
+    - name: per_page
+      value: "15"
+      type: query
+      description: "Number of products per page"
+      disabled: true
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Get Products by Category
+
+  Returns a paginated list of products within a specific category, supporting brand, pet type, price filtering, and sorting via `BaseService` and Spatie QueryBuilder.
+
+  ## Figma Screen
+  - **Screen:** Category Catalog Screen (e.g., clicking on "Food")
+  - **UI Elements:** Category banner, filter chips (Dog, Cat, Brand), price sorting dropdown, and product card grid.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/marketplace/categories/:categoryId/products`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `categoryId` | integer | Yes | ID of the category (e.g. `1` for Food) |
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `filter[pet_type]` | string | No | `dog`, `cat`, or `both` |
+  | `filter[brand_id]` | integer | No | Specific brand ID |
+  | `sort` | string | No | `price`, `-price`, `-rating`, `-sales_count`, `name` |
+  | `per_page` | integer | No | Items per page (default: 15) |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Products for Food retrieved successfully.",
+    "data": {
+      "current_page": 1,
+      "data": [
+        {
+          "id": 1,
+          "name": "Royal Canin Medium Adult Dry Dog Food",
+          "slug": "royal-canin-medium-adult-dry-dog-food",
+          "pet_type": "dog",
+          "price": 54.99,
+          "discount_price": 49.99,
+          "stock": 45,
+          "rating": 4.8,
+          "reviews_count": 84,
+          "sales_count": 210,
+          "brand": {
+            "id": 1,
+            "name": "Royal Canin"
+          },
+          "store": {
+            "id": 1,
+            "name": "Pawsome Pet Shop"
+          }
+        }
+      ],
+      "total": 2
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

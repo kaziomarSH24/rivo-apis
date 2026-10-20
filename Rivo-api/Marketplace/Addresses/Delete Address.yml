@@ -1,0 +1,49 @@
+info:
+  name: Delete Address
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{base_url}}/v1/marketplace/addresses/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Delete Saved Address
+
+  Removes an address from the user's saved address book.
+
+  ---
+
+  ## Request Details
+  - **Method:** `DELETE`
+  - **URL:** `{{base_url}}/v1/marketplace/addresses/:addressId`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `addressId` | integer | Yes | ID of the address to delete |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Delivery address deleted successfully.",
+    "data": []
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

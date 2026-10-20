@@ -1,0 +1,69 @@
+info:
+  name: Get Store Profile
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/vendor/profile"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+docs: |-
+  # Get Vendor Business Profile
+
+  Fetches the authenticated merchant's store details, operating hours, delivery fees, and attached KYC verification documents.
+
+  ## Figma Screen
+  - **Screen:** Merchant Settings / Store Profile Screen
+  - **UI Elements:** Store logo preview, cover banner preview, verified partner badge status (`pending`, `verified`), and document cards.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/vendor/profile`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Business profile retrieved successfully.",
+    "data": {
+      "id": 1,
+      "name": "Pawsome Pet Shop",
+      "type": "pet_shop",
+      "phone": "+15125550199",
+      "email": "sarah.mitchell@yopmail.com",
+      "street_address": "2401 S Congress Ave",
+      "city": "Austin",
+      "state": "TX",
+      "delivery_fee": 0,
+      "delivery_time_text": "15-20 min",
+      "is_verified": true,
+      "is_live": true,
+      "documents": [
+        {
+          "id": 1,
+          "type": "business_registration_certificate",
+          "original_name": "pawsome_registration_certificate.pdf",
+          "status": "approved"
+        }
+      ]
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,0 +1,44 @@
+info:
+  name: Clear Entire Cart
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{base_url}}/v1/marketplace/cart"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Clear Entire Shopping Cart
+
+  Deletes all items and clears active merchant link from user's cart.
+
+  ---
+
+  ## Request Details
+  - **Method:** `DELETE`
+  - **URL:** `{{base_url}}/v1/marketplace/cart`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Cart cleared successfully.",
+    "data": []
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

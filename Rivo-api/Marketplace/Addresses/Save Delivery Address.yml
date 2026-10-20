@@ -1,0 +1,78 @@
+info:
+  name: Save Delivery Address
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/marketplace/addresses"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "street_address": "2200 Barton Springs Rd",
+        "house_no": "Suite 102",
+        "landmark": "Zilker Park Entrance",
+        "city": "Austin",
+        "state": "TX",
+        "zip_code": "78704",
+        "latitude": 30.2638,
+        "longitude": -97.7711,
+        "is_default": true
+      }
+
+docs: |-
+  # Save New Delivery Address
+
+  Creates a new delivery address for the customer. Setting `is_default: true` automatically unsets previous default.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/marketplace/addresses`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Request Body Fields
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `street_address` | string | Yes | Street name and number |
+  | `house_no` | string | No | Apartment, suite, unit number |
+  | `landmark` | string | No | Notable nearby landmark for rider |
+  | `city` | string | No | City |
+  | `state` | string | No | State (e.g. `TX`) |
+  | `zip_code` | string | No | Postal code |
+  | `latitude` | numeric | No | GPS Latitude coordinate |
+  | `longitude` | numeric | No | GPS Longitude coordinate |
+  | `is_default` | boolean | No | Mark as active default delivery location |
+
+  ---
+
+  ## Response Structure (201 Created)
+  ```json
+  {
+    "ok": true,
+    "message": "Delivery address saved successfully.",
+    "data": {
+      "id": 2,
+      "street_address": "2200 Barton Springs Rd",
+      "city": "Austin",
+      "is_default": true
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,0 +1,48 @@
+info:
+  name: Clear Recent Searches
+  type: http
+  seq: 9
+
+http:
+  method: DELETE
+  url: "{{base_url}}/v1/marketplace/search/recent"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Clear User Recent Searches
+
+  Clears all recent search history for the authenticated user.
+
+  ## Figma Screen
+  - **Screen:** Search Screen
+  - **UI Element:** "Clear All" button next to "Recent Searches" header.
+
+  ---
+
+  ## Request Details
+  - **Method:** `DELETE`
+  - **URL:** `{{base_url}}/v1/marketplace/search/recent`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Recent searches cleared successfully.",
+    "data": []
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

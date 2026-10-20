@@ -1,0 +1,49 @@
+info:
+  name: Delete KYC Document
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{base_url}}/v1/vendor/documents/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+docs: |-
+  # Delete KYC Document
+
+  Removes a previously uploaded business document from the store profile.
+
+  ---
+
+  ## Request Details
+  - **Method:** `DELETE`
+  - **URL:** `{{base_url}}/v1/vendor/documents/:documentId`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `documentId` | integer | Yes | ID of the document record |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Document removed successfully.",
+    "data": []
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

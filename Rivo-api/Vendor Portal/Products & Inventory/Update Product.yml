@@ -1,0 +1,55 @@
+info:
+  name: Update Product
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/vendor/products/1"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Royal Canin Medium Adult Dry Dog Food (Updated)",
+        "price": 56.99,
+        "discount_price": 51.99,
+        "stock": 50
+      }
+
+docs: |-
+  # Update Product Details
+
+  Modifies product information, pricing, description, or images.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/vendor/products/:productId`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Product updated successfully.",
+    "data": { ... }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

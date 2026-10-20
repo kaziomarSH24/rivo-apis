@@ -1,0 +1,54 @@
+info:
+  name: Get Product Details
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/vendor/products/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+docs: |-
+  # Vendor View Product Details
+
+  Fetches complete merchant view of product with variant stock counts, sales numbers, and configurations.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/vendor/products/:productId`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `productId` | integer | Yes | ID of the product |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Product details retrieved.",
+    "data": {
+      "id": 1,
+      "name": "Royal Canin Medium Adult Dry Dog Food",
+      "stock": 45,
+      "variants": [...]
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

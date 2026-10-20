@@ -1,4 +1,4 @@
-﻿info:
+info:
   name: Login
   type: http
   seq: 3
@@ -14,17 +14,21 @@ http:
     data:
       - name: email
         type: text
-        value: "kaziomar@yopmail.com"
-        description: "User registered email"
+        value: sarah.mitchell@yopmail.com
+        description: Customer or Vendor email (e.g. sarah.mitchell@yopmail.com for vendor, kaziomar@yopmail.com for pet parent)
+        disabled: true
       - name: password
         type: text
         value: "11111111"
-        description: "Account password"
+        description: "Account password (Default: 11111111)"
       - name: fcm_token
         type: text
-        value: "your_device_fcm_token_here"
-        description: "Optional Firebase device token for push notifications"
+        value: your_device_fcm_token_here
+        description: Optional Firebase device token for push notifications
         disabled: true
+      - name: email
+        type: text
+        value: kaziomar@yopmail.com
   auth: inherit
 
 runtime:
@@ -39,19 +43,52 @@ runtime:
             if (jsonData && jsonData.data && jsonData.data.access_token) {
                 const token = jsonData.data.access_token;
                 bru.setVar("userToken", token);
-                console.log("Token saved to collection variable 'userToken'");
+                console.log("Token saved to 'userToken'");
+
+                // If user is a vendor, automatically set vendorToken
+                const user = jsonData.data.user;
+                if (user && user.roles && user.roles.some(r => r.name === 'vendor')) {
+                    bru.setVar("vendorToken", token);
+                    console.log("Vendor detected! Token saved to 'vendorToken'");
+                }
             }
         } catch (e) {
             console.error("Script error:", e);
         }
 
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
 docs: |-
-  # User Login API
+  # Unified Login API (Customer & Vendor)
 
-  Authenticates the user with email and password, issuing a Bearer API token.
+  Authenticates both **Pet Owners (Customers)** and **Store Owners (Vendors)** using their email/phone and password, returning a Sanctum Bearer API token.
 
-  ## Figma Screen
-  - **Screen:** Login / Sign In Screen
+  ## Figma Screens
+  - **Pet Parent App:** Sign In / Login Screen
+  - **Vendor Portal / App:** Merchant Sign In Screen
+
+  ---
+
+  ## Unified Authentication Workflow
+
+  The authentication endpoint is **100% unified**. Both regular pet parents and merchant store vendors use this exact same endpoint:
+  ```
+  POST /api/v1/auth/login
+  ```
+
+  ### How Frontend Identifies User Type & Redirects:
+  Upon successful login, inspect the `data.user.roles` array in the JSON response:
+  1. **Customer / Pet Parent (`roles` contains `user`):**
+     - Navigate to consumer home feed (`GET /api/v1/marketplace/home` or Pet Profile).
+  2. **Merchant / Store Owner (`roles` contains `vendor`):**
+     - Check `data.user.store`:
+       - If `data.user.store == null`: The merchant has not completed store onboarding ➡️ Navigate to **Store Onboarding Screen** (`POST /api/v1/vendor/store`).
+       - If `data.user.store != null`: Store is already onboarded ➡️ Navigate directly to **Vendor Dashboard** (`GET /api/v1/vendor/dashboard`).
 
   ---
 
@@ -60,40 +97,90 @@ docs: |-
   - **URL:** `{{base_url}}/v1/auth/login`
   - **Authentication:** None (Public)
 
-  ### Request Body (multipart/form-data or JSON)
+  ### Request Body (`multipart/form-data` or `application/json`)
   | Field | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `email` | string | Yes | Account email address |
+  | `email` | string | Required* | Registered account email (*required if `phone_number` omitted) |
+  | `phone_number` | string | Required* | Registered phone number (*required if `email` omitted) |
   | `password` | string | Yes | Minimum 8 characters |
-  | `fcm_token` | string | No | Optional Firebase Cloud Messaging token |
-
-  #### Default Test Credentials:
-  - **Main User:** `kaziomar@yopmail.com` / `11111111` (Pets: Pedro, Milo)
-  - **Partner User:** `sarah@yopmail.com` / `11111111` (Pet: Luna)
+  | `fcm_token` | string | No | Optional Firebase Cloud Messaging token for push notifications |
 
   ---
 
-  ## Response (200 OK)
+  ## Pre-Seeded Test Credentials
+
+  | User Role | Email | Password | Details |
+  | :--- | :--- | :--- | :--- |
+  | **Customer (Pet Parent)** | `kaziomar@yopmail.com` | `11111111` | Has active pet Pedro (Golden Retriever), default address in Austin TX, active cart, and order history. |
+  | **Vendor (Store Owner)** | `sarah.mitchell@yopmail.com` | `11111111` | Owner of **Pawsome Pet Shop**, has active products catalog, incoming orders, and verified KYC docs. |
+
+  ---
+
+  ## Response Structure (200 OK)
+
+  ### Vendor Login Example Response:
   ```json
   {
     "ok": true,
     "message": "Login successful",
     "data": {
-      "access_token": "1|xyz...",
+      "access_token": "4|uupinx1i4THVZ...",
       "token_type": "Bearer",
       "user": {
-        "id": 1,
-        "name": "Kazi Omar",
-        "email": "kaziomar@yopmail.com",
-        "avatar": null
+        "id": 8,
+        "name": "Sarah Mitchell",
+        "email": "sarah.mitchell@yopmail.com",
+        "phone_number": "+15125550199",
+        "email_verified_at": "2026-10-20T06:11:49.000000Z",
+        "roles": [
+          {
+            "id": 4,
+            "name": "vendor",
+            "guard_name": "web"
+          }
+        ],
+        "store": {
+          "id": 1,
+          "name": "Pawsome Pet Shop",
+          "slug": "pawsome-pet-shop-austin",
+          "type": "pet_shop",
+          "city": "Austin",
+          "rating": 4.9,
+          "is_live": true,
+          "is_verified": true
+        }
       }
     }
   }
   ```
 
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true
+  ### Customer Login Example Response:
+  ```json
+  {
+    "ok": true,
+    "message": "Login successful",
+    "data": {
+      "access_token": "5|98y712hdkjsa...",
+      "token_type": "Bearer",
+      "user": {
+        "id": 1,
+        "name": "Omar Faruk",
+        "email": "kaziomar@yopmail.com",
+        "roles": [
+          {
+            "id": 2,
+            "name": "user",
+            "guard_name": "web"
+          }
+        ],
+        "store": null
+      }
+    }
+  }
+  ```
+
+  ---
+
+  ## Error Responses
+  - `401 Unauthorized`: `"Invalid credentials."` or `"Please verify your email first."`
+  - `422 Unprocessable Content`: Validation errors on required fields.

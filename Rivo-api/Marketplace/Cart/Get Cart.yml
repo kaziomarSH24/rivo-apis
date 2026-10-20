@@ -1,0 +1,82 @@
+info:
+  name: Get Cart
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/marketplace/cart"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Get Active Cart Screen
+
+  Fetches user's active shopping cart matching the **Figma Cart Screen**:
+  - Single store validation
+  - Cart item details, selected flavors/sizes, unit prices, line item totals
+  - Subtotal calculation
+  - Delivery Fee (Free with Rivo Pro badge)
+  - Tax & discount calculations
+  - Order summary grand total
+
+  ## Figma Screen
+  - **Screen:** Shopping Cart Screen
+  - **UI Elements:** Cart item cards with +/- stepper buttons, Promo code input, Order Summary breakdown card, "Proceed to Checkout" floating button.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/marketplace/cart`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Cart retrieved successfully.",
+    "data": {
+      "store": {
+        "id": 1,
+        "name": "Pawsome Pet Shop",
+        "delivery_fee": 0,
+        "delivery_time_text": "15-20 min"
+      },
+      "items": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "name": "Royal Canin Medium Adult Dry Dog Food",
+          "flavor": "Chicken & Rice",
+          "size": "30 lbs",
+          "unit_price": 49.99,
+          "quantity": 1,
+          "total_price": 49.99,
+          "image": "https://..."
+        }
+      ],
+      "summary": {
+        "subtotal": 49.99,
+        "delivery_fee": 0,
+        "tax": 4.12,
+        "discount": 0,
+        "total": 54.11,
+        "is_pro_member": true
+      }
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

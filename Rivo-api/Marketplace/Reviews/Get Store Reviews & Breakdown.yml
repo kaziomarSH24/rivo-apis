@@ -1,0 +1,63 @@
+info:
+  name: Get Store Reviews & Breakdown
+  type: http
+  seq: 3
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/marketplace/stores/1/reviews"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Store Reviews & 5-Star Breakdown
+
+  Fetches merchant customer feedback, overall rating, and 5-star bar percentages.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/marketplace/stores/:storeId/reviews`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `storeId` | integer | Yes | ID of the store |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Store reviews retrieved successfully.",
+    "data": {
+      "average_rating": 4.9,
+      "total_reviews": 128,
+      "breakdown": {
+        "5_star": 90,
+        "4_star": 8,
+        "3_star": 2,
+        "2_star": 0,
+        "1_star": 0
+      },
+      "reviews": {
+        "current_page": 1,
+        "data": [...]
+      }
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

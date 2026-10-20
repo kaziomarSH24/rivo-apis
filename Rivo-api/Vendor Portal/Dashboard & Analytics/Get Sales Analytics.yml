@@ -1,0 +1,70 @@
+info:
+  name: Get Sales Analytics
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/vendor/analytics"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: period
+      value: week
+      type: query
+      description: "Reporting time range: day, week, month, year"
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+docs: |-
+  # Vendor Sales Analytics & Reports
+
+  Fetches detailed sales statistics, order completion volumes, and top-selling products for the merchant.
+
+  ## Figma Screen
+  - **Screen:** Business Analytics & Sales Performance Screen
+  - **UI Elements:** Period selector pills (Today, Week, Month, Year), Total Revenue metric, Total Orders metric, Best Sellers ranking table.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/vendor/analytics`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `period` | string | No | `day`, `week`, `month`, `year` (default: `week`) |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Vendor analytics retrieved successfully.",
+    "data": {
+      "period": "week",
+      "total_revenue": 49.11,
+      "total_orders": 1,
+      "best_sellers": [
+        {
+          "id": 1,
+          "name": "Royal Canin Medium Adult Dry Dog Food",
+          "sales_count": 210,
+          "rating": 4.8
+        }
+      ]
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

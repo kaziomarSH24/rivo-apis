@@ -20,6 +20,10 @@ request:
       value: http://10.10.28.53:80/api
     - name: userSarah
       value: 2|QbixCILAPjkkcXfu6X2yC5Yhet0FOp9639It3sj9c1b72dae
+    - name: live_url
+      value: https://rivo.kaziomar.dpdns.org/api
+    - name: vendor
+      value: 19|LyqoKqrQj8eGgqYPNzqUxTmsHdaarcgFlZf9U9tDf035a829
 bundled: false
 extensions:
   bruno:

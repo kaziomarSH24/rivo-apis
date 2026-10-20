@@ -1,0 +1,52 @@
+info:
+  name: Set Default Address
+  type: http
+  seq: 4
+
+http:
+  method: PATCH
+  url: "{{base_url}}/v1/marketplace/addresses/1/default"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Set Default Delivery Location
+
+  Sets the specified address as the user's primary default address used in checkout and home screen ETA.
+
+  ---
+
+  ## Request Details
+  - **Method:** `PATCH`
+  - **URL:** `{{base_url}}/v1/marketplace/addresses/:addressId/default`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `addressId` | integer | Yes | ID of the address to set as default |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Default delivery address updated.",
+    "data": {
+      "id": 1,
+      "is_default": true
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

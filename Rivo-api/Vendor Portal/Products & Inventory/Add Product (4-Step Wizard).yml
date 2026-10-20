@@ -1,0 +1,94 @@
+info:
+  name: Add Product (4-Step Wizard)
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/vendor/products"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "name": "Organic Grain-Free Salmon Dog Food",
+        "category_id": 1,
+        "brand_id": 1,
+        "description": "Premium wild-caught salmon rich in omega-3 and omega-6 fatty acids for healthy skin and coat.",
+        "pet_type": "dog",
+        "price": 58.00,
+        "discount_price": 52.00,
+        "stock": 35,
+        "low_stock_threshold": 5,
+        "is_active": true,
+        "is_online": true,
+        "is_instore": true,
+        "variants": [
+          {
+            "flavor": "Salmon & Sweet Potato",
+            "size_lbs": "25 lbs",
+            "price": 58.00,
+            "stock": 25
+          },
+          {
+            "flavor": "Salmon & Sweet Potato",
+            "size_lbs": "12 lbs",
+            "price": 32.00,
+            "stock": 10
+          }
+        ]
+      }
+
+docs: |-
+  # 4-Step Product Creation Wizard
+
+  Publishes a new product to the merchant's store catalog:
+  - **Step 1: General Info:** Name, category, brand, pet type (Dog, Cat, Both), description
+  - **Step 2: Pricing & Inventory:** Regular price, discount price, initial stock, low stock threshold
+  - **Step 3: Variants:** Flavors, sizes/weights, variant-specific prices and stocks
+  - **Step 4: Visibility & Channels:** Online delivery, In-store pickup, active status
+
+  ## Figma Screen
+  - **Screen:** 4-Step Add Product Wizard Screen
+  - **UI Elements:** Step progress bar, Input fields, Variant tag builder, Image dropzone, Publish button.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/vendor/products`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ---
+
+  ## Response Structure (201 Created)
+  ```json
+  {
+    "ok": true,
+    "message": "Product published successfully.",
+    "data": {
+      "id": 7,
+      "store_id": 1,
+      "name": "Organic Grain-Free Salmon Dog Food",
+      "slug": "organic-grain-free-salmon-dog-food-a1b2c",
+      "price": 58,
+      "stock": 35,
+      "is_active": true,
+      "variants": [...]
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

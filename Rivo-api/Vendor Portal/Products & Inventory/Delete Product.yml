@@ -1,0 +1,44 @@
+info:
+  name: Delete Product
+  type: http
+  seq: 7
+
+http:
+  method: DELETE
+  url: "{{base_url}}/v1/vendor/products/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+docs: |-
+  # Soft Delete Product
+
+  Removes a product from the merchant's catalog.
+
+  ---
+
+  ## Request Details
+  - **Method:** `DELETE`
+  - **URL:** `{{base_url}}/v1/vendor/products/:productId`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Product deleted successfully.",
+    "data": []
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,0 +1,98 @@
+info:
+  name: Get Store Products Catalog
+  type: http
+  seq: 1
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/vendor/products"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: filter[active]
+      value: "1"
+      type: query
+      description: "Filter active items with positive stock"
+      disabled: true
+    - name: filter[out_of_stock]
+      value: "1"
+      type: query
+      description: "Filter zero-stock items"
+      disabled: true
+    - name: filter[inactive]
+      value: "1"
+      type: query
+      description: "Filter disabled/hidden items"
+      disabled: true
+    - name: filter[search]
+      value: Royal
+      type: query
+      description: "Search product name"
+      disabled: true
+    - name: sort
+      value: -sales_count
+      type: query
+      description: "Sort: -sales_count, -stock, price, -created_at"
+      disabled: true
+    - name: per_page
+      value: "15"
+      type: query
+      description: "Items per page"
+      disabled: true
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+docs: |-
+  # Store Products & Inventory Table
+
+  Fetches the merchant's full catalog powered by `BaseService` and Spatie QueryBuilder:
+  - Supports quick filtering: `active`, `out_of_stock`, `inactive`
+  - Name search
+  - Sorting by stock, sales, or date
+
+  ## Figma Screen
+  - **Screen:** Merchant Catalog / Inventory Management Screen
+  - **UI Elements:** Inventory table, stock stepper inputs, active toggle switches, "Add New Product" CTA button.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/vendor/products`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Catalog retrieved successfully.",
+    "data": {
+      "current_page": 1,
+      "data": [
+        {
+          "id": 1,
+          "name": "Royal Canin Medium Adult Dry Dog Food",
+          "price": 54.99,
+          "discount_price": 49.99,
+          "stock": 45,
+          "is_active": true,
+          "category": { "name": "Food" },
+          "brand": { "name": "Royal Canin" },
+          "variants": [...]
+        }
+      ],
+      "total": 3
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

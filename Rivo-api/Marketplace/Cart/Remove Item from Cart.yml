@@ -1,0 +1,52 @@
+info:
+  name: Remove Item from Cart
+  type: http
+  seq: 4
+
+http:
+  method: DELETE
+  url: "{{base_url}}/v1/marketplace/cart/items/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Remove Item from Cart
+
+  Removes a single item from the customer's cart. If all items are removed, the cart store attachment is reset.
+
+  ---
+
+  ## Request Details
+  - **Method:** `DELETE`
+  - **URL:** `{{base_url}}/v1/marketplace/cart/items/:itemId`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `itemId` | integer | Yes | ID of the cart item |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Item removed from cart.",
+    "data": {
+      "items": [],
+      "summary": { ... }
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,0 +1,99 @@
+info:
+  name: Process Checkout
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/marketplace/checkout"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "address_id": 1,
+        "delivery_type": "express",
+        "payment_method": "mastercard",
+        "notes": "Please leave at the door with doorman."
+      }
+
+docs: |-
+  # Customer Checkout (Place Order)
+
+  Executes order placement from the customer's active cart:
+  - Generates unique order number (e.g. `RIV-78421`)
+  - Decrements product and variant inventory stock counts
+  - Increments product sales counter
+  - Calculates Rivo Pro subscriber $0 delivery fee benefit
+  - Automatically empties user's active shopping cart
+  - Creates order items historical snapshot
+
+  ## Figma Screen
+  - **Screen:** Checkout Screen / Order Confirmation Screen
+  - **UI Elements:** Delivery address selector, Delivery speed option (Express 15-20 min), Payment method selector, Total receipt card, "Place Order" button.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/marketplace/checkout`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Request Body Fields
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `address_id` | integer | No | Saved delivery address ID (required if `delivery_address` is omitted) |
+  | `delivery_address` | object | No | Custom address object if not using a saved address ID |
+  | `delivery_type` | string | No | `express` (15-20 min), `standard`, or `pickup` (default: `express`) |
+  | `payment_method` | string | No | `mastercard`, `visa`, `apple_pay`, `cash_on_delivery` |
+  | `notes` | string | No | Special delivery instructions for courier |
+
+  ---
+
+  ## Response Structure (201 Created)
+  ```json
+  {
+    "ok": true,
+    "message": "Order placed successfully.",
+    "data": {
+      "id": 1,
+      "order_number": "RIV-78421",
+      "status": "new",
+      "delivery_type": "express",
+      "estimated_delivery_time": "15-20 min",
+      "subtotal": 49.99,
+      "delivery_fee": 0,
+      "tax": 4.12,
+      "discount": 5,
+      "total": 49.11,
+      "payment_method": "mastercard",
+      "payment_status": "paid",
+      "placed_at": "2026-10-20T06:29:13.000000Z",
+      "items": [
+        {
+          "id": 1,
+          "product_name": "Royal Canin Medium Adult Dry Dog Food",
+          "variant_flavor": "Chicken & Rice",
+          "variant_size": "30 lbs",
+          "price": 49.99,
+          "quantity": 1,
+          "total": 49.99
+        }
+      ]
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

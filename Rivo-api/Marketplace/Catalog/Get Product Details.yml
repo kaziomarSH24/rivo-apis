@@ -1,0 +1,107 @@
+info:
+  name: Get Product Details
+  type: http
+  seq: 7
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/marketplace/products/1"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Product Details Screen
+
+  Fetches full product details matching the **Figma Product Details Screen**:
+  - Image gallery carousel
+  - Price & promotional discount
+  - Flavor selector pills (e.g. Chicken & Rice, Salmon)
+  - Size / weight selector pills (e.g. 17 lbs, 30 lbs)
+  - In-stock availability badge
+  - Store info & delivery estimate snippet
+  - Overall star rating & 5-star distribution percentage breakdown
+
+  ## Figma Screen
+  - **Screen:** Product Details / Single Product View
+  - **UI Elements:** Image carousel, Add to Cart floating CTA button, Variant chips (Flavor/Size), Reviews summary card.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/marketplace/products/:productId`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `productId` | integer | Yes | ID of the product (e.g. `1`) |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Product details retrieved successfully.",
+    "data": {
+      "product": {
+        "id": 1,
+        "name": "Royal Canin Medium Adult Dry Dog Food",
+        "description": "Formulated with high-quality proteins...",
+        "pet_type": "dog",
+        "price": 54.99,
+        "discount_price": 49.99,
+        "stock": 45,
+        "images": [
+          "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800"
+        ],
+        "rating": 4.8,
+        "reviews_count": 84,
+        "variants": [
+          {
+            "id": 1,
+            "product_id": 1,
+            "flavor": "Chicken & Rice",
+            "size_lbs": "30 lbs",
+            "price": 54.99,
+            "stock": 30
+          }
+        ],
+        "brand": {
+          "id": 1,
+          "name": "Royal Canin"
+        },
+        "store": {
+          "id": 1,
+          "name": "Pawsome Pet Shop",
+          "rating": 4.9,
+          "delivery_time_text": "15-20 min",
+          "delivery_fee": 0
+        }
+      },
+      "reviews_summary": {
+        "average_rating": 4.8,
+        "total_reviews": 84,
+        "breakdown": {
+          "5_star": 85,
+          "4_star": 10,
+          "3_star": 5,
+          "2_star": 0,
+          "1_star": 0
+        }
+      }
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,0 +1,79 @@
+info:
+  name: Get Product Reviews & Breakdown
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/marketplace/products/1/reviews"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Product Reviews & 5-Star Breakdown
+
+  Fetches the complete review list and rating distribution for a product matching the **Figma Reviews Screen**:
+  - Overall average rating (e.g. `4.8`)
+  - Total review count
+  - 5-star distribution percentage bars (5★, 4★, 3★, 2★, 1★)
+  - Paginated user reviews with timestamps, star counts, comments, and buyer badges.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/marketplace/products/:productId/reviews`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `productId` | integer | Yes | ID of the product |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Product reviews retrieved successfully.",
+    "data": {
+      "average_rating": 4.8,
+      "total_reviews": 84,
+      "breakdown": {
+        "5_star": 85,
+        "4_star": 10,
+        "3_star": 5,
+        "2_star": 0,
+        "1_star": 0
+      },
+      "reviews": {
+        "current_page": 1,
+        "data": [
+          {
+            "id": 1,
+            "rating": 5,
+            "comment": "Pedro absolutely loves this Royal Canin formula!",
+            "is_anonymous": false,
+            "user": {
+              "id": 1,
+              "name": "Omar Faruk",
+              "avatar": null
+            }
+          }
+        ]
+      }
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

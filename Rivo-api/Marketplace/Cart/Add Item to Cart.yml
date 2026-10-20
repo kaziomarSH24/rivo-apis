@@ -1,0 +1,68 @@
+info:
+  name: Add Item to Cart
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/marketplace/cart/items"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "product_id": 1,
+        "variant_id": 1,
+        "quantity": 1
+      }
+
+docs: |-
+  # Add Item to Cart
+
+  Adds a product or specific variant to the customer's cart.
+
+  ## Single-Store Rule
+  - If the user already has items in their cart from another store, the API returns a `422 Unprocessable Content` response informing the user to clear their cart or finish their existing order first.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/marketplace/cart/items`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Request Body Fields
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `product_id` | integer | Yes | ID of the product |
+  | `variant_id` | integer | No | ID of the specific flavor/size variant |
+  | `quantity` | integer | No | Quantity to add (default: 1) |
+
+  ---
+
+  ## Response Structure (201 Created)
+  ```json
+  {
+    "ok": true,
+    "message": "Item added to cart.",
+    "data": {
+      "store": { ... },
+      "items": [ ... ],
+      "summary": { ... }
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

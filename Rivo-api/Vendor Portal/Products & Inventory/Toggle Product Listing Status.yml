@@ -1,0 +1,51 @@
+info:
+  name: Toggle Product Listing Status
+  type: http
+  seq: 6
+
+http:
+  method: PATCH
+  url: "{{base_url}}/v1/vendor/products/1/toggle-active"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+docs: |-
+  # Toggle Listing Visibility
+
+  Toggles active/hidden status of product listing without deleting the item.
+
+  ## Figma Screen
+  - **Screen:** Merchant Inventory Table
+  - **UI Element:** Green active toggle switch in the row.
+
+  ---
+
+  ## Request Details
+  - **Method:** `PATCH`
+  - **URL:** `{{base_url}}/v1/vendor/products/:productId/toggle-active`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Listing status updated.",
+    "data": {
+      "id": 1,
+      "is_active": false
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

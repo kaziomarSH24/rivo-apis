@@ -1,0 +1,68 @@
+info:
+  name: Reject Order
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/vendor/orders/1/reject"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "reason": "Item temporarily out of stock."
+      }
+
+docs: |-
+  # Reject Order
+
+  Merchant declines an incoming order:
+  - Restores deducted inventory stock
+  - Decrements sales counts
+  - Transitions status to `cancelled` with rejection reason
+
+  ## Figma Screen
+  - **Screen:** Incoming Order Modal
+  - **UI Element:** Red "Decline" button with reason prompt.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/vendor/orders/:orderId/reject`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ### Request Body Fields
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `reason` | string | No | Reason for declining the order |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Order rejected and inventory restored.",
+    "data": {
+      "id": 1,
+      "status": "cancelled",
+      "rejection_reason": "Item temporarily out of stock."
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

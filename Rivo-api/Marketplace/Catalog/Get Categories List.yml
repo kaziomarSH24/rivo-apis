@@ -1,0 +1,59 @@
+info:
+  name: Get Categories List
+  type: http
+  seq: 4
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/marketplace/categories"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Product Categories List
+
+  Returns all active product categories with icons, subcategories, and active product counts.
+
+  ## Figma Screen
+  - **Screen:** Category Grid / Navigation Drawer
+  - **Categories:** Food, Treats, Toys, Beds, Grooming, Health, Accessories.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/marketplace/categories`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Product categories retrieved successfully.",
+    "data": [
+      {
+        "id": 1,
+        "name": "Food",
+        "slug": "food",
+        "icon": "food.png",
+        "order_column": 1,
+        "is_active": true,
+        "products_count": 2,
+        "children": []
+      }
+    ]
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

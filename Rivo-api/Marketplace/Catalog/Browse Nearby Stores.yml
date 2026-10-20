@@ -1,0 +1,96 @@
+info:
+  name: Browse Nearby Stores
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/marketplace/stores"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: filter[type]
+      value: pet_shop
+      type: query
+      description: "Filter by store type: pet_shop, veterinary, grooming, pharmacy"
+      disabled: true
+    - name: filter[city]
+      value: Austin
+      type: query
+      description: "Filter stores in specific city"
+      disabled: true
+    - name: sort
+      value: -rating
+      type: query
+      description: "Sort order: -rating, -reviews_count, name, delivery_fee"
+      disabled: true
+    - name: per_page
+      value: "15"
+      type: query
+      description: "Number of stores per page"
+      disabled: true
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Browse Nearby Stores List
+
+  Lists all active local pet stores, veterinary clinics, grooming salons, and pet pharmacies.
+
+  ## Figma Screen
+  - **Screen:** Stores List / Explore Stores Near You
+  - **UI Elements:** Store logo, store name, distance/delivery time badge (e.g. `15 min`), star rating, review count, and store category tags.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/marketplace/stores`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `filter[type]` | string | No | `pet_shop`, `veterinary`, `grooming`, `pharmacy` |
+  | `filter[city]` | string | No | City name (e.g. `Austin`) |
+  | `filter[name]` | string | No | Partial store name match |
+  | `sort` | string | No | `rating`, `-rating`, `name`, `delivery_fee` |
+  | `per_page` | integer | No | Items per page (default: 15) |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Stores list retrieved successfully.",
+    "data": {
+      "current_page": 1,
+      "data": [
+        {
+          "id": 1,
+          "name": "Pawsome Pet Shop",
+          "slug": "pawsome-pet-shop-austin",
+          "type": "pet_shop",
+          "city": "Austin",
+          "rating": 4.9,
+          "reviews_count": 128,
+          "delivery_fee": 0,
+          "delivery_time_text": "15-20 min",
+          "is_verified": true,
+          "is_live": true
+        }
+      ],
+      "total": 3
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

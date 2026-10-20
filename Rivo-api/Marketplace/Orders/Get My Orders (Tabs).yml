@@ -1,0 +1,92 @@
+info:
+  name: Get My Orders (Tabs)
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/marketplace/orders"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: filter[status]
+      value: ongoing
+      type: query
+      description: "Order status filter: ongoing, completed, cancelled"
+      disabled: true
+    - name: sort
+      value: -created_at
+      type: query
+      description: "Sort: -created_at, -total"
+      disabled: true
+    - name: per_page
+      value: "15"
+      type: query
+      description: "Number of orders per page"
+      disabled: true
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # My Orders List (Tabs Support)
+
+  Fetches customer order history matching the **Figma My Orders Screen**:
+  - **All Orders Tab:** Returns full list of orders
+  - **Ongoing Tab (`filter[status]=ongoing`):** In-progress orders (`new`, `preparing`, `ready_for_pickup`, `out_for_delivery`)
+  - **Completed Tab (`filter[status]=completed`):** Delivered orders (`delivered`)
+  - **Cancelled Tab (`filter[status]=cancelled`):** Cancelled or rejected orders
+
+  ## Figma Screen
+  - **Screen:** My Orders (Tabbed View: All, Ongoing, Completed, Cancelled)
+  - **UI Elements:** Tab pills, Order cards showing Store name, order number, item thumbnails, current status pill (e.g. `Preparing`), ETA badge, total amount, and "Track Order" button.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/marketplace/orders`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `filter[status]` | string | No | `ongoing`, `completed`, `cancelled`, or specific status (`preparing`, `delivered`) |
+  | `sort` | string | No | `-created_at`, `total`, `-total` |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Orders retrieved successfully.",
+    "data": {
+      "current_page": 1,
+      "data": [
+        {
+          "id": 1,
+          "order_number": "RIV-78421",
+          "status": "preparing",
+          "delivery_type": "express",
+          "estimated_delivery_time": "15-20 min",
+          "total": 49.11,
+          "store": {
+            "id": 1,
+            "name": "Pawsome Pet Shop"
+          },
+          "items": [...]
+        }
+      ],
+      "total": 1
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,0 +1,75 @@
+info:
+  name: Cancel Order
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/marketplace/orders/1/cancel"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "reason": "Ordered wrong product size by mistake."
+      }
+
+docs: |-
+  # Customer Cancel Order
+
+  Allows a customer to cancel an ongoing order if it is still in `new` or `preparing` stage:
+  - Validates ownership
+  - Re-credits product stock and decrements sales count
+  - Marks status as `cancelled` with customer-specified reason
+
+  ## Figma Screen
+  - **Screen:** Order Tracking Screen / Order Details
+  - **UI Element:** "Cancel Order" outline button in bottom sheet with cancellation reason selector.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/marketplace/orders/:orderId/cancel`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `orderId` | integer | Yes | ID of the order to cancel |
+
+  ### Request Body Fields
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `reason` | string | No | Reason for cancellation (e.g. `Ordered wrong item`) |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Order cancelled successfully and inventory restored.",
+    "data": {
+      "id": 1,
+      "order_number": "RIV-78421",
+      "status": "cancelled",
+      "rejection_reason": "Ordered wrong product size by mistake.",
+      "cancelled_at": "2026-10-20T06:45:00.000000Z"
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

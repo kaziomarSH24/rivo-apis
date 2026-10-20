@@ -1,0 +1,54 @@
+info:
+  name: Accept Order
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/vendor/orders/1/accept"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+docs: |-
+  # Accept Incoming Order
+
+  Merchant accepts incoming order:
+  - Validates order belongs to store
+  - Transitions order status to `preparing`
+  - Notifies customer order is being prepared
+
+  ## Figma Screen
+  - **Screen:** Incoming Order Modal / Order Queue Card
+  - **UI Element:** Green "Accept Order" button with sound/push notification.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/vendor/orders/:orderId/accept`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Order accepted and moved to preparing.",
+    "data": {
+      "id": 1,
+      "status": "preparing"
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

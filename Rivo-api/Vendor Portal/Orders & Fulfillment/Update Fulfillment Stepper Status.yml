@@ -1,0 +1,68 @@
+info:
+  name: Update Fulfillment Stepper Status
+  type: http
+  seq: 5
+
+http:
+  method: PATCH
+  url: "{{base_url}}/v1/vendor/orders/1/status"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "status": "ready_for_pickup"
+      }
+
+docs: |-
+  # Fulfillment Stepper Status Transition
+
+  Advances order through fulfillment stages:
+  - `preparing` -> Prep in progress
+  - `ready_for_pickup` -> Packed and waiting for courier/pickup
+  - `out_for_delivery` -> Courier is en route
+  - `delivered` -> Successfully handed over to customer
+
+  ## Figma Screen
+  - **Screen:** Order Fulfillment Stepper
+  - **UI Element:** Step transition buttons: "Mark as Ready", "Hand over to Driver", "Mark as Delivered".
+
+  ---
+
+  ## Request Details
+  - **Method:** `PATCH`
+  - **URL:** `{{base_url}}/v1/vendor/orders/:orderId/status`
+  - **Authentication:** `Bearer {{vendorToken}}`
+
+  ### Request Body Fields
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `status` | string | Yes | `preparing`, `ready_for_pickup`, `out_for_delivery`, `delivered`, `cancelled` |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Order fulfillment status updated successfully.",
+    "data": {
+      "id": 1,
+      "status": "ready_for_pickup"
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
