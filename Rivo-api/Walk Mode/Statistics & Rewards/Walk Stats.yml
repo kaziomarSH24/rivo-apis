@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Walk Stats (Goals & Streak)
   type: http
   seq: 8
@@ -12,6 +12,50 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Walk Goals & Streak Stats API
+
+  Retrieves active streak counters, total XP earned, current level, and daily distance targets for a pet.
+
+  ## Figma Screen
+  - **Screen:** Walk Mode Dashboard (Top Streak & Level Widget)
+  - **Elements:**
+    - Streak badge: e.g. "7 Days" (🔥 Fire icon)
+    - Level progress: e.g. "Level 2 - Trail Runner"
+    - Daily goal: e.g. "3.5 km / day"
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/pets/:petId/walk-stats`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Pet ID (e.g. `1` for Pedro) |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Stats retrieved",
+    "data": {
+      "id": 1,
+      "pet_id": 1,
+      "daily_distance_goal_km": "3.50",
+      "total_xp": 1450,
+      "current_level": 2,
+      "current_streak_days": 7,
+      "longest_streak_days": 12,
+      "last_walk_date": "2026-10-20T00:00:00.000000Z"
+    }
+  }
+  ```
 
 settings:
   encodeUrl: true

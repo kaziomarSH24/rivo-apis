@@ -1,0 +1,95 @@
+﻿info:
+  name: Bookmark Post
+  type: http
+  seq: 9
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/social/posts/1/bookmark"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Bookmark Post API (Toggle Save Post)
+
+  Toggles saving or unsaving a post for the authenticated user.
+
+  ## Figma Screen
+  - **Screen:** Post Details / Feed Card / "Saved Posts"
+  - **UI Elements:**
+    - Bookmark icon button on post card / post details
+    - Saved post bookmark toggle in post options
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/social/posts/:postId/bookmark`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `postId` | integer | Yes | ID of the post to save or unsave (e.g., `1`) |
+
+  ### Request Headers
+  | Header | Value | Description |
+  | :--- | :--- | :--- |
+  | `Accept` | `application/json` | Expect JSON response |
+  | `Authorization` | `Bearer <token>` | Bearer authentication token |
+
+  ### Request Body
+  - None required. Calling this endpoint toggles the bookmark on or off.
+
+  ---
+
+  ## Response Structure
+
+  ### Bookmark Added (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Post saved successfully",
+    "data": {
+      "post_id": 1,
+      "is_bookmarked": true
+    }
+  }
+  ```
+
+  ### Bookmark Removed (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Post removed from saved posts",
+    "data": {
+      "post_id": 1,
+      "is_bookmarked": false
+    }
+  }
+  ```
+
+  ### Response Fields Explanation
+  | Field | Type | Description |
+  | :--- | :--- | :--- |
+  | `ok` | boolean | Success status (`true`) |
+  | `message` | string | Feedback message |
+  | `data.post_id` | integer | Target post ID |
+  | `data.is_bookmarked` | boolean | New bookmark status (`true` = bookmarked, `false` = removed) |
+
+  ---
+
+  ## Error Responses
+  - `401 Unauthorized`: Token is missing or invalid.
+  - `404 Not Found`: Post ID does not exist.
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

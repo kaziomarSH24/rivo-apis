@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Respond Friend Request
   type: http
   seq: 6
@@ -9,20 +9,66 @@ http:
   headers:
     - name: Accept
       value: application/json
+    - name: Content-Type
+      value: application/json
   body:
-    type: multipart-form
-    data:
-      - name: requester_pet_id
-        type: text
-        value: "6"
-        description: The ID of the pet who sent the request
-      - name: action
-        type: text
-        value: accepted
-        description: accepted | declined
+    type: json
+    data: |-
+      {
+        "requester_pet_id": 3,
+        "action": "accepted"
+      }
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Respond Friend Request API
+
+  Accepts or declines an incoming friend request from another pet.
+
+  ## Figma Screen
+  - **Screen:** Pending Requests / Notifications -> "Accept" (Confirm) or "Decline" (Delete)
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/social/request/respond/:petId`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Target pet receiving the request (e.g. `1`) |
+
+  ### Request Body (JSON)
+  ```json
+  {
+    "requester_pet_id": 3,
+    "action": "accepted"
+  }
+  ```
+
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `requester_pet_id` | integer | Yes | Pet ID who initiated the friend request |
+  | `action` | string | Yes | `"accepted"` or `"declined"` |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Friend request accepted",
+    "data": {
+      "status": "accepted",
+      "requester_pet_id": 3,
+      "connected_pet_id": 1
+    }
+  }
+  ```
 
 settings:
   encodeUrl: true

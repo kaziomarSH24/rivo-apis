@@ -1,0 +1,135 @@
+﻿info:
+  name: Save Profile Badges
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/pets/1/badges/display"
+  headers:
+    - name: Accept
+      value: application/json
+    - name: Content-Type
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "badge_ids": [
+          "walk_warrior"
+        ]
+      }
+
+docs: |-
+  # Save Profile Badges API
+
+  Saves up to 3 selected badges to display in the profile achievement slots.
+
+  ## Figma Screen
+  - **Screen:** Manage Badges -> "Save Profile Badges" button
+  - **Purpose:** Updates the 3 highlighted achievement slots shown on the Pet Social Profile.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/pets/:petId/badges/display`
+  - **Authentication:** `Bearer {{userToken}}` (Pet owner only)
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | ID of the pet (e.g., `1` for Pedro) |
+
+  ### Request Headers
+  | Header | Value | Description |
+  | :--- | :--- | :--- |
+  | `Accept` | `application/json` | Expect JSON response |
+  | `Content-Type` | `application/json` | Payload format |
+  | `Authorization` | `Bearer <token>` | User must own this pet |
+
+  ### Request Body (JSON)
+  ```json
+  {
+    "badge_ids": [
+      "walk_warrior",
+      "streak_master"
+    ]
+  }
+  ```
+
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `badge_ids` | `string[]` | Yes | Array of badge IDs (0 to 3 items). Only earned badges are saved. Pass `[]` to clear all slots. |
+
+  #### Available Badge IDs in Rivo:
+  - `walk_warrior`: Walked 50 km
+  - `streak_master`: 7-day walk streak
+  - `trail_runner`: Level 2 reached
+  - `training_star`: Completed 10 care tasks
+  - `care_hero`: Completed 5 care days
+  - `marathon_master`: Walked 100 km
+
+  ---
+
+  ## Response Structure
+
+  ### Success (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Profile badges updated successfully",
+    "data": {
+      "displayed_count": 2,
+      "max_slots": 3,
+      "slots": [
+        {
+          "id": "walk_warrior",
+          "title": "Walk Warrior",
+          "subtitle": "Walked 50 km",
+          "icon": "medal_bronze_paw",
+          "category": "walk"
+        },
+        {
+          "id": "streak_master",
+          "title": "Streak Master",
+          "subtitle": "7-day walk streak",
+          "icon": "medal_fire",
+          "category": "walk"
+        },
+        null
+      ]
+    }
+  }
+  ```
+
+  ### Response Fields Explanation
+  | Field | Type | Description |
+  | :--- | :--- | :--- |
+  | `ok` | boolean | Request status indicator |
+  | `message` | string | Feedback message |
+  | `data.displayed_count` | integer | Number of active badges selected (0 - 3) |
+  | `data.max_slots` | integer | Maximum slots allowed (always `3`) |
+  | `data.slots` | array | Exactly 3 elements. Each slot is a badge object or `null` if empty |
+  | `data.slots[].id` | string | Badge unique slug/id |
+  | `data.slots[].title` | string | Title shown on UI (e.g. "Walk Warrior") |
+  | `data.slots[].subtitle` | string | Milestone description (e.g. "Walked 50 km") |
+  | `data.slots[].icon` | string | Asset icon key for app UI |
+  | `data.slots[].category` | string | Category: `walk`, `care`, or `achievement` |
+
+  ---
+
+  ## Error Responses
+  - `401 Unauthorized`: Token is missing or invalid.
+  - `403 Forbidden`: Authenticated user does not own this pet.
+  - `422 Unprocessable Entity`: Validation failure (e.g., more than 3 badge IDs passed).
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

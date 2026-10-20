@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Get Posts
   type: http
   seq: 1
@@ -8,33 +8,94 @@ http:
   url: "{{base_url}}/v1/social/posts"
   params:
     - name: include
-      value: "user,pet,media,comments,likes,postable"
+      value: user,pet,media,comments,likes,postable
       type: query
       description: "Relations to include: user,pet,media,comments,likes,postable"
       disabled: true
     - name: filter[type]
-      value: "walk_summary"
+      value: walk_summary
       type: query
       description: "Filter by type: general,lost_pet,walk_summary,achievement,milestone,training"
       disabled: true
     - name: filter[pet_id]
       value: "1"
       type: query
-      description: "Filter by Pet ID from {{base_url}}/v1/pets"
+      description: Filter by Pet ID from {{base_url}}/v1/pets
       disabled: true
     - name: filter[user_id]
       value: "1"
       type: query
-      description: "Filter by User ID from {{base_url}}/v1/auth/profile"
+      description: Filter by User ID from {{base_url}}/v1/auth/profile
       disabled: true
     - name: sort
-      value: "-created_at"
+      value: -created_at
       type: query
-      description: "Sort by -created_at, likes_count, comments_count (Prefix with - for descending)"
+      description: Sort by -created_at, likes_count, comments_count (Prefix with - for descending)
       disabled: true
   auth:
     type: bearer
-    token: "{{pet15User}}"
+    token: "{{userSarah}}"
+
+docs: |-
+  # Get Posts API (Social Feed & Profile Posts)
+
+  Retrieves public posts for the community feed or filtered for a specific pet's profile.
+
+  ## Figma Screens
+  - **Screen 1:** Social Community Feed (all posts)
+  - **Screen 2:** Pet Profile -> Posts tab (filtered by `filter[pet_id]=1`)
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/social/posts`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `filter[pet_id]` | integer | No | Pass Pet ID to show only posts by that pet (Profile posts tab) |
+  | `filter[user_id]` | integer | No | Pass User ID to show posts by a specific user |
+  | `filter[type]` | string | No | Filter by type: `general`, `walk`, `achievement`, `milestone`, `training` |
+  | `sort` | string | No | Sort order, e.g. `-created_at` (newest first) |
+  | `page` | integer | No | Page number for pagination (default: 1) |
+
+  ---
+
+  ## Response Structure
+  ```json
+  {
+    "ok": true,
+    "message": "Posts retrieved successfully",
+    "data": {
+      "data": [
+        {
+          "id": 1,
+          "title": null,
+          "content": "Morning walk with Pedro! Explored the whole park trail today.",
+          "type": "walk",
+          "location": "Central Dog Park",
+          "likes_count": 5,
+          "is_liked": false,
+          "reactions": {
+            "bone": 2,
+            "fire": 1,
+            "paw": 2,
+            "heart": 0,
+            "clap": 0
+          },
+          "comments_count": 3,
+          "shares_count": 1,
+          "is_bookmarked": false,
+          "user": { "id": 1, "name": "Kazi Omar" },
+          "pet": { "id": 1, "name": "Pedro", "breed": "Golden Retriever" },
+          "media": []
+        }
+      ]
+    }
+  }
+  ```
 
 settings:
   encodeUrl: true

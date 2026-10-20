@@ -1,51 +1,103 @@
-info:
+﻿info:
   name: Update Post
   type: http
   seq: 4
 
 http:
   method: PUT
-  url: "{{base_url}}/v1/social/posts/:postId"
-  params:
-    - name: postId
-      value: "1"
-      type: path
-      description: "Post ID from {{base_url}}/v1/social/posts"
+  url: "{{base_url}}/v1/social/posts/1"
+  headers:
+    - name: Accept
+      value: application/json
   body:
-    type: multipart-form
-    data:
-      - name: content
-        type: text
-        value: "Beautiful day for a walk in the park! 🐶💚"
-        description: "Caption/text for post (Max 500 characters)"
-      - name: location
-        type: text
-        value: "Lima Dog Park"
-        description: "Optional location name"
-      - name: visibility
-        type: text
-        value: "public"
-        description: "Post visibility: public, followers, private"
-      - name: hide_like_count
-        type: text
-        value: "true"
-        description: "Toggle to hide like count: true or false"
-      - name: hide_share_count
-        type: text
-        value: "false"
-        description: "Toggle to hide share count: true or false"
-      - name: turn_off_commenting
-        type: text
-        value: "false"
-        description: "Toggle to turn off commenting: true or false"
-      - name: remove_media_ids[]
-        type: text
-        value: "1"
-        description: "Optional media ID from post media to delete"
-        disabled: true
+    type: json
+    data: |-
+      {
+        "content": "Beautiful day for a walk in the park with Pedro!",
+        "location": "Central Dog Park",
+        "visibility": "public",
+        "hide_like_count": false,
+        "hide_share_count": false,
+        "turn_off_commenting": false
+      }
   auth:
     type: bearer
-    token: "{{pet15User}}"
+    token: "{{userToken}}"
+
+docs: |-
+  # Update Post API (Edit Post)
+
+  Updates an existing post's text content, location, visibility, and audience toggle controls.
+
+  ## Figma Screen
+  - **Screen:** Edit Post (accessible from Post 3-dots Menu -> Edit Post)
+  - **UI Controls:**
+    - Text caption editor
+    - Location field
+    - Privacy dropdown (Public / Followers / Private)
+    - Toggle: "Hide like count on this post"
+    - Toggle: "Hide share count on this post"
+    - Toggle: "Turn off commenting"
+
+  ---
+
+  ## Request Details
+  - **Method:** `PUT` or `PATCH`
+  - **URL:** `{{base_url}}/v1/social/posts/:postId`
+  - **Authentication:** `Bearer {{userToken}}` (Must be post author)
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `postId` | integer | Yes | ID of the post to update (e.g., `1`) |
+
+  ### Request Headers
+  | Header | Value | Description |
+  | :--- | :--- | :--- |
+  | `Accept` | `application/json` | Expect JSON response |
+  | `Content-Type` | `application/json` | Payload format |
+  | `Authorization` | `Bearer <token>` | User must be post owner |
+
+  ### Request Body (JSON)
+  ```json
+  {
+    "content": "Updated caption for Pedro's afternoon walk!",
+    "location": "Central Dog Park",
+    "visibility": "public",
+    "hide_like_count": false,
+    "hide_share_count": false,
+    "turn_off_commenting": false
+  }
+  ```
+
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `content` | string | No | Post caption / text (max 1000 characters) |
+  | `location` | string | No | Check-in place or venue name |
+  | `visibility` | string | No | `public`, `followers`, or `private` |
+  | `hide_like_count` | boolean | No | When `true`, like count is hidden for other users |
+  | `hide_share_count` | boolean | No | When `true`, share count is hidden |
+  | `turn_off_commenting` | boolean | No | When `true`, comment input is disabled on this post |
+
+  ---
+
+  ## Response Structure
+  ```json
+  {
+    "ok": true,
+    "message": "Post updated successfully",
+    "data": {
+      "id": 1,
+      "content": "Updated caption for Pedro's afternoon walk!",
+      "location": "Central Dog Park",
+      "visibility": "public",
+      "hide_like_count": false,
+      "hide_share_count": false,
+      "turn_off_commenting": false,
+      "updated_at": "2026-10-20T10:45:00.000000Z"
+    }
+  }
+  ```
 
 settings:
   encodeUrl: true

@@ -1,7 +1,7 @@
-info:
+﻿info:
   name: Delete Route
   type: http
-  seq: 10
+  seq: 8
 
 http:
   method: DELETE
@@ -12,3 +12,33 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Delete Saved Route API
+
+  Deletes a saved route created by the user.
+
+  ---
+
+  ## Request Details
+  - **Method:** `DELETE`
+  - **URL:** `{{base_url}}/v1/walk-routes/:routeId`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Route deleted successfully",
+    "data": []
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

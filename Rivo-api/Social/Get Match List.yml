@@ -1,21 +1,61 @@
-info:
+﻿info:
   name: Get Match List
   type: http
   seq: 3
 
 http:
   method: GET
-  url: "{{base_url}}/v1/social/match-list/:petId"
+  url: "{{base_url}}/v1/social/match-list/1"
   headers:
     - name: Accept
       value: application/json
-  params:
-    - name: petId
-      value: "15"
-      type: path
   auth:
     type: bearer
-    token: 19|qfZqIcBjqtkYsMBhxeYpwEJAzB4yEYhjsD5iCGnrcec90bd3
+    token: "{{userToken}}"
+
+docs: |-
+  # Get Match List API (Connected Friends)
+
+  Retrieves all mutual matches / accepted friends for a pet.
+
+  ## Figma Screen
+  - **Screen:** Messages / Chats Screen (Top horizontal circular avatars: "Matches")
+  - **Screen:** Pet Profile -> "Friends" list modal
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/social/match-list/:petId`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Pet ID (e.g. `1` for Pedro) |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Matches retrieved successfully",
+    "data": [
+      {
+        "id": 3,
+        "name": "Luna",
+        "breed": "French Bulldog",
+        "photo": null,
+        "user": {
+          "id": 2,
+          "name": "Sarah Jenkins"
+        },
+        "connected_at": "2026-10-18T10:00:00.000000Z"
+      }
+    ]
+  }
+  ```
 
 settings:
   encodeUrl: true
@@ -23,8 +63,3 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
-
-docs: |
-  **Get Connections**
-  Retrieves a list of all accepted friends or matches for a pet.
-  These are pets that have mutually liked each other or accepted a friend request.

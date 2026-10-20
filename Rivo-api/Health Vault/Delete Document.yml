@@ -1,7 +1,7 @@
-info:
+﻿info:
   name: Delete Document
   type: http
-  seq: 5
+  seq: 7
 
 http:
   method: DELETE
@@ -12,3 +12,33 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Delete Medical Document API
+
+  Permanently removes a document and its uploaded file from the pet's Health Vault.
+
+  ---
+
+  ## Request Details
+  - **Method:** `DELETE`
+  - **URL:** `{{base_url}}/v1/pets/:petId/health-vault/documents/:documentId`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Document deleted successfully",
+    "data": []
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

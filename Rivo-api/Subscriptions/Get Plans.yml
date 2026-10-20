@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Get Plans
   type: http
   seq: 1
@@ -12,6 +12,46 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Subscription Plans API
+
+  Fetches available premium subscription tiers (e.g. Free, Pro Monthly, Pro Annual) with features and pricing.
+
+  ## Figma Screen
+  - **Screen:** Paywall / Upgrade to Pro Screen
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/subscriptions/plans`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Subscription plans retrieved",
+    "data": [
+      {
+        "id": "pro_monthly",
+        "name": "Rivo Pro (Monthly)",
+        "price": 9.99,
+        "currency": "USD",
+        "interval": "month",
+        "features": [
+          "Unlimited AI Vet Chat",
+          "Advanced Walk Heatmaps",
+          "Unlimited Saved Routes",
+          "Lost Mode Priority Broadcast"
+        ]
+      }
+    ]
+  }
+  ```
 
 settings:
   encodeUrl: true

@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Get My Profile
   type: http
   seq: 1
@@ -9,16 +9,45 @@ http:
   headers:
     - name: Accept
       value: application/json
-    - name: Authorization
-      value: Bearer {{auth_token}}
   auth:
     type: bearer
-    token: "{{pet15User}}"
+    token: "{{userToken}}"
 
-runtime:
-  variables:
-    - name: base_url
-      value: http://10.10.28.53:80/api
+docs: |-
+  # Get Current User Profile API
+
+  Retrieves the authenticated user's account details, contact info, and profile avatar.
+
+  ## Figma Screen
+  - **Screen:** Account Settings / User Profile Screen
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/profile/me`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "User profile retrieved successfully",
+    "data": {
+      "id": 1,
+      "name": "Kazi Omar",
+      "email": "kaziomar@yopmail.com",
+      "phone_number": null,
+      "avatar": null,
+      "latitude": 23.8103,
+      "longitude": 90.4125,
+      "address": null,
+      "created_at": "2026-10-18T00:00:00.000000Z"
+    }
+  }
+  ```
 
 settings:
   encodeUrl: true
@@ -26,5 +55,3 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
-
-docs: Gets all information (including roles and permissions) for the logged-in user.

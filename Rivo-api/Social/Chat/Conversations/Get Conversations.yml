@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Get Conversations
   type: http
   seq: 1
@@ -9,12 +9,46 @@ http:
   headers:
     - name: Accept
       value: application/json
-    - name: Authorization
-      value: Bearer {{auth_token}}
-      disabled: true
   auth:
     type: bearer
-    token: "{{pet15User}}"
+    token: "{{userToken}}"
+
+docs: |-
+  # Get Conversations API (Chats Inbox)
+
+  Retrieves active chat threads for the authenticated user with unread counts and message previews.
+
+  ## Figma Screen
+  - **Screen:** Messages / Chat List Screen
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/chat/conversations`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "data": [
+      {
+        "id": 1,
+        "display_name": "Sarah Jenkins",
+        "unread_count": 1,
+        "last_message_preview": "Hey Sarah! Pedro is always up for a park run...",
+        "last_message_time": "10:15 AM",
+        "other_user": {
+          "id": 2,
+          "name": "Sarah Jenkins",
+          "avatar": null
+        }
+      }
+    ]
+  }
+  ```
 
 settings:
   encodeUrl: true
@@ -22,5 +56,3 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
-
-docs: Fetches a paginated list of all conversations for the authenticated user, including the last message and unread count.

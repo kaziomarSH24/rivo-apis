@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Mark as Found
   type: http
   seq: 3
@@ -13,6 +13,38 @@ http:
     type: bearer
     token: "{{userToken}}"
 
-docs: |
-  **Mark as Found**
-  Toggles Lost Mode OFF for a pet and sets the report status to found.
+docs: |-
+  # Mark Pet as Found API (Deactivate Lost Mode)
+
+  Deactivates Lost Mode when a missing pet is safely recovered.
+
+  ## Figma Screen
+  - **Screen:** Active Lost Mode Banner -> "I Found My Pet!" Confirmation Modal
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/pets/:petId/lost-reports/mark-found`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Pet marked as found successfully",
+    "data": {
+      "status": "found",
+      "found_at": "2026-10-20T11:15:00.000000Z"
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

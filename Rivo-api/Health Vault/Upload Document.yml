@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Upload Document
   type: http
   seq: 4
@@ -10,12 +10,54 @@ http:
     - name: Accept
       value: application/json
   body:
-    type: multipartForm
+    type: multipart-form
     data:
       - name: title
-        value: "Vaccination Record"
+        type: text
+        value: "Rabies Vaccination Certificate"
+        description: "Document title"
+      - name: type
+        type: text
+        value: "vaccination"
+        description: "Category: vaccination, prescription, medical_bill, lab_report, other"
       - name: document
         type: file
+        value: []
+        description: "File (pdf, jpeg, png, jpg, max 10MB)"
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Upload Medical Document API
+
+  Uploads a veterinary health record, certificate, or invoice to the pet's Health Vault.
+
+  ## Figma Screen
+  - **Screen:** Health Vault -> Documents -> "Upload Document" Modal
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/pets/:petId/health-vault/documents`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Request Body (multipart/form-data)
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `title` | string | Yes | Document label (e.g. "Rabies Vaccination Certificate") |
+  | `type` | string | Yes | `vaccination`, `prescription`, `medical_bill`, `lab_report`, `other` |
+  | `document` | file | Yes | PDF or image file (max 10MB) |
+
+  ---
+
+  ## Response (201 Created)
+  Returns saved document metadata with secure download URL.
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

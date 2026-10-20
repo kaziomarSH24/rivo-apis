@@ -1,7 +1,7 @@
-info:
+﻿info:
   name: Get Weight Logs
   type: http
-  seq: 3
+  seq: 5
 
 http:
   method: GET
@@ -12,3 +12,42 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Get Weight History API
+
+  Fetches the complete historical weight chart data for a pet.
+
+  ## Figma Screen
+  - **Screen:** Health Vault -> Weight Chart Screen
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/pets/:petId/health-vault/weight`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Weight logs retrieved",
+    "data": [
+      {
+        "id": 1,
+        "weight_kg": 28.5,
+        "logged_at": "2026-10-18T10:00:00.000000Z"
+      }
+    ]
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

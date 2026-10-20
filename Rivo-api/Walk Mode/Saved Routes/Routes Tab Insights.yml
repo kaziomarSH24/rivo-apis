@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Routes Tab Insights
   type: http
   seq: 7
@@ -12,3 +12,44 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Routes Tab Insights API
+
+  Returns aggregated stats for the Routes tab: most frequented trail, total routes saved, favorite route, and recommended routes nearby.
+
+  ## Figma Screen
+  - **Screen:** Walk Mode -> Routes Tab Overview
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/pets/:petId/walk-routes-tab`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Routes tab data retrieved",
+    "data": {
+      "saved_routes_count": 3,
+      "favorite_routes_count": 1,
+      "most_walked_route": {
+        "id": 1,
+        "name": "Central Park Loop",
+        "walk_count": 12
+      }
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

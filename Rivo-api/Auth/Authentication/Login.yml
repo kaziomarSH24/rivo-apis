@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Login
   type: http
   seq: 3
@@ -12,27 +12,18 @@ http:
   body:
     type: multipart-form
     data:
+      - name: email
+        type: text
+        value: "kaziomar@yopmail.com"
+        description: "User registered email"
       - name: password
         type: text
         value: "11111111"
-      - name: email
-        type: text
-        value: kaziomar@yopmail.com
-      - name: email
-        type: text
-        value: mehedi@yopmail.com
-        disabled: true
-      - name: email
-        type: text
-        value: david@yopmail.com
-        disabled: true
+        description: "Account password"
       - name: fcm_token
         type: text
-        value: your_device_fcm_token_here
-        disabled: true
-      - name: password
-        type: text
-        value: password
+        value: "your_device_fcm_token_here"
+        description: "Optional Firebase device token for push notifications"
         disabled: true
   auth: inherit
 
@@ -44,42 +35,61 @@ runtime:
     - type: after-response
       code: |-
         try {
-            // Bruno automatically parses the JSON response body
             const jsonData = res.getBody();
-            console.log("Response data received:", jsonData); 
-
             if (jsonData && jsonData.data && jsonData.data.access_token) {
                 const token = jsonData.data.access_token;
-                const roles = jsonData.data.user.roles;
-
-                if (roles && Array.isArray(roles) && roles.length > 0) {
-                    roles.forEach(role => {
-                        if (role && role.name) {
-                            const roleName = role.name.toLowerCase();
-                            const varName = `${roleName}Token`; 
-                            
-                            // Bruno: Setting Collection Variable
-                            bru.setVar(varName, token);
-                            
-                            console.log(`Token saved for role '${role.name}'. Collection variable '${varName}' created.`);
-                        } else {
-                            console.warn("Found a role object without a 'name' property:", role);
-                        }
-                    });
-                } else {
-                    console.warn("No roles found for this user or roles is not a non-empty array. Response roles:", roles);
-                }
-            } else {
-                console.error("❌ No access token found in response path 'jsonData.data.access_token'.");
+                bru.setVar("userToken", token);
+                console.log("Token saved to collection variable 'userToken'");
             }
         } catch (e) {
-            console.error("❌ Script error:", e);
+            console.error("Script error:", e);
         }
 
-        // Example Test
-        test("Successful login", function () {
-            expect(res.getStatus()).to.equal(200);
-        });
+docs: |-
+  # User Login API
+
+  Authenticates the user with email and password, issuing a Bearer API token.
+
+  ## Figma Screen
+  - **Screen:** Login / Sign In Screen
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/auth/login`
+  - **Authentication:** None (Public)
+
+  ### Request Body (multipart/form-data or JSON)
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `email` | string | Yes | Account email address |
+  | `password` | string | Yes | Minimum 8 characters |
+  | `fcm_token` | string | No | Optional Firebase Cloud Messaging token |
+
+  #### Default Test Credentials:
+  - **Main User:** `kaziomar@yopmail.com` / `11111111` (Pets: Pedro, Milo)
+  - **Partner User:** `sarah@yopmail.com` / `11111111` (Pet: Luna)
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Login successful",
+    "data": {
+      "access_token": "1|xyz...",
+      "token_type": "Bearer",
+      "user": {
+        "id": 1,
+        "name": "Kazi Omar",
+        "email": "kaziomar@yopmail.com",
+        "avatar": null
+      }
+    }
+  }
+  ```
 
 settings:
   encodeUrl: true
@@ -87,5 +97,3 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
-
-docs: Logs in a user and returns an auth_token.

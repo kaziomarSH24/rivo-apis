@@ -1,24 +1,52 @@
-info:
+﻿info:
   name: Complete Care Task
   type: http
   seq: 3
 
 http:
   method: POST
-  url: "{{base_url}}/v1/pets/:petId/care-tasks/:taskId/complete"
+  url: "{{base_url}}/v1/pets/1/care-tasks/1/complete"
   headers:
     - name: Accept
       value: application/json
-  params:
-    - name: taskId
-      value: "5"
-      type: path
-    - name: petId
-      value: "1"
-      type: path
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Complete Care Task API
+
+  Marks a scheduled care task as completed for today. Also contributes to the "Training Star" and "Care Hero" badge progress.
+
+  ## Figma Screen
+  - **Screen:** Care Tab -> Checkbox check on task card
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/pets/:petId/care-tasks/:taskId/complete`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Pet ID (e.g. `1` for Pedro) |
+  | `taskId` | integer | Yes | Care Task ID to mark completed |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Care task marked as completed",
+    "data": {
+      "task_id": 1,
+      "completed_at": "2026-10-20T11:15:00.000000Z"
+    }
+  }
+  ```
 
 settings:
   encodeUrl: true

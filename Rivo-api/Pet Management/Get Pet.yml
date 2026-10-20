@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Get Pet
   type: http
   seq: 3
@@ -12,6 +12,109 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Get Pet Profile API (Own Profile & Others Profile)
+
+  Retrieves detailed profile information for any pet in the community.
+
+  ## Figma Screens
+  - **Screen 1:** Pet Social Profile (Own Pet - shows Edit Profile, Manage Badges, Settings)
+  - **Screen 2:** Others Pet Profile (shows Follow / Message buttons, `is_owner: false`)
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/pets/:petId`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Pet ID (e.g., `1` for Pedro, `3` for Sarah's Luna) |
+
+  ### Request Headers
+  | Header | Value | Description |
+  | :--- | :--- | :--- |
+  | `Accept` | `application/json` | Expect JSON response |
+  | `Authorization` | `Bearer <token>` | Bearer authentication token |
+
+  ---
+
+  ## Response Structure
+
+  ### Success (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Pet retrieved successfully",
+    "data": {
+      "id": 1,
+      "user_id": 1,
+      "is_owner": true,
+      "type": "dog",
+      "name": "Pedro",
+      "breed": "Golden Retriever",
+      "age_years": 3,
+      "age_months": 2,
+      "weight": 28.5,
+      "bio": "Friendly energetic golden retriever who loves exploring parks and running trails!",
+      "traits": ["playful", "active", "friendly"],
+      "personality": "Energetic & loving",
+      "energy_level": "high",
+      "training_level": "intermediate",
+      "is_vaccinated": true,
+      "gender": "male",
+      "photo": null,
+      "level": 2,
+      "level_title": "Trail Runner",
+      "posts_count": 3,
+      "friends_count": 2,
+      "achievements": {
+        "displayed_count": 1,
+        "max_slots": 3,
+        "slots": [
+          {
+            "id": "walk_warrior",
+            "title": "Walk Warrior",
+            "subtitle": "Walked 50 km",
+            "icon": "medal_bronze_paw",
+            "category": "walk"
+          },
+          null,
+          null
+        ]
+      },
+      "user": {
+        "id": 1,
+        "name": "Kazi Omar",
+        "email": "kaziomar@yopmail.com",
+        "avatar": null
+      },
+      "created_at": "2026-10-18T00:00:00.000000Z",
+      "updated_at": "2026-10-20T10:30:00.000000Z"
+    }
+  }
+  ```
+
+  ### Response Fields Explanation
+  | Field | Type | Description |
+  | :--- | :--- | :--- |
+  | `ok` | boolean | Request success flag (`true`) |
+  | `message` | string | Status message |
+  | `data.id` | integer | Pet ID |
+  | `data.is_owner` | boolean | `true` if current user owns this pet, `false` for others |
+  | `data.name` | string | Pet name (e.g. "Pedro") |
+  | `data.breed` | string | Pet breed |
+  | `data.level` | integer | Walk & Activity level number (e.g., `2`) |
+  | `data.level_title` | string | Gamified level title (e.g. "Trail Runner") |
+  | `data.posts_count` | integer | Total posts created by/for this pet |
+  | `data.friends_count` | integer | Total accepted pet connections / friends |
+  | `data.achievements` | object | Contains 3 slots for profile showcase badges |
+  | `data.achievements.displayed_count` | integer | Active badges set (0 - 3) |
+  | `data.achievements.slots` | array | Exactly 3 elements. Badge objects or `null` |
+  | `data.user` | object | Pet owner user profile (`id`, `name`, `avatar`) |
 
 settings:
   encodeUrl: true

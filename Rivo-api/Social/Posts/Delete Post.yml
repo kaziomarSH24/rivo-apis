@@ -1,19 +1,57 @@
-info:
+﻿info:
   name: Delete Post
   type: http
   seq: 5
 
 http:
   method: DELETE
-  url: "{{base_url}}/v1/social/posts/:postId"
-  params:
-    - name: postId
-      value: "1"
-      type: path
-      description: "Post ID from {{base_url}}/v1/social/posts"
+  url: "{{base_url}}/v1/social/posts/1"
+  headers:
+    - name: Accept
+      value: application/json
   auth:
     type: bearer
-    token: "{{pet15User}}"
+    token: "{{userToken}}"
+
+docs: |-
+  # Delete Post API
+
+  Deletes an existing post owned by the authenticated user.
+
+  ## Figma Screen
+  - **Screen:** Post 3-dots Menu -> "Delete Post" confirmation popup
+
+  ---
+
+  ## Request Details
+  - **Method:** `DELETE`
+  - **URL:** `{{base_url}}/v1/social/posts/:postId`
+  - **Authentication:** `Bearer {{userToken}}` (Must be post owner)
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `postId` | integer | Yes | ID of the post to delete (e.g., `1`) |
+
+  ---
+
+  ## Response Structure
+
+  ### Success (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Post deleted successfully",
+    "data": []
+  }
+  ```
+
+  ---
+
+  ## Error Responses
+  - `401 Unauthorized`: Token missing or invalid.
+  - `403 Forbidden`: User does not have permission to delete this post.
+  - `404 Not Found`: Post ID does not exist.
 
 settings:
   encodeUrl: true

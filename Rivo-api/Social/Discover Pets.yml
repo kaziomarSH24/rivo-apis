@@ -1,11 +1,11 @@
-info:
+﻿info:
   name: Discover Pets
   type: http
   seq: 1
 
 http:
   method: GET
-  url: "{{base_url}}/v1/social/discover/15"
+  url: "{{base_url}}/v1/social/discover/1"
   headers:
     - name: Accept
       value: application/json
@@ -13,35 +13,95 @@ http:
     - name: distance
       value: "20"
       type: query
-      description: max distance in km
+      description: "Max distance radius in kilometers"
       disabled: true
     - name: age
-      value: puppy
+      value: adult
       type: query
-      description: puppy, adult, senior
+      description: "Filter by life stage: puppy, adult, senior"
       disabled: true
     - name: size
-      value: small
+      value: medium
       type: query
-      description: small, medium, large
+      description: "Filter by size: small, medium, large"
       disabled: true
     - name: gender
-      value: male
+      value: any
       type: query
-      description: male, female, any
+      description: "Filter by gender: male, female, any"
       disabled: true
     - name: breed
       value: ""
       type: query
+      description: "Filter by specific breed name"
       disabled: true
     - name: vaccinated
       value: required
       type: query
-      description: required, not required
+      description: "Filter vaccination status: required, not required"
       disabled: true
   auth:
     type: bearer
-    token: "{{pet15User}}"
+    token: "{{userToken}}"
+
+docs: |-
+  # Discover Pets API (Matchmaking Feed)
+
+  Fetches nearby community pets for Tinder-style card swiping and matchmaking.
+
+  ## Figma Screen
+  - **Screen:** Discover / Matchmaker (Swipe Cards Screen)
+  - **Cards Show:** Pet photo, name, age, breed, distance in km, compatibility score, energy level, personality traits.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/social/discover/:petId`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Active pet ID doing the discovering (e.g. `1` for Pedro) |
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `distance` | integer | No | Maximum distance radius in km (default: 50) |
+  | `age` | string | No | `puppy`, `adult`, or `senior` |
+  | `size` | string | No | `small`, `medium`, or `large` |
+  | `gender` | string | No | `male`, `female`, or `any` |
+  | `breed` | string | No | Specific breed filter |
+  | `vaccinated` | string | No | `required` or `not required` |
+
+  > **Note:** Pets that are already swiped, connected, or owned by the same user are automatically filtered out.
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Nearby pets retrieved successfully",
+    "data": [
+      {
+        "id": 3,
+        "name": "Luna",
+        "breed": "French Bulldog",
+        "age_years": 2,
+        "gender": "female",
+        "distance": 3.4,
+        "compatibility": 88,
+        "photo": "http://.../luna.jpg",
+        "user": {
+          "id": 2,
+          "name": "Sarah Jenkins"
+        }
+      }
+    ]
+  }
+  ```
 
 settings:
   encodeUrl: true
@@ -49,17 +109,3 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
-
-docs: |
-  **Discover Pets API**
-  Fetches a list of pets nearby for Tinder-like swiping.
-
-  **Filters:**
-  - distance (int): Maximum distance in kilometers (Requires user location to be set).
-  - age (string): puppy, adult, senior.
-  - size (string): small, medium, large.
-  - breed (string): e.g. Golden Retriever or Any Breed.
-  - vaccinated (string): required, not required.
-  - gender (string): male, female, any.
-
-  **Note:** Pets you have already swiped on, or connected with, or your own pets are automatically excluded.

@@ -1,7 +1,8 @@
-info:
+﻿info:
   name: Update Pet
   type: http
   seq: 4
+
 http:
   method: POST
   url: "{{base_url}}/v1/pets/1?_method=PUT"
@@ -11,40 +12,73 @@ http:
   body:
     type: multipart-form
     data:
-      - name: type
-        type: text
-        value: "Dog"
-        description: "Dog, Cat, etc."
       - name: name
         type: text
-        value: "Pedro Jr."
+        value: Pedro
         description: "Name of the pet"
       - name: breed
         type: text
-        value: "Golden Retriever"
-        description: "Breed name or Mixed/Other"
+        value: Golden Retriever
+        description: "Breed name"
       - name: age_years
         type: text
-        value: "2"
+        value: "3"
         description: "Age in years"
       - name: age_months
         type: text
-        value: "4"
+        value: "2"
         description: "Age in months (0-11)"
       - name: weight
         type: text
-        value: "12.0"
+        value: "28.5"
         description: "Weight in kg"
-      - name: gender
+      - name: bio
         type: text
-        value: "Male"
-        description: "Male, Female, or Unknown"
+        value: "Friendly energetic golden retriever who loves exploring parks and running trails!"
+        description: "Pet bio"
       - name: photo
         type: file
         value: ""
         description: "Upload pet photo (jpeg, png, jpg, gif)"
         disabled: true
   auth:
-  mode: bearer
-auth:bearer:
-  token: {{userToken}}
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Update Pet Profile API
+
+  Updates pet profile information (name, breed, weight, bio, photo).
+
+  ## Figma Screen
+  - **Screen:** Edit Pet Profile Screen
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST` with `?_method=PUT` (for multipart file upload support in PHP)
+  - **URL:** `{{base_url}}/v1/pets/:petId?_method=PUT`
+  - **Authentication:** `Bearer {{userToken}}` (Must be pet owner)
+
+  ### Body Parameters (multipart/form-data)
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `name` | string | No | Updated pet name |
+  | `breed` | string | No | Updated breed |
+  | `age_years` | integer | No | Updated age years |
+  | `age_months` | integer | No | Updated age months |
+  | `weight` | number | No | Updated weight (kg) |
+  | `bio` | string | No | Updated bio text |
+  | `photo` | file | No | Optional new photo file |
+
+  ---
+
+  ## Response (200 OK)
+  Returns the updated `PetResource` object with `is_owner`, `level`, `achievements`, etc.
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

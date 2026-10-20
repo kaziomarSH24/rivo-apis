@@ -1,0 +1,115 @@
+﻿info:
+  name: Get Pet Badges
+  type: http
+  seq: 7
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/pets/1/badges"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Get Pet Badges API
+
+  Retrieves all available badges for a pet, divided into **Earned** and **Locked** categories with realtime progress.
+
+  ## Figma Screen
+  - **Screen:** Manage Badges (Modal)
+  - **UI Elements:**
+    - Slot counter: "Selected 1/3"
+    - "Earned Badges" list (selectable cards with checkbox/highlight)
+    - "Locked Badges" list (grayed out with progress text like "0/100 km")
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/pets/:petId/badges`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | ID of the pet (e.g., `1` for Pedro) |
+
+  ### Request Headers
+  | Header | Value | Description |
+  | :--- | :--- | :--- |
+  | `Accept` | `application/json` | Expect JSON response |
+  | `Authorization` | `Bearer <token>` | Bearer authentication token |
+
+  ---
+
+  ## Response Structure
+
+  ### Success (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Pet badges retrieved successfully",
+    "data": {
+      "selected_count": 1,
+      "max_display": 3,
+      "earned": [
+        {
+          "id": "walk_warrior",
+          "title": "Walk Warrior",
+          "subtitle": "Walked 50 km",
+          "description": "Complete a total of 50 km across all walk sessions.",
+          "icon": "medal_bronze_paw",
+          "category": "walk",
+          "progress": "50/50 km",
+          "current_value": 50,
+          "target_value": 50,
+          "is_displayed": true
+        }
+      ],
+      "locked": [
+        {
+          "id": "marathon_master",
+          "title": "Marathon Master",
+          "subtitle": "Walk 100 km",
+          "description": "Accumulate a monumental 100 km of trail and park exploration.",
+          "icon": "medal_gold_cup",
+          "category": "walk",
+          "progress": "50/100 km",
+          "current_value": 50,
+          "target_value": 100,
+          "is_displayed": false
+        }
+      ]
+    }
+  }
+  ```
+
+  ### Response Fields Explanation
+  | Field | Type | Description |
+  | :--- | :--- | :--- |
+  | `ok` | boolean | Success status (`true`) |
+  | `message` | string | Status message |
+  | `data.selected_count` | integer | Number of badges currently chosen for display (e.g., `1`) |
+  | `data.max_display` | integer | Max badges allowed to be chosen (`3`) |
+  | `data.earned[]` | array | Badges the pet has successfully unlocked |
+  | `data.locked[]` | array | Badges the pet has not yet unlocked |
+  | `...[].id` | string | Unique badge identifier (use this in `POST .../badges/display`) |
+  | `...[].title` | string | Badge title (e.g., "Walk Warrior") |
+  | `...[].subtitle` | string | Subtitle / milestone requirement |
+  | `...[].description` | string | Full description of criteria |
+  | `...[].icon` | string | Asset icon key (`medal_bronze_paw`, `medal_fire`, etc.) |
+  | `...[].category` | string | Category: `walk`, `care`, `achievement` |
+  | `...[].progress` | string | Human-readable progress string (e.g., "7/7 days") |
+  | `...[].current_value` | number | Numeric value reached so far |
+  | `...[].target_value` | number | Numeric goal required to earn badge |
+  | `...[].is_displayed` | boolean | `true` if this badge is currently assigned to one of the 3 profile slots |
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Complete Walk
   type: http
   seq: 2
@@ -9,32 +9,83 @@ http:
   headers:
     - name: Accept
       value: application/json
+    - name: Content-Type
+      value: application/json
   body:
-    type: multipart-form
-    data:
-      - name: distance_km
-        type: text
-        value: "3.35"
-        description: Distance in km
-      - name: duration_seconds
-        type: text
-        value: "1758"
-        description: Total duration in seconds
-      - name: calories
-        type: text
-        value: "235"
-        description: Calories burned
-      - name: avg_speed_kmh
-        type: text
-        value: "6.2"
-        description: Average speed
-      - name: route_coordinates
-        type: text
-        value: '[{"lat": 23.8103, "lng": 90.4125}, {"lat": 23.8115, "lng": 90.4130}]'
-        description: JSON array of coordinates
+    type: json
+    data: |-
+      {
+        "distance_km": 3.35,
+        "duration_seconds": 1758,
+        "calories": 235,
+        "avg_speed_kmh": 6.2,
+        "steps": 4200,
+        "route_coordinates": [
+          {"lat": 23.8103, "lng": 90.4125},
+          {"lat": 23.8115, "lng": 90.4130},
+          {"lat": 23.8125, "lng": 90.4140}
+        ]
+      }
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Complete Walk Session API
+
+  Ends an active walk session, calculates earned XP, updates streak, checks level up, and stores GPS route coordinates.
+
+  ## Figma Screen
+  - **Screen:** Walk Mode -> Live Tracking -> "Finish Walk" button
+  - **Screen:** Walk Summary Modal (Celebration, XP earned, Distance, Duration, Streak)
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/pets/:petId/walks`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Active pet on the walk (e.g. `1` for Pedro) |
+
+  ### Request Body (JSON)
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `distance_km` | number | Yes | Total distance walked in kilometers |
+  | `duration_seconds` | integer | Yes | Total time elapsed in seconds |
+  | `calories` | integer | No | Estimated calories burned |
+  | `avg_speed_kmh` | number | No | Average pace / speed |
+  | `steps` | integer | No | Pedometer step count |
+  | `route_coordinates` | array | No | GPS array: `[{"lat": 23.81, "lng": 90.41}, ...]` |
+  | `route_id` | integer\|null | No | ID of predefined saved route if followed |
+
+  ---
+
+  ## Response Structure (201 Created)
+  ```json
+  {
+    "ok": true,
+    "message": "Walk completed successfully",
+    "data": {
+      "walk": {
+        "id": 29,
+        "distance_km": 3.35,
+        "duration_seconds": 1758,
+        "duration_formatted": "00:29:18",
+        "calories": 235,
+        "avg_speed_kmh": 6.2,
+        "steps": 4200,
+        "xp_earned": 67
+      },
+      "level_up": false,
+      "streak_updated": true,
+      "bonus_xp": 25
+    }
+  }
+  ```
 
 settings:
   encodeUrl: true

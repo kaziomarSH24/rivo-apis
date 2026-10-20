@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Get Emergency Contacts
   type: http
   seq: 1
@@ -12,3 +12,52 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Get Emergency Vet Contacts API
+
+  Retrieves saved primary and 24/7 emergency veterinary clinics and hotlines.
+
+  ## Figma Screen
+  - **Screen:** Emergency Mode / Vet Quick Dial Screen
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/emergency-contacts`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Emergency contacts retrieved",
+    "data": {
+      "primary_vet": {
+        "id": 1,
+        "clinic_name": "Central Animal Hospital",
+        "doctor_name": "Dr. Emily Hayes",
+        "phone_number": "+1-555-0199",
+        "address": "123 Park Avenue",
+        "is_24_hours": false
+      },
+      "emergency_vet": {
+        "id": 2,
+        "clinic_name": "24/7 Pet Emergency Center",
+        "phone_number": "+1-555-0911",
+        "address": "456 Urgent Care Way",
+        "is_24_hours": true
+      }
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

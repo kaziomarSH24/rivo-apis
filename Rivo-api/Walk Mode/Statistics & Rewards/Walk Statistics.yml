@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Walk Statistics
   type: http
   seq: 3
@@ -13,10 +13,54 @@ http:
     - name: filter[period]
       value: month
       type: query
+      description: "week, month, or year"
       disabled: true
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Walk Analytics & Route Heatmap API
+
+  Aggregates pet walking activity (total distance, total sessions, duration, calories, average pace) and returns recent route GPS coordinates for drawing the walk exploration heatmap.
+
+  ## Figma Screen
+  - **Screen:** Walk Mode -> Statistics Screen (Distance Bar Charts, Heatmap Map View)
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/pets/:petId/walk-statistics`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Pet ID (e.g. `1` for Pedro) |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Statistics retrieved",
+    "data": {
+      "statistics": {
+        "total_distance_km": 67.1,
+        "total_walks": 28,
+        "total_duration_hours": 17.5,
+        "total_calories": 4200,
+        "avg_speed_kmh": 5.4
+      },
+      "heatmap_coordinates": [
+        {"lat": 23.8103, "lng": 90.4125},
+        {"lat": 23.8115, "lng": 90.4130}
+      ]
+    }
+  }
+  ```
 
 settings:
   encodeUrl: true

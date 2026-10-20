@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Get Dashboard
   type: http
   seq: 1
@@ -12,3 +12,59 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Health Vault Dashboard API
+
+  Retrieves comprehensive health metrics, pet health score, vaccination schedule, weight tracking trends, documents summary, and AI insights.
+
+  ## Figma Screen
+  - **Screen:** Health Vault Screen / Medical Record Overview
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/pets/:petId/health-vault/dashboard`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Pet ID (e.g. `1` for Pedro) |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Health Vault dashboard retrieved",
+    "data": {
+      "health_score": {
+        "score": 92,
+        "grade": "Excellent"
+      },
+      "vaccinations": {
+        "upcoming": [],
+        "completed_count": 3
+      },
+      "weight_tracking": {
+        "current_weight": 28.5,
+        "history": []
+      },
+      "health_documents": {
+        "total_count": 2,
+        "recent": []
+      },
+      "ai_insight": "Pedro is in great health! Keep up his active walking routine."
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

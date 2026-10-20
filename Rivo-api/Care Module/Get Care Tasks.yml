@@ -1,21 +1,60 @@
-info:
+﻿info:
   name: Get Care Tasks
   type: http
   seq: 1
 
 http:
   method: GET
-  url: "{{base_url}}/v1/pets/:petId/care-tasks"
+  url: "{{base_url}}/v1/pets/1/care-tasks"
   headers:
     - name: Accept
       value: application/json
-  params:
-    - name: petId
-      value: "1"
-      type: path
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Get Care Tasks API
+
+  Retrieves active daily care tasks and reminders for a pet (feeding, medication, grooming, vaccination).
+
+  ## Figma Screen
+  - **Screen:** Care Tab / Pet Health Routine Screen
+  - **Elements:** Task list with checkboxes, scheduled times, category icons.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/pets/:petId/care-tasks`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Pet ID (e.g. `1` for Pedro) |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Care tasks retrieved successfully",
+    "data": [
+      {
+        "id": 1,
+        "type": "feeding",
+        "title": "Morning Kibble",
+        "description": "1.5 cups dry food + salmon oil",
+        "frequency": "Daily",
+        "preferred_time": "08:00",
+        "is_reminder_on": true,
+        "is_completed_today": true
+      }
+    ]
+  }
+  ```
 
 settings:
   encodeUrl: true

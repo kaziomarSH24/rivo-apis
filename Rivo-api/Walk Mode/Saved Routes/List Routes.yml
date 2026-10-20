@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: List Routes
   type: http
   seq: 5
@@ -13,16 +13,65 @@ http:
     - name: filter[search]
       value: "Loop"
       type: query
-      description: Global search by route name
+      description: "Search route by name"
       disabled: true
     - name: filter[is_favorite]
       value: "1"
       type: query
-      disabled: true
-    - name: sort
-      value: -created_at
-      type: query
+      description: "Filter only favorite routes"
       disabled: true
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # List Saved Routes API
+
+  Retrieves saved walking trails and routes created by the user or bookmarked from the community.
+
+  ## Figma Screen
+  - **Screen:** Walk Mode -> Routes Tab -> "Saved Routes" List
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/walk-routes`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `filter[search]` | string | No | Search keyword |
+  | `filter[is_favorite]` | boolean | No | `1` to show only favorited routes |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Routes retrieved successfully",
+    "data": [
+      {
+        "id": 1,
+        "name": "Central Park Loop",
+        "distance_km": 3.2,
+        "est_duration_minutes": 28,
+        "is_favorite": true,
+        "walk_count": 12,
+        "route_coordinates": [
+          {"lat": 23.8103, "lng": 90.4125},
+          {"lat": 23.8115, "lng": 90.4130}
+        ]
+      }
+    ]
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

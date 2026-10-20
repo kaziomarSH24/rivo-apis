@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Walk Rewards
   type: http
   seq: 4
@@ -12,3 +12,66 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Walk Streak Rewards API
+
+  Lists all milestone streak levels, bonus XP rewards, and whether they are currently unlocked based on the pet's active walk streak.
+
+  ## Figma Screen
+  - **Screen:** Walk Mode -> Rewards & Streak Milestones Screen
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/pets/:petId/walk-rewards`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Pet ID (e.g. `1` for Pedro) |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Rewards retrieved",
+    "data": [
+      {
+        "id": 1,
+        "level": 1,
+        "reward_title": "Level 1",
+        "required_streak_days": 3,
+        "bonus_xp": 20,
+        "is_unlocked": true
+      },
+      {
+        "id": 2,
+        "level": 2,
+        "reward_title": "Level 2",
+        "required_streak_days": 7,
+        "bonus_xp": 50,
+        "is_unlocked": true
+      },
+      {
+        "id": 3,
+        "level": 3,
+        "reward_title": "Level 3",
+        "required_streak_days": 14,
+        "bonus_xp": 100,
+        "is_unlocked": false
+      }
+    ]
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

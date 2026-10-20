@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Log Weight
   type: http
   seq: 6
@@ -9,12 +9,46 @@ http:
   headers:
     - name: Accept
       value: application/json
+    - name: Content-Type
+      value: application/json
   body:
     type: json
     data: |-
       {
-        "weight_kg": 21.5
+        "weight_kg": 28.5
       }
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Log Weight API
+
+  Records a new weight measurement for the pet to track growth or diet trends.
+
+  ## Figma Screen
+  - **Screen:** Health Vault -> Weight Tracker -> "Log Weight" button
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/pets/:petId/health-vault/weight`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Request Body (JSON)
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `weight_kg` | number | Yes | Current weight in kilograms (e.g. `28.5`) |
+
+  ---
+
+  ## Response (201 Created)
+  Returns logged weight entry and updates `pets.weight`.
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

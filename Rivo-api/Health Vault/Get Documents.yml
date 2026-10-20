@@ -1,7 +1,7 @@
-info:
+﻿info:
   name: Get Documents
   type: http
-  seq: 2
+  seq: 3
 
 http:
   method: GET
@@ -12,3 +12,30 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Get Medical Documents API
+
+  Lists all stored medical certificates, lab reports, and prescriptions for a pet.
+
+  ## Figma Screen
+  - **Screen:** Health Vault -> Documents Library
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/pets/:petId/health-vault/documents`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response (200 OK)
+  Returns array of document objects with `id`, `title`, `type`, `file_url`, `created_at`.
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

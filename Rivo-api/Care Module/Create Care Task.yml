@@ -1,25 +1,23 @@
-info:
+﻿info:
   name: Create Care Task
   type: http
   seq: 2
 
 http:
   method: POST
-  url: "{{base_url}}/v1/pets/:petId/care-tasks"
+  url: "{{base_url}}/v1/pets/1/care-tasks"
   headers:
     - name: Accept
       value: application/json
-  params:
-    - name: petId
-      value: "1"
-      type: path
+    - name: Content-Type
+      value: application/json
   body:
     type: json
     data: |-
       {
         "type": "medicine",
         "title": "Heartworm Pill",
-        "description": "Give one pill after dinner",
+        "description": "Give one chewable pill after dinner",
         "frequency": "Monthly",
         "preferred_time": "19:00",
         "is_reminder_on": true
@@ -27,6 +25,36 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Create Care Task API
+
+  Adds a new recurring care task or medication reminder for a pet.
+
+  ## Figma Screen
+  - **Screen:** Care Tab -> "Add New Task" Modal
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/pets/:petId/care-tasks`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Request Body (JSON)
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `type` | string | Yes | `feeding`, `medicine`, `grooming`, `walk`, `vaccination` |
+  | `title` | string | Yes | Task title (e.g. "Heartworm Pill") |
+  | `description` | string | No | Instructions or notes |
+  | `frequency` | string | Yes | `Daily`, `Weekly`, `Monthly`, `As Needed` |
+  | `preferred_time` | string | No | `HH:MM` time format (e.g. "19:00") |
+  | `is_reminder_on` | boolean | No | Send push notification reminder |
+
+  ---
+
+  ## Response (201 Created)
+  Returns created care task resource.
 
 settings:
   encodeUrl: true

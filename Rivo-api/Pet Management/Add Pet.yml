@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Add Pet
   type: http
   seq: 2
@@ -14,39 +14,107 @@ http:
     data:
       - name: type
         type: text
-        value: Cat
-        description: Dog,Cat
+        value: dog
+        description: "Pet species: dog, cat, etc."
       - name: name
         type: text
-        value: mini
-        description: Name of the pet
+        value: Pedro
+        description: "Name of the pet"
       - name: breed
         type: text
         value: Golden Retriever
-        description: Breed name or Mixed/Other
+        description: "Breed name"
       - name: age_years
         type: text
-        value: "2"
-        description: Age in years
+        value: "3"
+        description: "Age in years"
       - name: age_months
         type: text
-        value: "3"
-        description: Age in months (0-11)
+        value: "2"
+        description: "Age in months (0-11)"
       - name: weight
         type: text
-        value: "11.4"
-        description: Weight in kg
+        value: "28.5"
+        description: "Weight in kg"
       - name: gender
         type: text
-        value: Male
-        description: Male, Female, or Unknown
+        value: male
+        description: "male, female, or unknown"
+      - name: bio
+        type: text
+        value: "Friendly energetic golden retriever"
+        description: "Optional pet biography"
+        disabled: true
       - name: photo
         type: file
         value: []
-        description: Upload pet photo (jpeg, png, jpg, gif)
+        description: "Upload pet photo (jpeg, png, jpg, gif, max 5MB)"
+        disabled: true
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Add Pet API
+
+  Registers a new pet under the authenticated user's profile.
+
+  ## Figma Screen
+  - **Screen:** Add Pet Onboarding / Profile Add Pet Modal
+  - **Purpose:** Creates a pet profile and initializes pet walk stats, care tasks, and achievements.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/pets`
+  - **Headers:** `Accept: application/json`, `Content-Type: multipart/form-data`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Request Body (multipart/form-data)
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `name` | string | Yes | Pet name (e.g. "Pedro") |
+  | `type` | string | Yes | Pet species (`dog`, `cat`) |
+  | `breed` | string | Yes | Breed name (e.g. "Golden Retriever") |
+  | `age_years` | integer | Yes | Age years (e.g. `3`) |
+  | `age_months` | integer | Yes | Age months (`0` to `11`) |
+  | `weight` | number | Yes | Weight in kilograms (e.g. `28.5`) |
+  | `gender` | string | Yes | `male`, `female`, or `unknown` |
+  | `bio` | string | No | Short biography or description |
+  | `photo` | file | No | Image file (jpeg, png, jpg, max 5MB) |
+
+  ---
+
+  ## Response Structure (201 Created)
+  ```json
+  {
+    "ok": true,
+    "message": "Pet created successfully",
+    "data": {
+      "id": 1,
+      "user_id": 1,
+      "is_owner": true,
+      "name": "Pedro",
+      "type": "dog",
+      "breed": "Golden Retriever",
+      "age_years": 3,
+      "age_months": 2,
+      "weight": 28.5,
+      "gender": "male",
+      "photo": null,
+      "level": 1,
+      "level_title": "Park Explorer",
+      "posts_count": 0,
+      "friends_count": 0,
+      "achievements": {
+        "displayed_count": 0,
+        "max_slots": 3,
+        "slots": [null, null, null]
+      }
+    }
+  }
+  ```
 
 settings:
   encodeUrl: true

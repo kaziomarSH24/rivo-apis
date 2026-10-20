@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Send Message
   type: http
   seq: 2
@@ -7,30 +7,54 @@ http:
   method: POST
   url: "{{base_url}}/v1/chat/messages"
   headers:
-    - name: Authorization
-      value: "Bearer {{pet15User}}"
+    - name: Accept
+      value: application/json
   body:
     type: multipart-form
     data:
       - name: conversation_id
         type: text
-        value: "3"
-        description: "Required. Conversation ID from {{base_url}}/v1/chat/conversations"
+        value: "1"
+        description: "Target conversation ID"
       - name: body
         type: text
-        value: "Hello! This is a test message."
-        description: "Text content of the message (Optional if media is attached)"
+        value: "Sounds awesome! We'll be there around 4 PM."
+        description: "Message text"
       - name: media
         type: file
         value: []
-        description: "Optional image/video/audio file attachment"
+        description: "Optional photo or audio message attachment"
         disabled: true
-      - name: parent_message_id
-        type: text
-        value: "1"
-        description: "Optional. Parent message ID from {{base_url}}/v1/chat/messages?conversation_id=:id for reply"
-        disabled: true
-  auth: inherit
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Send Message API
+
+  Sends a text message or media attachment to a conversation. Broadcasts realtime Reverb event.
+
+  ## Figma Screen
+  - **Screen:** Chat Room -> Send button / Attachment picker
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/chat/messages`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Request Body (multipart/form-data)
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `conversation_id` | integer | Yes | Target conversation ID |
+  | `body` | string | Optional | Text message content (required if no media) |
+  | `media` | file | Optional | Image, video, or audio attachment |
+
+  ---
+
+  ## Response (201 Created)
+  Returns the created message object with `sender_id`, `created_at`, etc.
 
 settings:
   encodeUrl: true
@@ -38,9 +62,3 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
-
-docs: |-
-  Sends a new message to a conversation.
-
-  - You can send a text message (`body`), a media file (`media`), or both.
-  - To reply to a specific message, provide its ID in `parent_message_id`.

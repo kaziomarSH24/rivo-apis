@@ -1,42 +1,48 @@
-info:
+﻿info:
   name: List Walks
   type: http
   seq: 1
 
 http:
   method: GET
-  url: "{{base_url}}/v1/pets/1/walks?filter[pet_id]=&filter[route_id]="
+  url: "{{base_url}}/v1/pets/1/walks"
   headers:
     - name: Accept
       value: application/json
   params:
-    - name: filter[start_time]
-      value: 2026-09-14
-      type: query
-      description: Filter by start time
-      disabled: true
-    - name: include
-      value: route,pet
-      type: query
-      description: pet
-      disabled: true
     - name: sort
       value: -created_at
       type: query
+      description: "Sort order (-created_at for newest first)"
       disabled: true
-    - name: ""
-      value: ""
-      type: query
-      description: "'pet_id', 'route_id',"
-    - name: filter[pet_id]
-      value: ""
-      type: query
-    - name: filter[route_id]
-      value: ""
-      type: query
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # List Walk Sessions API
+
+  Retrieves chronological history of past walks for a specific pet.
+
+  ## Figma Screen
+  - **Screen:** Walk Mode -> Walk History Screen
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/pets/:petId/walks`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Pet ID (e.g. `1` for Pedro) |
+
+  ---
+
+  ## Response (200 OK)
+  Returns list of `WalkSessionResource` objects (id, distance_km, duration_formatted, steps, calories, xp_earned, created_at).
 
 settings:
   encodeUrl: true

@@ -1,23 +1,72 @@
-info:
+﻿info:
   name: Send Friend Request
   type: http
   seq: 5
+
 http:
   method: POST
   url: "{{base_url}}/v1/social/request/send/1"
   headers:
     - name: Accept
       value: application/json
+    - name: Content-Type
+      value: application/json
   body:
-    type: multipart-form
-    data:
-      - name: target_pet_id
-        type: text
-        value: 2
-        description: The ID of the pet you want to send a friend request to
+    type: json
+    data: |-
+      {
+        "target_pet_id": 3
+      }
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Send Friend Request API
+
+  Sends an explicit connection / friend request directly from a pet's profile.
+
+  ## Figma Screen
+  - **Screen:** Others Pet Profile -> "Add Friend" / "Connect" button
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/social/request/send/:petId`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | Sender pet ID (e.g. `1` for Pedro) |
+
+  ### Request Body (JSON)
+  ```json
+  {
+    "target_pet_id": 3
+  }
+  ```
+
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `target_pet_id` | integer | Yes | ID of the pet receiving the request |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Friend request sent successfully",
+    "data": {
+      "status": "pending",
+      "requester_pet_id": 1,
+      "connected_pet_id": 3
+    }
+  }
+  ```
+
 settings:
   encodeUrl: true
   timeout: 0

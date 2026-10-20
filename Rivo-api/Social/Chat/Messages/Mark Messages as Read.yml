@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Mark Messages as Read
   type: http
   seq: 5
@@ -9,15 +9,50 @@ http:
   headers:
     - name: Accept
       value: application/json
-    - name: Authorization
-      value: Bearer {{auth_token}}
+    - name: Content-Type
+      value: application/json
   body:
     type: json
     data: |-
       {
-          "conversation_id": 1
+        "conversation_id": 1
       }
-  auth: inherit
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Mark Messages as Read API
+
+  Updates all unread messages in a conversation as read by the current user.
+
+  ## Figma Screen
+  - **Screen:** Chat Room (Triggered on screen open)
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/chat/messages/read`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Request Body (JSON)
+  ```json
+  {
+    "conversation_id": 1
+  }
+  ```
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Messages marked as read",
+    "data": []
+  }
+  ```
 
 settings:
   encodeUrl: true
@@ -25,5 +60,3 @@ settings:
   followRedirects: true
   maxRedirects: 5
   forwardAuthorizationHeader: true
-
-docs: Marks all unread messages in a specific conversation as 'read' for the authenticated user.

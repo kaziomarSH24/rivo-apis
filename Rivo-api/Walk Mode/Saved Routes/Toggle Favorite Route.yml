@@ -1,7 +1,7 @@
-info:
+﻿info:
   name: Toggle Favorite Route
   type: http
-  seq: 7
+  seq: 9
 
 http:
   method: PUT
@@ -12,3 +12,39 @@ http:
   auth:
     type: bearer
     token: "{{userToken}}"
+
+docs: |-
+  # Toggle Favorite Route API
+
+  Toggles the favorite (bookmark) state on a walking route.
+
+  ## Figma Screen
+  - **Screen:** Routes List -> Heart/Star icon button on route card
+
+  ---
+
+  ## Request Details
+  - **Method:** `PUT`
+  - **URL:** `{{base_url}}/v1/walk-routes/:routeId/toggle-favorite`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Route favorite status updated",
+    "data": {
+      "route_id": 1,
+      "is_favorite": true
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

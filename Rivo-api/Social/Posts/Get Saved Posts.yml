@@ -1,0 +1,145 @@
+﻿info:
+  name: Get Saved Posts
+  type: http
+  seq: 10
+
+http:
+  method: GET
+  url: "{{base_url}}/v1/social/posts/saved?page=1&per_page=15"
+  params:
+    - name: page
+      value: "1"
+      type: query
+      description: "Page number for pagination"
+    - name: per_page
+      value: "15"
+      type: query
+      description: "Number of posts per page"
+  headers:
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Get Saved Posts API
+
+  Retrieves the authenticated user's bookmarked / saved posts feed, ordered by most recently bookmarked.
+
+  ## Figma Screen
+  - **Screen:** Pet Profile -> "Saved Post" button / Bookmark Library
+  - **Purpose:** Displays all posts the user saved for quick reference.
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/social/posts/saved`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Query Parameters
+  | Parameter | Type | Required | Default | Description |
+  | :--- | :--- | :--- | :--- | :--- |
+  | `page` | integer | No | `1` | Pagination page number |
+  | `per_page` | integer | No | `15` | Number of items per page |
+
+  ### Request Headers
+  | Header | Value | Description |
+  | :--- | :--- | :--- |
+  | `Accept` | `application/json` | Expect JSON response |
+  | `Authorization` | `Bearer <token>` | Bearer authentication token |
+
+  ---
+
+  ## Response Structure
+
+  ### Success (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Saved posts retrieved successfully",
+    "data": {
+      "data": [
+        {
+          "id": 1,
+          "title": null,
+          "content": "Morning walk with Pedro! Explored the whole park trail today.",
+          "type": "walk",
+          "location": "Central Dog Park",
+          "visibility": "public",
+          "hide_like_count": false,
+          "hide_share_count": false,
+          "turn_off_commenting": false,
+          "likes_count": 5,
+          "is_liked": true,
+          "user_reaction": "paw",
+          "reactions": {
+            "bone": 2,
+            "fire": 1,
+            "paw": 2,
+            "heart": 0,
+            "clap": 0
+          },
+          "comments_count": 3,
+          "shares_count": 1,
+          "is_bookmarked": true,
+          "created_at": "2026-10-18T08:00:00.000000Z",
+          "updated_at": "2026-10-18T08:00:00.000000Z",
+          "user": {
+            "id": 1,
+            "name": "Kazi Omar",
+            "avatar": null
+          },
+          "pet": {
+            "id": 1,
+            "name": "Pedro",
+            "breed": "Golden Retriever",
+            "photo": null
+          },
+          "media": []
+        }
+      ],
+      "links": {
+        "first": "http://.../v1/social/posts/saved?page=1",
+        "last": "http://.../v1/social/posts/saved?page=1",
+        "prev": null,
+        "next": null
+      },
+      "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "per_page": 15,
+        "to": 1,
+        "total": 1
+      }
+    }
+  }
+  ```
+
+  ### Response Fields Explanation
+  | Field | Type | Description |
+  | :--- | :--- | :--- |
+  | `ok` | boolean | Success status (`true`) |
+  | `message` | string | Status message |
+  | `data.data[]` | array | List of bookmarked post objects |
+  | `...[].id` | integer | Unique post ID |
+  | `...[].content` | string | Caption or post body text |
+  | `...[].type` | string | Post type (`general`, `walk`, `badge`, `milestone`) |
+  | `...[].location` | string\|null | Optional check-in location name |
+  | `...[].likes_count` | integer | Total count of likes / reactions |
+  | `...[].is_liked` | boolean | Whether current user reacted to this post |
+  | `...[].user_reaction` | string\|null | Specific reaction slug (`bone`, `fire`, `paw`, `heart`, `clap`) |
+  | `...[].is_bookmarked` | boolean | Always `true` in saved posts view |
+  | `...[].user` | object | Post author details (`id`, `name`, `avatar`) |
+  | `...[].pet` | object | Associated pet details (`id`, `name`, `breed`, `photo`) |
+  | `...[].media` | array | Attached photos / videos |
+  | `data.meta` | object | Laravel pagination metadata (`current_page`, `last_page`, `total`) |
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

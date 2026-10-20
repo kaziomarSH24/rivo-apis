@@ -1,7 +1,8 @@
-info:
+﻿info:
   name: Delete Pet
   type: http
   seq: 5
+
 http:
   method: DELETE
   url: "{{base_url}}/v1/pets/1"
@@ -9,6 +10,43 @@ http:
     - name: Accept
       value: application/json
   auth:
-  mode: bearer
-auth:bearer:
-  token: {{userToken}}
+    type: bearer
+    token: "{{userToken}}"
+
+docs: |-
+  # Delete Pet API
+
+  Deletes a pet profile and associated data.
+
+  ## Figma Screen
+  - **Screen:** Pet Settings -> "Delete Pet Profile" confirmation modal
+
+  ---
+
+  ## Request Details
+  - **Method:** `DELETE`
+  - **URL:** `{{base_url}}/v1/pets/:petId`
+  - **Authentication:** `Bearer {{userToken}}` (Must be pet owner)
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `petId` | integer | Yes | ID of the pet to delete |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Pet deleted successfully",
+    "data": []
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

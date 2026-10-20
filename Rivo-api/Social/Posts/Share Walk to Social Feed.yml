@@ -1,4 +1,4 @@
-info:
+﻿info:
   name: Share Walk to Social Feed
   type: http
   seq: 6
@@ -6,6 +6,9 @@ info:
 http:
   method: POST
   url: "{{base_url}}/v1/social/posts"
+  headers:
+    - name: Accept
+      value: application/json
   body:
     type: multipart-form
     data:
@@ -15,12 +18,12 @@ http:
         description: "Set to walk_summary"
       - name: walk_session_id
         type: text
-        value: "34"
-        description: "Required. Walk Session ID from {{base_url}}/v1/pets/:petId/walks"
+        value: "1"
+        description: "Required. Walk Session ID from completed walk"
       - name: content
         type: text
-        value: "Morning walk with my Pedro! 🐾✨"
-        description: "Optional caption/text for the walk post"
+        value: "Completed a 4.2 km trail exploration with Pedro today!"
+        description: "Caption / text for the walk post"
       - name: location
         type: text
         value: "Central Dog Park"
@@ -28,15 +31,40 @@ http:
       - name: visibility
         type: text
         value: "public"
-        description: "Post visibility: public,followers,private (Default: public)"
-      - name: pet_id
-        type: text
-        value: "1"
-        description: "Optional. Pet ID from {{base_url}}/v1/pets (Auto-detected from walk_session_id if omitted)"
-        disabled: true
+        description: "Post visibility: public, followers, private"
   auth:
     type: bearer
-    token: "{{pet15User}}"
+    token: "{{userToken}}"
+
+docs: |-
+  # Share Walk to Social Feed API
+
+  Publishes a completed walk session as an interactive walk summary card on the community feed.
+
+  ## Figma Screen
+  - **Screen:** Walk Mode -> Walk Completed Summary -> "Share to Social Feed" button
+  - **Screen:** Community Feed / Profile -> Walk summary card (distance, duration, pace, route thumbnail)
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/social/posts`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Request Body (multipart/form-data)
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `type` | string | Yes | Set to `"walk_summary"` |
+  | `walk_session_id` | integer | Yes | ID of the completed walk session |
+  | `content` | string | No | User's caption or notes |
+  | `location` | string | No | Location or park name |
+  | `visibility` | string | No | `public`, `followers`, or `private` (default: `public`) |
+
+  ---
+
+  ## Response (201 Created)
+  Returns the created `PostResource` with post type `walk_summary` and attached walk metrics.
 
 settings:
   encodeUrl: true

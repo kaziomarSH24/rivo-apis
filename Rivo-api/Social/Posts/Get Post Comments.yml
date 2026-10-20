@@ -1,26 +1,65 @@
-info:
+﻿info:
   name: Get Post Comments
   type: http
-  seq: 5
+  seq: 8
 
 http:
   method: GET
-  url: "{{base_url}}/v1/social/posts/:postId/comments"
+  url: "{{base_url}}/v1/social/posts/1/comments?include=user,replies.user"
   headers:
     - name: Accept
       value: application/json
   params:
-    - name: postId
-      value: "5"
-      type: path
-      description: "Post ID from {{base_url}}/v1/social/posts"
     - name: include
       value: "user,replies.user"
       type: query
-      description: "Relations to include: user,replies,replies.user"
+      description: "Include author and nested replies"
   auth:
     type: bearer
-    token: "{{pet15User}}"
+    token: "{{userToken}}"
+
+docs: |-
+  # Get Post Comments API
+
+  Fetches the comment thread for a specific post, including author details and nested replies.
+
+  ## Figma Screen
+  - **Screen:** Post Details Screen -> Comments list
+
+  ---
+
+  ## Request Details
+  - **Method:** `GET`
+  - **URL:** `{{base_url}}/v1/social/posts/:postId/comments`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `postId` | integer | Yes | ID of the post |
+
+  ---
+
+  ## Response (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Comments retrieved successfully",
+    "data": [
+      {
+        "id": 1,
+        "content": "Pedro looks so happy! Great walk!",
+        "created_at": "2026-10-20T11:00:00.000000Z",
+        "user": {
+          "id": 1,
+          "name": "Kazi Omar",
+          "avatar": null
+        },
+        "replies": []
+      }
+    ]
+  }
+  ```
 
 settings:
   encodeUrl: true
