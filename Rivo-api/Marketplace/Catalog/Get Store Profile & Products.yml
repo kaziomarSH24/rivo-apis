@@ -9,34 +9,60 @@ http:
   headers:
     - name: Accept
       value: application/json
+  params:
+    - name: category_id
+      value: "1"
+      type: query
+      description: "Filter products by category ID available in this store (e.g. 1 for Food)"
+      disabled: true
+    - name: sort
+      value: -rating
+      type: query
+      description: "Sort products: price, -price, rating, -rating, name, created_at, -created_at"
+      disabled: true
+    - name: per_page
+      value: "15"
+      type: query
+      description: "Number of products per page (default: 15)"
+      disabled: true
   auth:
     type: bearer
     token: "{{userToken}}"
 
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
 docs: |-
   # Store Profile & Catalog Screen
 
-  Fetches comprehensive details for a specific store:
-  - Banner & Logo images
-  - Address, city, state, contact phone, email
-  - Star rating & 5-star distribution breakdown
-  - Catalog of products sold by this merchant
+  Fetches comprehensive details for a specific store formatted for the mobile store profile screen.
 
-  ## Figma Screen
-  - **Screen:** Merchant / Store Profile Page
-  - **UI Elements:** Store header banner, verified badge, rating summary, delivery time indicator, and category product carousel.
+  ## Figma Screens
+  - **Screen 1 (Shop Details):** Store header banner, circular logo badge, store name, rating & review count (`★ 4.9`), delivery fee & time badges, **"Browse Categories"** carousel, **"Products"** grid/carousel with wishlist heart, and **"Review"** preview with customer comment.
+  - **Screen 2 (Store Review):** Overall rating score (e.g. `4.8`), total reviews count, 5-star distribution percentage breakdown (5★ to 1★), and paginated customer reviews with timestamps.
 
   ---
 
   ## Request Details
   - **Method:** `GET`
-  - **URL:** `{{base_url}}/v1/marketplace/stores/:storeId`
+  - **URL:** `{{base_url}}/v1/marketplace/stores/:store`
   - **Authentication:** `Bearer {{userToken}}`
 
   ### Path Parameters
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `storeId` | integer | Yes | ID of the target store (e.g. `1`) |
+  | `store` | integer / string | Yes | ID or slug of the target store (e.g. `1` or `pawsome-pet-shop-austin`) |
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `category_id` | integer | No | Filter products in this store by category ID (e.g. `1` for Food) |
+  | `sort` | string | No | Sort products: `price`, `-price`, `rating`, `-rating`, `name` |
+  | `per_page` | integer | No | Products per page (default: 15) |
 
   ---
 
@@ -49,33 +75,93 @@ docs: |-
       "store": {
         "id": 1,
         "name": "Pawsome Pet Shop",
+        "slug": "pawsome-pet-shop-austin",
         "type": "pet_shop",
-        "rating": 4.9,
-        "reviews_count": 128,
+        "logo": "http://10.10.28.53/storage/stores/logos/pawsome.jpg",
+        "banner": "http://10.10.28.53/storage/stores/banners/pawsome.jpg",
+        "rating": 5.0,
+        "reviews_count": 2,
+        "delivery_fee": 0,
         "delivery_time_text": "15-20 min",
-        "delivery_fee": 0
+        "street_address": "2401 S Congress Ave",
+        "city": "Austin",
+        "is_verified": true,
+        "is_live": true
       },
+      "categories": [
+        {
+          "id": 1,
+          "name": "Food",
+          "slug": "food",
+          "icon": "http://10.10.28.53/storage/categories/food.png",
+          "order_column": 1
+        },
+        {
+          "id": 4,
+          "name": "Beds",
+          "slug": "beds",
+          "icon": "http://10.10.28.53/storage/categories/beds.png",
+          "order_column": 4
+        }
+      ],
       "reviews_summary": {
-        "average_rating": 4.9,
-        "total_reviews": 128,
+        "rating": 5.0,
+        "reviews_count": 2,
         "breakdown": {
-          "5_star": 90,
-          "4_star": 8,
-          "3_star": 2,
-          "2_star": 0,
-          "1_star": 0
+          "5": { "star": 5, "count": 2, "percentage": 100 },
+          "4": { "star": 4, "count": 0, "percentage": 0 },
+          "3": { "star": 3, "count": 0, "percentage": 0 },
+          "2": { "star": 2, "count": 0, "percentage": 0 },
+          "1": { "star": 1, "count": 0, "percentage": 0 }
+        },
+        "reviews": {
+          "current_page": 1,
+          "data": [
+            {
+              "id": 36,
+              "user": {
+                "id": 8,
+                "name": "Store Owner",
+                "avatar": null
+              },
+              "rating": 5,
+              "comment": "Fantastic local pet shop! Ultra fast 15-minute delivery and great customer care.",
+              "photos": [],
+              "created_at": "2026-10-22T06:13:06.000000Z",
+              "created_at_human": "2 days ago"
+            }
+          ],
+          "per_page": 15,
+          "total": 2,
+          "last_page": 1
         }
       },
       "products": {
-        "data": [...]
+        "data": [
+          {
+            "id": 1,
+            "store_id": 1,
+            "category_id": 1,
+            "name": "Royal Canin Medium Adult Dry Dog Food",
+            "slug": "royal-canin-medium-adult-dry-dog-food",
+            "price": 54.99,
+            "discount_price": 49.99,
+            "has_discount": true,
+            "discount_percentage": 9,
+            "stock": 45,
+            "is_in_stock": true,
+            "primary_image": "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800",
+            "rating": 4.5,
+            "reviews_count": 2
+          }
+        ],
+        "links": { ... },
+        "meta": {
+          "current_page": 1,
+          "per_page": 15,
+          "total": 4
+        }
       }
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true
