@@ -6,27 +6,34 @@ info:
 http:
   method: PUT
   url: "{{base_url}}/v1/marketplace/addresses/:addressId"
-  params:
-    - name: addressId
-      value: "1"
-      type: path
   headers:
     - name: Content-Type
       value: application/json
     - name: Accept
       value: application/json
-  auth:
-    type: bearer
-    token: "{{userToken}}"
+  params:
+    - name: addressId
+      value: "1"
+      type: path
   body:
     type: json
     data: |-
       {
         "street_address": "124 Main Street",
         "house_no": "Apt 5C (Updated)",
-        "city": "Austin",
+        "city": "New York",
         "is_default": true
       }
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # Update Existing Address
@@ -52,13 +59,13 @@ docs: |-
   {
     "ok": true,
     "message": "Delivery address updated successfully.",
-    "data": { ... }
+    "data": {
+      "id": 1,
+      "street_address": "124 Main Street",
+      "house_no": "Apt 5C (Updated)",
+      "city": "New York",
+      "is_default": true,
+      "formatted_address": "Apt 5C (Updated), 124 Main Street, New York"
+    }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true

@@ -10,9 +10,30 @@ http:
     - name: Accept
       value: application/json
   params:
-    - name: is_default
-      value: "true"
+    - name: filter[is_default]
+      value: "1"
       type: query
+      description: "Filter by default status: 1 or 0"
+      disabled: true
+    - name: filter[city]
+      value: Austin
+      type: query
+      description: "Filter partial match by city"
+      disabled: true
+    - name: filter[state]
+      value: TX
+      type: query
+      description: "Filter partial match by state"
+      disabled: true
+    - name: filter[street_address]
+      value: "Main Street"
+      type: query
+      description: "Filter partial match by street address"
+      disabled: true
+    - name: sort
+      value: -created_at
+      type: query
+      description: "Sort fields: is_default, -is_default, created_at, -created_at"
       disabled: true
   auth:
     type: bearer
@@ -28,11 +49,11 @@ settings:
 docs: |-
   # Saved Delivery Addresses List
 
-  Returns all saved delivery locations for the authenticated user, prioritized with default address first.
+  Returns all saved delivery locations for the authenticated user, prioritized with default address first. Powered by `UserAddressService` and `UserAddressResource`.
 
   ## Figma Screen
-  - **Screen:** Delivery Address Selector / Manage Addresses Screen
-  - **UI Elements:** Address cards with radio selector, Default badge, Edit and Delete buttons, "Add New Address" bottom button.
+  - **Screen:** Delivery Address Selector / Manage Addresses Screen (Cart & Checkout Flow)
+  - **UI Elements:** Address cards with radio selector, Default badge, Edit and Delete buttons, formatted single-line address, and "Add New Address" bottom button.
 
   ---
 
@@ -40,6 +61,15 @@ docs: |-
   - **Method:** `GET`
   - **URL:** `{{base_url}}/v1/marketplace/addresses`
   - **Authentication:** `Bearer {{userToken}}`
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `filter[is_default]` | boolean / int | No | Filter by default status (`1` or `0`) |
+  | `filter[city]` | string | No | Partial filter by city name (e.g. `Austin`) |
+  | `filter[state]` | string | No | Partial filter by state code (e.g. `TX`) |
+  | `filter[street_address]` | string | No | Partial filter by street address |
+  | `sort` | string | No | Sort by `is_default`, `-is_default`, `-created_at` |
 
   ---
 
@@ -52,14 +82,15 @@ docs: |-
       {
         "id": 1,
         "street_address": "124 Main Street",
-        "house_no": "Apt 4B",
+        "house_no": "Apt 5C (Updated)",
         "landmark": "Near South Congress Bridge",
         "city": "Austin",
         "state": "TX",
         "zip_code": "78701",
         "latitude": 30.2648,
         "longitude": -97.7471,
-        "is_default": true
+        "is_default": true,
+        "formatted_address": "Apt 5C (Updated), 124 Main Street, Near South Congress Bridge, Austin, TX, 78701"
       }
     ]
   }

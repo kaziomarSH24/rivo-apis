@@ -65,7 +65,8 @@ docs: |-
       "id": 2,
       "street_address": "2200 Barton Springs Rd",
       "city": "Austin",
-      "is_default": true
+      "is_default": true,
+      "formatted_address": "Suite 102, 2200 Barton Springs Rd, Zilker Park Entrance, Austin, TX, 78704"
     }
   }
   ```
