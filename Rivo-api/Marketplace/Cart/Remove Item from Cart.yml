@@ -6,17 +6,24 @@ info:
 http:
   method: DELETE
   url: "{{base_url}}/v1/marketplace/cart/items/:item"
-  params:
-    - name: item
-      value: "1"
-      type: path
-      description: "Cart Item ID to remove"
   headers:
     - name: Accept
       value: application/json
+  params:
+    - name: item
+      value: "129"
+      type: path
+      description: Cart Item ID to remove
   auth:
     type: bearer
     token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # Remove Item from Cart
@@ -48,10 +55,3 @@ docs: |-
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true

@@ -11,7 +11,7 @@ http:
       value: application/json
   params:
     - name: filter[status]
-      value: ongoing
+      value: cancelled
       type: query
       description: "Order status filter: ongoing, completed, cancelled"
       disabled: true
@@ -23,11 +23,18 @@ http:
     - name: per_page
       value: "15"
       type: query
-      description: "Number of orders per page"
+      description: Number of orders per page
       disabled: true
   auth:
     type: bearer
     token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # My Orders List (Tabs Support)
@@ -83,10 +90,3 @@ docs: |-
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true
