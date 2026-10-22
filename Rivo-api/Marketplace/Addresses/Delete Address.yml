@@ -5,13 +5,24 @@ info:
 
 http:
   method: DELETE
-  url: "{{base_url}}/v1/marketplace/addresses/1"
+  url: "{{base_url}}/v1/marketplace/addresses/:addressId"
   headers:
     - name: Accept
       value: application/json
+  params:
+    - name: addressId
+      value: "116"
+      type: path
   auth:
     type: bearer
     token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # Delete Saved Address
@@ -40,10 +51,3 @@ docs: |-
     "data": []
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true

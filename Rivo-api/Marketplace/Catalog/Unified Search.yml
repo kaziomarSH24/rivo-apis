@@ -11,12 +11,19 @@ http:
       value: application/json
   params:
     - name: q
-      value: "Royal Canin"
+      value: Dog food
       type: query
-      description: "Search keyword (matches products name/description and stores name/city)"
+      description: Search keyword (matches products name/description and stores name/city)
   auth:
     type: bearer
     token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # Marketplace Unified Search
@@ -77,10 +84,3 @@ docs: |-
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true

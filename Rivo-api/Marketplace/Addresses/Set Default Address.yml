@@ -5,13 +5,24 @@ info:
 
 http:
   method: PATCH
-  url: "{{base_url}}/v1/marketplace/addresses/1/default"
+  url: "{{base_url}}/v1/marketplace/addresses/:addressId/default"
   headers:
     - name: Accept
       value: application/json
+  params:
+    - name: addressId
+      value: "1"
+      type: path
   auth:
     type: bearer
     token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # Set Default Delivery Location
@@ -43,10 +54,3 @@ docs: |-
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true

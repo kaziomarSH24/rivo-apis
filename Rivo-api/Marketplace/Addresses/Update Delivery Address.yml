@@ -5,7 +5,11 @@ info:
 
 http:
   method: PUT
-  url: "{{base_url}}/v1/marketplace/addresses/1"
+  url: "{{base_url}}/v1/marketplace/addresses/:addressId"
+  params:
+    - name: addressId
+      value: "1"
+      type: path
   headers:
     - name: Content-Type
       value: application/json
