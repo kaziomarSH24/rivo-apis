@@ -1,0 +1,77 @@
+info:
+  name: Confirm Order Payment
+  type: http
+  seq: 2
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/marketplace/orders/1/confirm-payment"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Accept
+      value: application/json
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+  body:
+    type: json
+    data: |-
+      {
+        "payment_intent_id": "pi_test_123456789"
+      }
+
+docs: |-
+  # Confirm Order Payment (Stripe / 3DS)
+
+  Called by mobile/web client immediately after the customer successfully completes the Stripe PaymentSheet / Apple Pay / 3D Secure authentication flow:
+  - Verifies PaymentIntent state with Stripe gateway
+  - Updates polymorphic `Transaction` status to `completed`
+  - Updates `Order.payment_status` to `paid`
+  - Records payment metadata & transaction ID
+
+  > **Note:** If the client fails or loses connection during verification, the backend Stripe Webhook (`payment_intent.succeeded`) will also asynchronously catch and mark the order as `paid`.
+
+  ---
+
+  ## Request Details
+  - **Method:** `POST`
+  - **URL:** `{{base_url}}/v1/marketplace/orders/:orderId/confirm-payment`
+  - **Authentication:** `Bearer {{userToken}}`
+
+  ### Path Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `orderId` | integer | Yes | ID of the order being confirmed |
+
+  ### Request Body Fields
+  | Field | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `payment_intent_id` | string | No | Stripe PaymentIntent ID (e.g. `pi_3Mtw...`). If omitted, gateway looks up the order's linked intent. |
+
+  ---
+
+  ## Response Structure (200 OK)
+  ```json
+  {
+    "ok": true,
+    "message": "Order payment confirmed successfully.",
+    "data": {
+      "id": 1,
+      "order_number": "RIV-78421",
+      "status": "new",
+      "payment_status": "paid",
+      "payment_method": "stripe",
+      "total": 49.11,
+      "transaction_id": 14,
+      "placed_at": "2026-10-22T03:00:00.000000Z"
+    }
+  }
+  ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

@@ -20,24 +20,26 @@ http:
       {
         "address_id": 1,
         "delivery_type": "express",
-        "payment_method": "mastercard",
+        "payment_method": "stripe",
         "notes": "Please leave at the door with doorman."
       }
 
 docs: |-
-  # Customer Checkout (Place Order)
+  # Customer Checkout (Place Order & Initiate Payment)
 
-  Executes order placement from the customer's active cart:
+  Executes order placement from the customer's active cart and initiates payment via the Decoupled Payment Gateway Interface:
   - Generates unique order number (e.g. `RIV-78421`)
   - Decrements product and variant inventory stock counts
   - Increments product sales counter
   - Calculates Rivo Pro subscriber $0 delivery fee benefit
   - Automatically empties user's active shopping cart
-  - Creates order items historical snapshot
+  - Creates polymorphic `Transaction` record (morphs to `Order`)
+  - Dispatches to driver (`StripePaymentGateway` or `CashOnDeliveryGateway`)
+  - If Stripe: generates `PaymentIntent`, returning `client_secret` and `publishable_key` for frontend PaymentSheet / 3D Secure completion.
 
   ## Figma Screen
   - **Screen:** Checkout Screen / Order Confirmation Screen
-  - **UI Elements:** Delivery address selector, Delivery speed option (Express 15-20 min), Payment method selector, Total receipt card, "Place Order" button.
+  - **UI Elements:** Delivery address selector, Delivery speed option (Express 15-20 min), Payment method selector (Stripe / Apple Pay / Visa / Master / COD), Total receipt card, "Place Order" button.
 
   ---
 
@@ -52,41 +54,80 @@ docs: |-
   | `address_id` | integer | No | Saved delivery address ID (required if `delivery_address` is omitted) |
   | `delivery_address` | object | No | Custom address object if not using a saved address ID |
   | `delivery_type` | string | No | `express` (15-20 min), `standard`, or `pickup` (default: `express`) |
-  | `payment_method` | string | No | `mastercard`, `visa`, `apple_pay`, `cash_on_delivery` |
+  | `payment_method` | string | No | `stripe`, `mastercard`, `visa`, `apple_pay`, `google_pay`, `card`, `cash_on_delivery`, `cash`, `cod` |
+  | `payment_method_id` | string | No | Optional Stripe PaymentMethod ID (`pm_...`) for direct server-side charge |
   | `notes` | string | No | Special delivery instructions for courier |
 
   ---
 
   ## Response Structure (201 Created)
+  ### When `payment_method` = `stripe` (or card, apple_pay):
   ```json
   {
     "ok": true,
     "message": "Order placed successfully.",
     "data": {
-      "id": 1,
-      "order_number": "RIV-78421",
-      "status": "new",
-      "delivery_type": "express",
-      "estimated_delivery_time": "15-20 min",
-      "subtotal": 49.99,
-      "delivery_fee": 0,
-      "tax": 4.12,
-      "discount": 5,
-      "total": 49.11,
-      "payment_method": "mastercard",
-      "payment_status": "paid",
-      "placed_at": "2026-10-20T06:29:13.000000Z",
-      "items": [
-        {
-          "id": 1,
-          "product_name": "Royal Canin Medium Adult Dry Dog Food",
-          "variant_flavor": "Chicken & Rice",
-          "variant_size": "30 lbs",
-          "price": 49.99,
-          "quantity": 1,
-          "total": 49.99
-        }
-      ]
+      "order": {
+        "id": 1,
+        "order_number": "RIV-78421",
+        "status": "new",
+        "delivery_type": "express",
+        "estimated_delivery_time": "15-20 min",
+        "subtotal": 49.99,
+        "delivery_fee": 0,
+        "tax": 4.12,
+        "discount": 5,
+        "total": 49.11,
+        "payment_method": "stripe",
+        "payment_status": "pending",
+        "placed_at": "2026-10-22T03:00:00.000000Z",
+        "items": [
+          {
+            "id": 1,
+            "product_name": "Royal Canin Medium Adult Dry Dog Food",
+            "variant_flavor": "Chicken & Rice",
+            "variant_size": "30 lbs",
+            "price": 49.99,
+            "quantity": 1,
+            "total": 49.99
+          }
+        ]
+      },
+      "payment": {
+        "gateway": "stripe",
+        "status": "requires_action",
+        "requires_action": true,
+        "payment_intent_id": "pi_3Mtw..._test",
+        "client_secret": "pi_3Mtw..._secret_...",
+        "publishable_key": "pk_test_...",
+        "transaction_id": 14
+      }
+    }
+  }
+  ```
+
+  ### When `payment_method` = `cash_on_delivery` (or cod, cash):
+  ```json
+  {
+    "ok": true,
+    "message": "Order placed successfully.",
+    "data": {
+      "order": {
+        "id": 1,
+        "order_number": "RIV-78421",
+        "status": "new",
+        "payment_status": "pending",
+        ...
+      },
+      "payment": {
+        "gateway": "cash_on_delivery",
+        "status": "pending",
+        "requires_action": false,
+        "payment_intent_id": null,
+        "client_secret": null,
+        "publishable_key": null,
+        "transaction_id": 14
+      }
     }
   }
   ```
