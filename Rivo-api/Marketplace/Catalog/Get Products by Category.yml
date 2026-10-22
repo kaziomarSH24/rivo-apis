@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{base_url}}/v1/marketplace/categories/1/products"
+  url: "{{base_url}}/v1/marketplace/categories/:categoryId/products?include=store,storeCount,brand,brandCount"
   headers:
     - name: Accept
       value: application/json
@@ -18,7 +18,7 @@ http:
     - name: filter[brand_id]
       value: "1"
       type: query
-      description: "Filter by brand ID (e.g. 1 for Royal Canin)"
+      description: Filter by brand ID (e.g. 1 for Royal Canin)
       disabled: true
     - name: sort
       value: -rating
@@ -28,16 +28,30 @@ http:
     - name: per_page
       value: "15"
       type: query
-      description: "Number of products per page"
+      description: Number of products per page
       disabled: true
+    - name: include
+      value: store,storeCount,brand,brandCount
+      type: query
+      description: "Eager load relations: store, category, brand, variants, reviews | Counts: storeCount, variantsCount, etc."
+    - name: categoryId
+      value: "1"
+      type: path
   auth:
     type: bearer
     token: "{{userToken}}"
 
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
 docs: |-
   # Get Products by Category
 
-  Returns a paginated list of products within a specific category, supporting brand, pet type, price filtering, and sorting via `BaseService` and Spatie QueryBuilder.
+  Returns a paginated list of products within a specific category, supporting dynamic relationships eager-loading (`include`), counts (`*Count`), existence checks (`*Exists`), brand/pet filtering, price sorting, and pagination via `BaseService` and Spatie QueryBuilder.
 
   ## Figma Screen
   - **Screen:** Category Catalog Screen (e.g., clicking on "Food")
@@ -58,10 +72,34 @@ docs: |-
   ### Query Parameters
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `filter[pet_type]` | string | No | `dog`, `cat`, or `both` |
-  | `filter[brand_id]` | integer | No | Specific brand ID |
-  | `sort` | string | No | `price`, `-price`, `-rating`, `-sales_count`, `name` |
-  | `per_page` | integer | No | Items per page (default: 15) |
+  | `include` | string | No | Dynamic relations, counts, or exists (comma-separated, see below) |
+  | `filter[pet_type]` | string | No | Filter products by pet type: `dog`, `cat`, or `both` |
+  | `filter[brand_id]` | integer | No | Filter products by specific Brand ID (e.g. `1` for Royal Canin) |
+  | `filter[name]` | string | No | Partial name search within this category |
+  | `sort` | string | No | Sort order: `price`, `-price`, `-rating`, `-sales_count`, `name`, `created_at` |
+  | `per_page` | integer | No | Items per page (default: `15`) |
+  | `page` | integer | No | Page number for pagination (e.g. `1`) |
+
+  ---
+
+  ### 🔗 Supported Include Options (`?include=...`)
+
+  | Include Keyword | Category | Result in Response | Description |
+  | :--- | :--- | :--- | :--- |
+  | `store` | Relation | `"store": { "id": 1, "name": "...", "logo": "..." }` | Eager-loads clean public store details |
+  | `brand` | Relation | `"brand": { "id": 1, "name": "...", "logo": "..." }` | Eager-loads brand info & logo |
+  | `category` | Relation | `"category": { "id": 1, "name": "...", "icon": "..." }` | Eager-loads category info & icon |
+  | `variants` | Relation | `"variants": [ { "id": 1, "flavor": "...", "price": ... } ]` | Eager-loads variant list |
+  | `reviews` | Relation | `"reviews": [ ... ]` | Eager-loads recent customer reviews |
+  | `storeCount` | Count | `"store_count": 1` | Counts linked stores (returns integer) |
+  | `variantsCount` | Count | `"variants_count": 2` | Counts total variants available for the product |
+  | `categoryCount` | Count | `"category_count": 1` | Counts linked category |
+  | `brandCount` | Count | `"brand_count": 1` | Counts linked brand |
+  | `reviewsCount` | Count | `"reviews_count": 84` | Total reviews count |
+  | `*Exists` | Exists | `variants_exists`, `store_exists`, etc. | Boolean check (`true` / `false`) |
+
+  > **Example Usage:**  
+  > `{{base_url}}/v1/marketplace/categories/1/products?include=store,storeCount,variants,variantsCount`
 
   ---
 
@@ -71,37 +109,56 @@ docs: |-
     "ok": true,
     "message": "Products for Food retrieved successfully.",
     "data": {
-      "current_page": 1,
       "data": [
         {
           "id": 1,
+          "store_id": 1,
+          "category_id": 1,
+          "brand_id": 1,
           "name": "Royal Canin Medium Adult Dry Dog Food",
           "slug": "royal-canin-medium-adult-dry-dog-food",
+          "description": "Formulated with high-quality proteins...",
           "pet_type": "dog",
           "price": 54.99,
           "discount_price": 49.99,
+          "has_discount": true,
+          "discount_percentage": 9,
           "stock": 45,
+          "is_in_stock": true,
+          "primary_image": "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800",
+          "images": [
+            "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800"
+          ],
           "rating": 4.8,
           "reviews_count": 84,
           "sales_count": 210,
-          "brand": {
-            "id": 1,
-            "name": "Royal Canin"
-          },
           "store": {
             "id": 1,
-            "name": "Pawsome Pet Shop"
-          }
+            "name": "Pawsome Pet Shop",
+            "slug": "pawsome-pet-shop-austin",
+            "delivery_time_text": "15-20 min",
+            "delivery_fee": 0,
+            "logo": null
+          },
+          "store_count": 1,
+          "variants_count": 2
         }
       ],
-      "total": 2
+      "links": {
+        "first": "...",
+        "last": "...",
+        "prev": null,
+        "next": null
+      },
+      "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "path": "...",
+        "per_page": 15,
+        "to": 4,
+        "total": 4
+      }
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true
