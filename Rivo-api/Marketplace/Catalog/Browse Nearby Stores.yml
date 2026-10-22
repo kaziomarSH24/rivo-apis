@@ -18,30 +18,47 @@ http:
     - name: filter[city]
       value: Austin
       type: query
-      description: "Filter stores in specific city"
+      description: Filter stores in specific city (e.g. Austin)
+      disabled: true
+    - name: filter[name]
+      value: Pawsome
+      type: query
+      description: Partial store name search
       disabled: true
     - name: sort
       value: -rating
       type: query
-      description: "Sort order: -rating, -reviews_count, name, delivery_fee"
+      description: "Sort order: rating, -rating, reviews_count, -reviews_count, name, delivery_fee"
       disabled: true
     - name: per_page
       value: "15"
       type: query
-      description: "Number of stores per page"
+      description: "Number of stores per page (default: 15)"
+      disabled: true
+    - name: include
+      value: "products,productsCount,productsExists,reviews,reviewsCount,reviewsExists"
+      type: query
+      description: "Comma-separated includes: products, productsCount, productsExists, documents, documentsCount, documentsExists, reviews, reviewsCount, reviewsExists"
       disabled: true
   auth:
     type: bearer
     token: "{{userToken}}"
 
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
 docs: |-
   # Browse Nearby Stores List
 
-  Lists all active local pet stores, veterinary clinics, grooming salons, and pet pharmacies.
+  Lists all verified & live local pet shops, veterinary clinics, grooming salons, and pharmacies, formatted via `StoreCardResource`.
 
   ## Figma Screen
   - **Screen:** Stores List / Explore Stores Near You
-  - **UI Elements:** Store logo, store name, distance/delivery time badge (e.g. `15 min`), star rating, review count, and store category tags.
+  - **UI Elements:** Store logo, banner, store name, distance/delivery time badge (e.g. `15 min`), star rating, reviews count, and address.
 
   ---
 
@@ -54,10 +71,31 @@ docs: |-
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
   | `filter[type]` | string | No | `pet_shop`, `veterinary`, `grooming`, `pharmacy` |
-  | `filter[city]` | string | No | City name (e.g. `Austin`) |
-  | `filter[name]` | string | No | Partial store name match |
-  | `sort` | string | No | `rating`, `-rating`, `name`, `delivery_fee` |
+  | `filter[city]` | string | No | Filter by city name (e.g. `Austin`) |
+  | `filter[name]` | string | No | Partial store name match (e.g. `Pawsome`) |
+  | `sort` | string | No | `rating`, `-rating`, `reviews_count`, `-reviews_count`, `name`, `delivery_fee` |
+  | `include` | string | No | Dynamic relations, counts & boolean flags (details below) |
   | `per_page` | integer | No | Items per page (default: 15) |
+
+  ---
+
+  ## Dynamic Includes (`?include=...`)
+  API supports 9 Spatie query includes to optimize frontend payloads:
+
+  | Include Name | Type | Response Key | Description |
+  | :--- | :--- | :--- | :--- |
+  | `products` | Relationship | `products` (array) | Eager-loads store products via `ProductCardResource` |
+  | `productsCount` | Count | `products_count` (int) | Returns total count of products for the store |
+  | `productsExists` | Exists | `products_exists` (bool) | Fast boolean flag (`true`/`false`) if store has products |
+  | `documents` | Relationship | `documents` (array) | Eager-loads store verification documents |
+  | `documentsCount` | Count | `documents_count` (int) | Returns total count of uploaded documents |
+  | `documentsExists` | Exists | `documents_exists` (bool) | Boolean flag if KYC documents exist |
+  | `reviews` | Relationship | `reviews` (array) | Eager-loads recent customer reviews |
+  | `reviewsCount` | Count | `reviews_count` (int) | Counts approved customer reviews |
+  | `reviewsExists` | Exists | `reviews_exists` (bool) | Boolean flag if store has at least one review |
+
+  > **Tip:** You can combine any includes, for example:
+  > `GET {{base_url}}/v1/marketplace/stores?include=productsCount,productsExists,reviewsExists`
 
   ---
 
@@ -67,30 +105,48 @@ docs: |-
     "ok": true,
     "message": "Stores list retrieved successfully.",
     "data": {
-      "current_page": 1,
       "data": [
         {
           "id": 1,
           "name": "Pawsome Pet Shop",
           "slug": "pawsome-pet-shop-austin",
           "type": "pet_shop",
-          "city": "Austin",
+          "logo": "http://10.10.28.53/storage/stores/logos/pawsome.jpg",
+          "banner": "http://10.10.28.53/storage/stores/banners/pawsome.jpg",
           "rating": 4.9,
           "reviews_count": 128,
           "delivery_fee": 0,
           "delivery_time_text": "15-20 min",
+          "street_address": "2401 S Congress Ave",
+          "city": "Austin",
           "is_verified": true,
-          "is_live": true
+          "is_live": true,
+
+          // Dynamic fields (only present when requested via ?include=...)
+          "products": [],
+          "products_count": 45,
+          "products_exists": true,
+          "documents": [],
+          "documents_count": 2,
+          "documents_exists": true,
+          "reviews": [],
+          "reviews_exists": true
         }
       ],
-      "total": 3
+      "links": {
+        "first": "http://10.10.28.53/api/v1/marketplace/stores?page=1",
+        "last": "http://10.10.28.53/api/v1/marketplace/stores?page=1",
+        "prev": null,
+        "next": null
+      },
+      "meta": {
+        "current_page": 1,
+        "from": 1,
+        "last_page": 1,
+        "per_page": 15,
+        "to": 3,
+        "total": 3
+      }
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true
