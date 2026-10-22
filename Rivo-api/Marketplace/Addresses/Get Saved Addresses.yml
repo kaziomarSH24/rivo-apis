@@ -18,17 +18,17 @@ http:
     - name: filter[city]
       value: Austin
       type: query
-      description: "Filter partial match by city"
+      description: Filter partial match by city
       disabled: true
     - name: filter[state]
       value: TX
       type: query
-      description: "Filter partial match by state"
+      description: Filter partial match by state
       disabled: true
     - name: filter[street_address]
-      value: "Main Street"
+      value: Main Street
       type: query
-      description: "Filter partial match by street address"
+      description: Filter partial match by street address
       disabled: true
     - name: sort
       value: -created_at

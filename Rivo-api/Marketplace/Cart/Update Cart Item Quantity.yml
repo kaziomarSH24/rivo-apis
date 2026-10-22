@@ -5,21 +5,28 @@ info:
 
 http:
   method: PATCH
-  url: "{{base_url}}/v1/marketplace/cart/items/1"
+  url: "{{base_url}}/v1/marketplace/cart/items/125"
   headers:
     - name: Content-Type
       value: application/json
     - name: Accept
       value: application/json
-  auth:
-    type: bearer
-    token: "{{userToken}}"
   body:
     type: json
     data: |-
       {
         "quantity": 2
       }
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # Update Cart Item Quantity Stepper
@@ -57,10 +64,3 @@ docs: |-
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true
