@@ -43,32 +43,40 @@ docs: |-
     "ok": true,
     "message": "Cart retrieved successfully.",
     "data": {
+      "cart_id": 1,
       "store": {
         "id": 1,
         "name": "Pawsome Pet Shop",
+        "slug": "pawsome-pet-shop-austin",
+        "logo": null,
         "delivery_fee": 0,
         "delivery_time_text": "15-20 min"
       },
+      "items_count": 1,
       "items": [
         {
-          "id": 1,
+          "id": 125,
+          "cart_id": 1,
           "product_id": 1,
+          "variant_id": 1,
           "name": "Royal Canin Medium Adult Dry Dog Food",
-          "flavor": "Chicken & Rice",
-          "size": "30 lbs",
-          "unit_price": 49.99,
+          "primary_image": "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800",
+          "variant_details": "Chicken & Rice, 30 lbs",
+          "unit_price": 54.99,
           "quantity": 1,
-          "total_price": 49.99,
-          "image": "https://..."
+          "item_total": 54.99,
+          "max_stock": 30,
+          "is_in_stock": true
         }
       ],
       "summary": {
-        "subtotal": 49.99,
+        "subtotal": 54.99,
         "delivery_fee": 0,
-        "tax": 4.12,
+        "is_pro_free_delivery": true,
+        "tax": 5.5,
         "discount": 0,
-        "total": 54.11,
-        "is_pro_member": true
+        "coupon_code": null,
+        "total": 60.49
       }
     }
   }
