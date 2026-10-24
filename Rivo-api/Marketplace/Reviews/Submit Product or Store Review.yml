@@ -7,54 +7,84 @@ http:
   method: POST
   url: "{{base_url}}/v1/marketplace/reviews"
   headers:
-    - name: Content-Type
-      value: application/json
     - name: Accept
       value: application/json
+  body:
+    type: multipart-form
+    data:
+      - name: reviewable_type
+        type: text
+        value: product
+        description: "Target entity type: product or store"
+      - name: reviewable_id
+        type: text
+        value: "1"
+        description: "Target product ID or store ID"
+      - name: order_id
+        type: text
+        value: "6"
+        description: "Verified purchase delivered order ID"
+      - name: rating
+        type: text
+        value: "5"
+        description: "Rating from 1 to 5"
+      - name: comment
+        type: text
+        value: "Pedro absolutely loves this Royal Canin formula! His coat is shinier and he finishes his bowl every time."
+        description: "Review text comment (max 1000 characters)"
+      - name: is_anonymous
+        type: text
+        value: "false"
+        description: "Hide user name in public review list (true/false)"
+      - name: photos[]
+        type: file
+        value: []
+        description: "Optional review photo(s). Select 1 or more images (jpeg, png, jpg, webp - max 5MB each)"
+        disabled: true
   auth:
     type: bearer
     token: "{{userToken}}"
-  body:
-    type: json
-    data: |-
-      {
-        "reviewable_type": "product",
-        "reviewable_id": 1,
-        "order_id": 1,
-        "rating": 5,
-        "comment": "Pedro absolutely loves this Royal Canin formula! His coat is shinier and he finishes his bowl every time.",
-        "is_anonymous": false
-      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # Submit Product or Store Review
 
   Submits a customer rating and review for either a purchased product or merchant store.
   - Automatically recalculates model average rating and total reviews count.
-  - Links to order ID to verify buyer badge.
+  - **Delivered Order Validation:** If `order_id` is provided, the order must belong to the authenticated user, have status `delivered`, and contain the reviewed product/store. Cancelled or ongoing orders are strictly rejected.
+  - **Duplicate Prevention:** Prevents multiple reviews for the same order and item.
+  - Links to order ID to verify buyer badge (`is_verified_purchase = true`).
   - Supports anonymous review submission toggle.
+  - Supports photo attachments via `multipart/form-data`.
 
   ## Figma Screen
-  - **Screen:** Write Review Screen / Rate & Review Bottom Sheet
-  - **UI Elements:** 5 clickable stars rating selector, review textarea, photo uploader, and "Post Review Anonymously" toggle switch.
+  - **Screen:** Write Review Screen / Rate & Review Bottom Sheet (Screen 8 & 9)
+  - **UI Elements:** 5 clickable stars rating selector, review textarea, photo uploader (`photos[]`), and "Post Review Anonymously" toggle switch.
 
   ---
 
   ## Request Details
   - **Method:** `POST`
   - **URL:** `{{base_url}}/v1/marketplace/reviews`
+  - **Content-Type:** `multipart/form-data`
   - **Authentication:** `Bearer {{userToken}}`
 
-  ### Request Body Fields
+  ### Request Form Data Fields
   | Field | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
   | `reviewable_type` | string | Yes | Target entity type: `product` or `store` |
   | `reviewable_id` | integer | Yes | Target product ID or store ID |
   | `rating` | integer | Yes | Rating from `1` to `5` |
-  | `order_id` | integer | No | Verified purchase order ID |
+  | `order_id` | integer | No | Verified purchase delivered order ID |
   | `comment` | string | No | Review text comment (max 1000 characters) |
   | `is_anonymous` | boolean | No | Hide user name in public review list (`true`/`false`) |
-  | `photo` | file | No | Optional review attachment image |
+  | `photos[]` | file / files | No | Optional review attachment images (single or multiple) |
 
   ---
 
@@ -64,20 +94,24 @@ docs: |-
     "ok": true,
     "message": "Review submitted successfully.",
     "data": {
-      "id": 1,
+      "id": 68,
       "reviewable_type": "product",
       "reviewable_id": 1,
       "rating": 5,
       "comment": "Pedro absolutely loves this Royal Canin formula!",
+      "photos": [
+        "https://cdn.rivo.pet/storage/reviews/photo_123.jpg"
+      ],
       "is_anonymous": false,
-      "created_at": "2026-10-20T06:41:13.000000Z"
+      "is_verified_purchase": true,
+      "order_id": 6,
+      "user": {
+        "id": 1,
+        "name": "Omar Faruk",
+        "avatar": null
+      },
+      "created_at": "2026-10-24T02:21:09+00:00",
+      "created_at_human": "0 seconds ago"
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true
