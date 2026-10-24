@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{base_url}}/v1/vendor/analytics"
+  url: "{{base_url}}/v1/vendor/analytics?period=week"
   headers:
     - name: Accept
       value: application/json
@@ -13,19 +13,34 @@ http:
     - name: period
       value: week
       type: query
-      description: "Reporting time range: day, week, month, year"
+      description: "Reporting time range: today, week, month (default: week)"
   auth:
     type: bearer
     token: "{{vendorToken}}"
 
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
 docs: |-
   # Vendor Sales Analytics & Reports
 
-  Fetches detailed sales statistics, order completion volumes, and top-selling products for the merchant.
+  Fetches detailed sales statistics, interactive time-series bar chart, fulfillment performance metrics, and top-selling ranked products matching the Figma "Analysis" screen.
 
   ## Figma Screen
-  - **Screen:** Business Analytics & Sales Performance Screen
-  - **UI Elements:** Period selector pills (Today, Week, Month, Year), Total Revenue metric, Total Orders metric, Best Sellers ranking table.
+  - **Screen:** Analysis Screen (`Today` / `Week` / `Month` filter pills)
+  - **UI Elements:**
+    1. **Period Filter:** `Today`, `Week` (active teal), `Month`
+    2. **Total Sales Card:** Headline amount (e.g. `$5,440`), percentage growth vs previous period (`+12.4% vs last week`), and 7-day Bar Chart (`Mon` - `Sun` with `is_today` active highlight).
+    3. **4 Performance Metric Grid Cards:**
+       - `Total Orders` (Box icon, total count, `+X today` subtext badge)
+       - `Completed` (Green check icon, total count, `X% rate` subtext badge)
+       - `Cancelled` (Red cross icon, total count, `X% rate` subtext badge)
+       - `Avg Order Value` (Money bag icon, amount, `+$X vs last wk` subtext badge)
+    4. **Best Sellers Card:** Ranked list (`rank`: 1, 2, 3...) with product image, product name, units sold (`X sold`), price, and calculated revenue (`$X`).
 
   ---
 
@@ -37,7 +52,7 @@ docs: |-
   ### Query Parameters
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `period` | string | No | `day`, `week`, `month`, `year` (default: `week`) |
+  | `period` | string | No | `today`, `week`, `month` (default: `week`) |
 
   ---
 
@@ -48,23 +63,80 @@ docs: |-
     "message": "Vendor analytics retrieved successfully.",
     "data": {
       "period": "week",
-      "total_revenue": 49.11,
-      "total_orders": 1,
+      "headline": {
+        "label": "Total Sales (Week)",
+        "amount": 1367.03,
+        "formatted_amount": "$1,367.03",
+        "growth_percentage": 100.0,
+        "growth_direction": "up",
+        "growth_label": "+100% vs last week"
+      },
+      "chart": [
+        {
+          "day": "Mon",
+          "date": "2026-10-19",
+          "total": 0.0,
+          "is_today": false,
+          "is_current": false
+        },
+        {
+          "day": "Tue",
+          "date": "2026-10-20",
+          "total": 604.9,
+          "is_today": false,
+          "is_current": false
+        },
+        {
+          "day": "Sat",
+          "date": "2026-10-24",
+          "total": 0.0,
+          "is_today": true,
+          "is_current": true
+        }
+      ],
+      "metrics": {
+        "total_orders": {
+          "label": "Total Orders",
+          "count": 12,
+          "subtext": "+0 today",
+          "icon": "box"
+        },
+        "completed_orders": {
+          "label": "Completed",
+          "count": 4,
+          "rate": 33.3,
+          "subtext": "33.3% rate",
+          "icon": "check"
+        },
+        "cancelled_orders": {
+          "label": "Cancelled",
+          "count": 1,
+          "rate": 8.3,
+          "subtext": "8.3% rate",
+          "icon": "cross"
+        },
+        "avg_order_value": {
+          "label": "Avg Order Value",
+          "amount": 341.76,
+          "formatted_amount": "$341.76",
+          "growth": "+$341.76 vs last week",
+          "subtext": "+$341.76 vs last week",
+          "icon": "money"
+        }
+      },
       "best_sellers": [
         {
+          "rank": 1,
           "id": 1,
           "name": "Royal Canin Medium Adult Dry Dog Food",
-          "sales_count": 210,
-          "rating": 4.8
+          "sales_count": 220,
+          "sales_text": "220 sold",
+          "price": 54.99,
+          "revenue": 1057.79,
+          "formatted_revenue": "$1,057.79",
+          "image": "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800"
         }
       ]
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true

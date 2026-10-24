@@ -5,13 +5,20 @@ info:
 
 http:
   method: POST
-  url: "{{base_url}}/v1/vendor/orders/1/accept"
+  url: "{{base_url}}/v1/vendor/orders/179/accept"
   headers:
     - name: Accept
       value: application/json
   auth:
     type: bearer
     token: "{{vendorToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # Accept Incoming Order
@@ -45,10 +52,3 @@ docs: |-
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true
