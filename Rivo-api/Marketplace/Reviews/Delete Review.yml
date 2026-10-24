@@ -1,0 +1,40 @@
+info:
+  name: Delete Review
+  type: http
+  seq: 5
+
+http:
+  method: DELETE
+  url: "{{base_url}}/v1/marketplace/reviews/:review"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: review
+      value: "68"
+      type: path
+      description: "Review ID to delete"
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Delete Review
+
+  Allows a customer to permanently remove their review.
+  - **Automatic Storage Cleanup:** All attached images are permanently deleted from server disk via `FileUploadTrait`.
+  - **Automatic Rating Recalculation:** The product or store's average rating and total review count are automatically updated.
+  - **Cache Flush:** Clears Redis cache tags so the deleted review disappears instantly.
+  - **Protected:** Only the review owner or an admin can delete (`403 Forbidden` for others).
+
+  ## Request Details
+  - **Method:** `DELETE`
+  - **URL:** `{{base_url}}/v1/marketplace/reviews/:review`
+  - **Authentication:** `Bearer {{userToken}}`

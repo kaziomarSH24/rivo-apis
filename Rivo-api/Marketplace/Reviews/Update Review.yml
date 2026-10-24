@@ -1,0 +1,64 @@
+info:
+  name: Update Review
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{base_url}}/v1/marketplace/reviews/:review"
+  headers:
+    - name: Accept
+      value: application/json
+  params:
+    - name: review
+      value: "68"
+      type: path
+      description: "Review ID to update"
+  body:
+    type: multipart-form
+    data:
+      - name: _method
+        type: text
+        value: PUT
+        description: "Method spoofing for PUT in multipart-form"
+      - name: rating
+        type: text
+        value: "5"
+        description: "Updated rating (1 to 5)"
+      - name: comment
+        type: text
+        value: "Updated: Pedro still absolutely loves this Royal Canin formula! His coat is super shiny."
+        description: "Updated comment text"
+      - name: is_anonymous
+        type: text
+        value: "false"
+        description: "Anonymous toggle"
+      - name: photos[]
+        type: file
+        value: []
+        description: "Optional new review photo(s)"
+        disabled: true
+  auth:
+    type: bearer
+    token: "{{userToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
+
+docs: |-
+  # Update Review
+
+  Allows a customer to edit their previously submitted rating, review text, or photos.
+  - Automatically recalculates average rating on parent Product or Store.
+  - Flushes Redis cache tags so updated feedback appears immediately.
+  - Protected: Only the original review author can edit (`403 Forbidden` for others).
+
+  ## Request Details
+  - **Method:** `POST` (or `PUT`)
+  - **URL:** `{{base_url}}/v1/marketplace/reviews/:review`
+  - **Content-Type:** `multipart/form-data`
+  - **Authentication:** `Bearer {{userToken}}`
