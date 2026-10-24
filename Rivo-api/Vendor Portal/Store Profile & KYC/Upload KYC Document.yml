@@ -9,18 +9,30 @@ http:
   headers:
     - name: Accept
       value: application/json
-  auth:
-    type: bearer
-    token: "{{vendorToken}}"
   body:
     type: multipart-form
     data:
       - name: type
-        value: business_license
         type: text
+        value: business_license
+        description: |-
+          - `business_registration_certificate`
+          - `business_license`
+          - `tax_certificate`
+          - `additional_document`
       - name: document
-        value: "@file"
-        type: file
+        type: text
+        value: ""
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # Upload KYC Business Document
@@ -57,10 +69,3 @@ docs: |-
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true

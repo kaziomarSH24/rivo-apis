@@ -9,63 +9,78 @@ http:
   headers:
     - name: Accept
       value: application/json
-  auth:
-    type: bearer
-    token: "{{vendorToken}}"
   body:
     type: multipart-form
     data:
       - name: name
+        type: text
         value: Pawsome Pet Shop
-        type: text
       - name: type
+        type: text
         value: pet_shop
-        type: text
       - name: owner_name
+        type: text
         value: Sarah Mitchell
-        type: text
       - name: phone
+        type: text
         value: "+15125550199"
-        type: text
       - name: email
+        type: text
         value: sarah.mitchell@yopmail.com
-        type: text
       - name: street_address
+        type: text
         value: 2401 S Congress Ave
-        type: text
       - name: city
+        type: text
         value: Austin
-        type: text
       - name: state
+        type: text
         value: TX
-        type: text
       - name: zip_code
+        type: text
         value: "78704"
-        type: text
       - name: latitude
+        type: text
         value: "30.2435"
-        type: text
       - name: longitude
+        type: text
         value: "-97.7521"
-        type: text
       - name: delivery_fee
-        value: "0.00"
         type: text
+        value: "10.00"
       - name: delivery_time_text
-        value: 15-20 min
         type: text
+        value: 15-20 min
       - name: logo
-        value: "@file"
         type: file
+        value:
+          - C:\Users\kazio\Downloads\Copy of Acrylic nail Manual - 14.png
+        contentType: image/png
       - name: banner
-        value: "@file"
         type: file
+        value:
+          - C:\Users\kazio\Downloads\Server_Lockscreen_Warning.png
+        contentType: image/png
       - name: registration_certificate
-        value: "@file"
         type: file
+        value:
+          - C:\Users\kazio\Downloads\IMG_1241.PNG
+        contentType: image/png
       - name: business_license
-        value: "@file"
         type: file
+        value:
+          - C:\Users\kazio\Downloads\Server_Lockscreen_Warning.png
+        contentType: image/png
+  auth:
+    type: bearer
+    token: "{{vendorToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # Store Onboarding & KYC Registration
@@ -159,10 +174,3 @@ docs: |-
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true

@@ -16,17 +16,26 @@ http:
 docs: |-
   # Vendor Dashboard Feed
 
-  Fetches the complete vendor operational dashboard matching the **Figma Vendor Dashboard Screen**:
-  - Store profile summary, ratings, and live status toggle indicator
-  - Fulfillment rate (e.g. `100%`) & average prep time
-  - Order status badge counters (`all`, `new`, `preparing`, `ready`, `out_for_delivery`)
-  - Today's revenue total + 7-day weekly bar chart breakdown
-  - Low stock inventory alert list (<5 units)
-  - Incoming orders queue with quick Accept/Reject actions
+  Fetches the complete vendor operational dashboard matching the **Figma Vendor Homepage / Dashboard Screen**:
+  - Time-aware greeting (`Good morning 👋`, `Good afternoon 👋`, `Good evening 👋`)
+  - Store profile summary (Name, Logo, Rating, Reviews Count, Live Status toggle, Prep time)
+  - Order status badge counters (`all`, `new`, `preparing`, `ready`, `done`, `out_for_delivery`)
+  - Today's revenue total + sales growth percentage vs yesterday + 7-day weekly bar chart (`is_today` highlighted)
+  - Store Performance cards (Rating, Reviews, Success Rate %, Avg Time)
+  - Inventory Alerts list (products with stock <= 5, with `Out of Stock` or `X left` badges)
+  - Recent Orders list with customer name, formatted total, relative time (`2 min ago`), and status badges
+  - Optimized with Redis multi-tag caching (`vendor_dashboard`, `stores`, `stores:{id}`) with 5-minute rolling TTL and instant invalidation on order/product changes.
 
   ## Figma Screen
-  - **Screen:** Merchant Dashboard / Store Hub
-  - **UI Elements:** Top store card with status toggle, Order status tabs with badge numbers, Sales bar chart, Low Stock warning banner, Recent Orders list.
+  - **Screen:** Vendor Homepage / Merchant Hub Screen
+  - **UI Elements:**
+    1. Greeting & Store Header (Logo, Name, ⭐ 4.8 Rating, 312 reviews)
+    2. Order Overview pills (1 New, 1 Preparing, 1 Ready, 2 Done)
+    3. Today's Sales card ($880, -29.0% vs yesterday, Weekly 7-day Bar Chart)
+    4. Store Performance (⭐ 4.8, ✅ 94% Success rate, ⚡ < 5m Avg time)
+    5. Inventory Alerts (🔴 Out of Stock, 🟡 3 left, 🟡 5 left)
+    6. Recent Orders (ORD-4521, Sarah Mitchell · 2 min ago, $84.50, New)
+    7. Quick Actions (Add Product, Manage Orders, Manage Store)
 
   ---
 
@@ -38,46 +47,75 @@ docs: |-
   ---
 
   ## Response Structure (200 OK)
+  Formatted via `VendorDashboardResource`:
   ```json
   {
     "ok": true,
     "message": "Vendor dashboard retrieved successfully.",
     "data": {
+      "greeting": "Good morning 👋",
       "store": {
         "id": 1,
         "name": "Pawsome Pet Shop",
+        "logo": "http://localhost/storage/stores/logos/logo.webp",
         "is_live": true,
         "is_verified": true,
-        "rating": 4.9,
-        "fulfillment_rate": 100,
-        "avg_prep_time_minutes": 15
+        "rating": 4.8,
+        "reviews_count": 312,
+        "fulfillment_rate": 94.0,
+        "avg_prep_time_minutes": 5
       },
       "order_overview": {
-        "all": 1,
-        "new": 0,
+        "all": 5,
+        "new": 1,
         "preparing": 1,
-        "ready": 0,
+        "ready": 1,
+        "done": 2,
         "out_for_delivery": 0
       },
       "today_sales": {
-        "amount": 49.11,
-        "growth_percentage": 0,
+        "amount": 880.0,
+        "growth_percentage": -29.0,
         "weekly_chart": [
-          { "day": "Mon", "date": "2026-10-19", "total": 0 },
-          { "day": "Tue", "date": "2026-10-20", "total": 49.11 }
+          { "day": "Mon", "date": "2026-10-19", "total": 420.0, "is_today": false },
+          { "day": "Sun", "date": "2026-10-25", "total": 880.0, "is_today": true }
         ]
       },
-      "low_stock_alerts": [],
+      "store_performance": {
+        "rating": 4.8,
+        "reviews_count": 312,
+        "success_rate": "94%",
+        "avg_time": "< 5m"
+      },
+      "low_stock_alerts": [
+        {
+          "id": 4,
+          "name": "Dog Training Collar",
+          "stock": 0,
+          "badge": "Out of Stock",
+          "price": 24.99,
+          "image": "http://localhost/storage/products/collar.webp"
+        },
+        {
+          "id": 8,
+          "name": "Whiskas Dry Food 3kg",
+          "stock": 3,
+          "badge": "3 left",
+          "price": 18.5,
+          "image": "http://localhost/storage/products/whiskas.webp"
+        }
+      ],
       "recent_orders": [
         {
-          "id": 1,
-          "order_number": "RIV-78421",
-          "status": "preparing",
-          "total": 49.11,
-          "user": {
-            "name": "Omar Faruk"
-          },
-          "items": [...]
+          "id": 12,
+          "order_number": "ORD-4521",
+          "customer_name": "Sarah Mitchell",
+          "customer_avatar": null,
+          "time_ago": "2 minutes ago",
+          "total": 84.5,
+          "status": "new",
+          "status_label": "New",
+          "items_count": 2
         }
       ]
     }
