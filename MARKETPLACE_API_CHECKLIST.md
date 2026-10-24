@@ -199,7 +199,7 @@
 ---
 
 ### 📍 ধাপ ৮: প্রোডাক্ট ক্যাটালগ ও ইনভেন্টরি ম্যানেজমেন্ট (Products & Inventory)
-- [ ] **35. GET** `/api/v1/vendor/products`
+- [x] **35. GET** `/api/v1/vendor/products`
   - **ব্রুনো ফাইল:** `Vendor Portal/Products & Inventory/Get Store Products Catalog.yml`
   - **কাজ:** ভেন্ডরের নিজস্ব সব প্রোডাক্টের তালিকা (ইনভেন্টরি স্টক ও স্ট্যাটাস সহ)
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`

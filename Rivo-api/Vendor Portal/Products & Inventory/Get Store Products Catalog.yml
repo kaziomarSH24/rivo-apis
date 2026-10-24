@@ -10,51 +10,57 @@ http:
     - name: Accept
       value: application/json
   params:
-    - name: filter[active]
-      value: "1"
+    - name: status
+      value: all
       type: query
-      description: "Filter active items with positive stock"
-      disabled: true
-    - name: filter[out_of_stock]
-      value: "1"
+      description: "Filter tabs: all, active, draft, out_of_stock (default: all)"
+    - name: search
+      value: ""
       type: query
-      description: "Filter zero-stock items"
-      disabled: true
-    - name: filter[inactive]
-      value: "1"
-      type: query
-      description: "Filter disabled/hidden items"
-      disabled: true
-    - name: filter[search]
-      value: Royal
-      type: query
-      description: "Search product name"
-      disabled: true
-    - name: sort
-      value: -sales_count
-      type: query
-      description: "Sort: -sales_count, -stock, price, -created_at"
+      description: "Search keyword matching product name or SKU"
       disabled: true
     - name: per_page
       value: "15"
       type: query
       description: "Items per page"
       disabled: true
+    - name: page
+      value: "1"
+      type: query
+      description: "Page number"
+      disabled: true
   auth:
     type: bearer
     token: "{{vendorToken}}"
 
-docs: |-
-  # Store Products & Inventory Table
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
-  Fetches the merchant's full catalog powered by `BaseService` and Spatie QueryBuilder:
-  - Supports quick filtering: `active`, `out_of_stock`, `inactive`
-  - Name search
-  - Sorting by stock, sales, or date
+docs: |-
+  # Store Products Catalog & Inventory
+
+  Fetches the merchant's catalog formatted to match the Figma **Products** screen layout with tab counters, status filter pills, search bar, and formatted product cards.
 
   ## Figma Screen
-  - **Screen:** Merchant Catalog / Inventory Management Screen
-  - **UI Elements:** Inventory table, stock stepper inputs, active toggle switches, "Add New Product" CTA button.
+  - **Screen:** Products (Merchant Catalog Screen)
+  - **UI Elements:**
+    1. **Live Tab Counters (Pills):**
+       - `All` (total catalog count)
+       - `Active` (live products with positive stock)
+       - `Draft` (unpublished / inactive products)
+       - `Out of Stock` (zero-inventory products)
+    2. **Search Bar:** Real-time search by product title or SKU.
+    3. **Product Card Components:**
+       - Square thumbnail image URL (WebP formatted)
+       - Product Title
+       - Subtitle: `Brand · Category` (e.g. `Royal Canin · Cat Food`)
+       - Status Badge: `Active` (green), `Draft` (grey), `Out of Stock` (red)
+       - Pricing: Active price & strikethrough original price if discounted
+       - Stock Label: `45 in stock` / `3 in stock (low stock warning)` / `Out of stock`
 
   ---
 
@@ -62,6 +68,14 @@ docs: |-
   - **Method:** `GET`
   - **URL:** `{{base_url}}/v1/vendor/products`
   - **Authentication:** `Bearer {{vendorToken}}`
+
+  ### Query Parameters
+  | Parameter | Type | Required | Description |
+  | :--- | :--- | :--- | :--- |
+  | `status` | string | No | `all`, `active`, `draft`, `out_of_stock` (default: `all`) |
+  | `search` | string | No | Search text for name or SKU |
+  | `per_page` | integer | No | Items per page (default: 15) |
+  | `page` | integer | No | Pagination page number |
 
   ---
 
@@ -71,28 +85,42 @@ docs: |-
     "ok": true,
     "message": "Catalog retrieved successfully.",
     "data": {
+      "counters": {
+        "all": 6,
+        "active": 4,
+        "draft": 1,
+        "out_of_stock": 1
+      },
       "current_page": 1,
       "data": [
         {
           "id": 1,
-          "name": "Royal Canin Medium Adult Dry Dog Food",
-          "price": 54.99,
-          "discount_price": 49.99,
+          "name": "Royal Canin Adult Cat Food 4kg",
+          "slug": "royal-canin-adult-cat-food-4kg",
+          "sku": "RC-CAT-4KG",
+          "subtitle": "Royal Canin · Cat Food",
+          "image": "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800",
+          "images": [
+            "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800"
+          ],
+          "price": 28.50,
+          "formatted_price": "$28.50",
+          "original_price": 35.00,
+          "formatted_original_price": "$35.00",
           "stock": 45,
+          "stock_status": "in_stock",
+          "stock_label": "45 in stock",
+          "status": "active",
+          "status_label": "Active",
+          "status_color": "green",
           "is_active": true,
-          "category": { "name": "Food" },
-          "brand": { "name": "Royal Canin" },
-          "variants": [...]
+          "category": { "id": 1, "name": "Cat Food" },
+          "brand": { "id": 1, "name": "Royal Canin" }
         }
       ],
-      "total": 3
+      "per_page": 15,
+      "total": 6,
+      "last_page": 1
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true
