@@ -13,7 +13,7 @@ http:
     type: bearer
     token: "{{vendorToken}}"
   body:
-    type: multipart
+    type: multipart-form
     data:
       - name: type
         value: business_license
