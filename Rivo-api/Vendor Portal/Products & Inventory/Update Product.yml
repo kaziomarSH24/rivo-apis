@@ -21,13 +21,28 @@ http:
         "name": "Royal Canin Medium Adult Dry Dog Food (Updated)",
         "price": 56.99,
         "discount_price": 51.99,
-        "stock": 50
+        "stock": 50,
+        "low_stock_threshold": 10,
+        "variants": [
+          {
+            "flavor": "Chicken Feast",
+            "size_lbs": "30 lbs",
+            "price": 56.99,
+            "stock": 30
+          },
+          {
+            "flavor": "Chicken Feast",
+            "size_lbs": "15 lbs",
+            "price": 32.00,
+            "stock": 20
+          }
+        ]
       }
 
 docs: |-
-  # Update Product Details
+  # Update Product Details (Vendor Portal)
 
-  Modifies product information, pricing, description, or images.
+  Modifies product details, pricing, stock levels, variants, or images.
 
   ---
 
@@ -35,6 +50,31 @@ docs: |-
   - **Method:** `POST`
   - **URL:** `{{base_url}}/v1/vendor/products/:productId`
   - **Authentication:** `Bearer {{vendorToken}}`
+  - *Note:* POST is used instead of PUT/PATCH to natively support PHP binary file uploads when sending `multipart/form-data`.
+
+  ---
+
+  ## Two Ways to Update Images & Variants
+
+  ### Option 1: JSON Body (Default & Bruno)
+  - **Header:** `Content-Type: application/json`
+  - All fields are optional. Only send the fields you want to modify.
+  - To keep or reorder images, pass string URLs in `"images": ["https://..."]`.
+  - To sync variants, send the complete new `"variants"` array; the backend will atomically sync them.
+
+  ### Option 2: Multipart Form-Data (File Upload)
+  - **Header:** `Content-Type: multipart/form-data`
+  - Upload new images using `images[]`. They will be optimized to WebP and saved.
+  - Variants can be sent as stringified JSON: `variants: '[{"flavor":"...","price":50,"stock":20}]'`
+
+  ---
+
+  ## Caching & Auto-Invalidation
+  Updating a product automatically purges:
+  - Merchant catalog cache: `stores:{store_id}:products`
+  - Vendor dashboard counters: `stores:{store_id}:dashboard`
+  - Vendor analytics: `stores:{store_id}:analytics`
+  - Store public cache: `stores:{store_id}`
 
   ---
 
@@ -43,7 +83,25 @@ docs: |-
   {
     "ok": true,
     "message": "Product updated successfully.",
-    "data": { ... }
+    "data": {
+      "id": 1,
+      "name": "Royal Canin Medium Adult Dry Dog Food (Updated)",
+      "slug": "royal-canin-medium-adult-dry-dog-food",
+      "sku": "RC-MED-ADULT",
+      "subtitle": "Royal Canin · Food",
+      "price": 51.99,
+      "formatted_price": "$51.99",
+      "original_price": 56.99,
+      "formatted_original_price": "$56.99",
+      "stock": 50,
+      "stock_status": "in_stock",
+      "stock_label": "50 in stock",
+      "status": "active",
+      "status_label": "Active",
+      "status_color": "green",
+      "is_active": true,
+      "variants": [...]
+    }
   }
   ```
 

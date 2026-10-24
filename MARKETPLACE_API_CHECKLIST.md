@@ -203,27 +203,27 @@
   - **ব্রুনো ফাইল:** `Vendor Portal/Products & Inventory/Get Store Products Catalog.yml`
   - **কাজ:** ভেন্ডরের নিজস্ব সব প্রোডাক্টের তালিকা (ইনভেন্টরি স্টক ও স্ট্যাটাস সহ)
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`
-- [ ] **36. POST** `/api/v1/vendor/products`
+- [x] **36. POST** `/api/v1/vendor/products`
   - **ব্রুনো ফাইল:** `Vendor Portal/Products & Inventory/Add Product (4-Step Wizard).yml`
   - **কাজ:** নতুন প্রোডাক্ট আপলোড (৪-স্টেপ উইজার্ড: বেসিক ইনফো, প্রাইসিং, ভ্যারিয়েন্টস ও ছবি)
   - **প্রত্যাশিত স্ট্যাটাস:** `201 Created`
-- [ ] **37. GET** `/api/v1/vendor/products/:product`
+- [x] **37. GET** `/api/v1/vendor/products/:product`
   - **ব্রুনো ফাইল:** `Vendor Portal/Products & Inventory/Get Product Details.yml`
   - **কাজ:** নির্দিষ্ট প্রোডাক্টের বিস্তারিত ভেন্ডর ভিউ ও ভ্যারিয়েন্ট স্টক দেখা
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`
-- [ ] **38. POST** `/api/v1/vendor/products/:product`
+- [x] **38. POST** `/api/v1/vendor/products/:product`
   - **ব্রুনো ফাইল:** `Vendor Portal/Products & Inventory/Update Product.yml`
   - **কাজ:** প্রোডাক্টের নাম, মূল্য, ছবি ও ভ্যারিয়েন্ট আপডেট করা
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`
-- [ ] **39. PATCH** `/api/v1/vendor/products/:product/stock`
+- [x] **39. PATCH** `/api/v1/vendor/products/:product/stock`
   - **ব্রুনো ফাইল:** `Vendor Portal/Products & Inventory/Update Product Stock (Stepper).yml`
   - **কাজ:** দ্রুত প্রোডাক্ট বা ভ্যারিয়েন্টের স্টক সংখ্যা বাড়ানো বা কমানো
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`
-- [ ] **40. PATCH** `/api/v1/vendor/products/:product/toggle-active`
+- [x] **40. PATCH** `/api/v1/vendor/products/:product/toggle-active`
   - **ব্রুনো ফাইল:** `Vendor Portal/Products & Inventory/Toggle Product Listing Status.yml`
   - **কাজ:** প্রোডাক্ট সাময়িকভাবে মার্কেটপ্লেসে হাইড (Paused) বা অ্যাক্টিভ (Live) করা
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`
-- [ ] **41. DELETE** `/api/v1/vendor/products/:product`
+- [x] **41. DELETE** `/api/v1/vendor/products/:product`
   - **ব্রুনো ফাইল:** `Vendor Portal/Products & Inventory/Delete Product.yml`
   - **কাজ:** প্রোডাক্ট ক্যাটালগ থেকে মুছে ফেলা (Soft delete)
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`

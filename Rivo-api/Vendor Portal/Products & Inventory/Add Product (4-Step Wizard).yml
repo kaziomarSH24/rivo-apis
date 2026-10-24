@@ -30,6 +30,10 @@ http:
         "is_active": true,
         "is_online": true,
         "is_instore": true,
+        "images": [
+          "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800",
+          "https://images.unsplash.com/photo-1548767797-d8c844163c4c?w=800"
+        ],
         "variants": [
           {
             "flavor": "Salmon & Sweet Potato",
@@ -47,24 +51,68 @@ http:
       }
 
 docs: |-
-  # 4-Step Product Creation Wizard
+  # 4-Step Product Creation Wizard (Vendor Portal)
 
-  Publishes a new product to the merchant's store catalog:
-  - **Step 1: General Info:** Name, category, brand, pet type (Dog, Cat, Both), description
-  - **Step 2: Pricing & Inventory:** Regular price, discount price, initial stock, low stock threshold
-  - **Step 3: Variants:** Flavors, sizes/weights, variant-specific prices and stocks
-  - **Step 4: Visibility & Channels:** Online delivery, In-store pickup, active status
-
-  ## Figma Screen
-  - **Screen:** 4-Step Add Product Wizard Screen
-  - **UI Elements:** Step progress bar, Input fields, Variant tag builder, Image dropzone, Publish button.
+  Publishes a new product to the merchant's store catalog according to the Figma 4-step wizard.
 
   ---
 
-  ## Request Details
-  - **Method:** `POST`
-  - **URL:** `{{base_url}}/v1/vendor/products`
-  - **Authentication:** `Bearer {{vendorToken}}`
+  ## Two Ways to Send Images & Data
+
+  This endpoint seamlessly supports **both** JSON payload and Multipart Form Data:
+
+  ### Option 1: JSON Body (Default & Bruno Testing)
+  - **Header:** `Content-Type: application/json`
+  - In JSON mode, pass image URLs as an array of strings in `"images"`:
+    ```json
+    "images": [
+      "https://images.unsplash.com/photo-1589924691995-400dc9ecc119?w=800"
+    ]
+    ```
+  - `variants` is passed as a standard JSON array of objects.
+
+  ### Option 2: Multipart Form-Data (Mobile App / File Upload)
+  - **Header:** `Content-Type: multipart/form-data`
+  - Attach real image files using the key `images[]` (up to 5MB each). The backend automatically resizes, optimizes, and converts them to `.webp` format.
+  - Nested arrays like `variants` can be passed either as stringified JSON:
+    `variants: '[{"flavor":"Salmon","size_lbs":"25 lbs","price":58,"stock":25}]'`
+    or indexed form keys (`variants[0][flavor]`, `variants[0][price]`, etc.).
+  - Booleans can be passed as `"true"`/`"false"` or `1`/`0`.
+
+  ---
+
+  ## 4-Step Wizard Flow (Figma Aligned)
+  - **Step 1: General Info:**
+    - `name` (required, string, max 255)
+    - `category_id` (required, exists in `product_categories`)
+    - `brand_id` (optional, exists in `brands`)
+    - `pet_type` (optional: `dog`, `cat`, or `both`)
+    - `description` (optional, text)
+    - `images` (optional array of image files or URLs)
+  - **Step 2: Pricing & Inventory:**
+    - `price` (required, numeric, min 0.01)
+    - `discount_price` (optional, must be less than price)
+    - `sku` (optional, auto-generated if omitted)
+    - `stock` (required, integer, min 0)
+    - `low_stock_threshold` (optional, default: 5)
+  - **Step 3: Variants (Optional):**
+    - `variants.*.flavor` (e.g. "Salmon & Sweet Potato")
+    - `variants.*.size_lbs` (e.g. "25 lbs")
+    - `variants.*.price` (custom variant price)
+    - `variants.*.stock` (variant inventory count)
+  - **Step 4: Visibility & Channels:**
+    - `is_active` (boolean, default true: Live vs Draft)
+    - `is_online` (boolean: Available for delivery)
+    - `is_instore` (boolean: Available for in-store pickup)
+
+  ---
+
+  ## Caching & Automatic Invalidation
+  Creating a product automatically purges:
+  - Merchant catalog cache: `stores:{store_id}:products`
+  - Vendor dashboard counters: `stores:{store_id}:dashboard`
+  - Vendor analytics metrics: `stores:{store_id}:analytics`
+  - Public store cache: `stores:{store_id}`
 
   ---
 
@@ -74,14 +122,44 @@ docs: |-
     "ok": true,
     "message": "Product published successfully.",
     "data": {
-      "id": 7,
-      "store_id": 1,
+      "id": 939,
       "name": "Organic Grain-Free Salmon Dog Food",
       "slug": "organic-grain-free-salmon-dog-food-a1b2c",
-      "price": 58,
+      "sku": "SKU-XYZ12345",
+      "subtitle": "Royal Canin · Food",
+      "description": "Premium wild-caught salmon...",
+      "pet_type": "dog",
+      "image": "https://images.unsplash.com/...",
+      "images": [
+        "https://images.unsplash.com/..."
+      ],
+      "price": 52.00,
+      "formatted_price": "$52.00",
+      "original_price": 58.00,
+      "formatted_original_price": "$58.00",
       "stock": 35,
+      "low_stock_threshold": 5,
+      "stock_status": "in_stock",
+      "stock_label": "35 in stock",
+      "status": "active",
+      "status_label": "Active",
+      "status_color": "green",
       "is_active": true,
-      "variants": [...]
+      "is_online": true,
+      "is_instore": true,
+      "category": { "id": 1, "name": "Food" },
+      "brand": { "id": 1, "name": "Royal Canin" },
+      "variants": [
+        {
+          "id": 12,
+          "flavor": "Salmon & Sweet Potato",
+          "size_lbs": "25 lbs",
+          "price": 58.00,
+          "stock": 25
+        }
+      ],
+      "created_at": "2026-10-24T07:10:27.000000Z",
+      "updated_at": "2026-10-24T07:10:27.000000Z"
     }
   }
   ```
