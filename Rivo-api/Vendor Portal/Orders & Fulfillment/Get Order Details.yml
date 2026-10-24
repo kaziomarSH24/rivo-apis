@@ -16,11 +16,13 @@ http:
 docs: |-
   # Vendor View Order Details
 
-  Fetches detailed order breakdown for merchant fulfillment:
-  - Customer contact information
-  - Exact delivery address and landmark
-  - Ordered items, selected sizes, quantities
-  - Preparation instructions and notes
+  Fetches detailed order breakdown for merchant fulfillment matching **Figma Screens 2, 4, 5**:
+  - **4-Step Order Status Stepper:** `New (1)` -> `Prep (2)` -> `Ready (3)` -> `Done (4)`
+  - **Fulfillment Timeline Tracking:** View status milestones (Preparing, Ready for Pickup, Courier Assigned, Out for Delivery, Delivered)
+  - **Customer Section:** Name, initials, phone, email, delivery type, and exact delivery address
+  - **Order Items List:** Products with images, variants, quantities (`Qty: 2`), unit prices, item totals
+  - **Pricing Breakdown:** Subtotal, Delivery Fee, Tax, Discount, Total
+  - **Payment & Security:** Payment method, status, notes, rejection reason, allowed actions
 
   ---
 
@@ -32,7 +34,7 @@ docs: |-
   ### Path Parameters
   | Parameter | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `orderId` | integer | Yes | ID of the order |
+  | `orderId` | integer | Yes | ID of the store order |
 
   ---
 
@@ -43,11 +45,69 @@ docs: |-
     "message": "Order details retrieved successfully.",
     "data": {
       "id": 1,
-      "order_number": "RIV-78421",
-      "status": "preparing",
-      "user": { ... },
-      "items": [ ... ],
-      "address": { ... }
+      "order_number": "ORD-4521",
+      "status": "new",
+      "status_label": "New",
+      "status_color": "blue",
+      "time_ago": "2 minutes ago",
+      "stepper": {
+        "current_step": 1,
+        "steps": [
+          { "key": "new", "label": "New", "step": 1, "is_completed": true, "is_current": true },
+          { "key": "prep", "label": "Prep", "step": 2, "is_completed": false, "is_current": false },
+          { "key": "ready", "label": "Ready", "step": 3, "is_completed": false, "is_current": false },
+          { "key": "done", "label": "Done", "step": 4, "is_completed": false, "is_current": false }
+        ]
+      },
+      "fulfillment_tracking": {
+        "badge": "Order Received",
+        "steps": [...]
+      },
+      "customer": {
+        "id": 14,
+        "name": "Sarah Mitchell",
+        "initials": "SM",
+        "avatar": null,
+        "phone": "+15125550199",
+        "email": "sarah@yopmail.com",
+        "delivery_type": "delivery",
+        "delivery_type_label": "Delivery order",
+        "address": "23 Oak Ave, Austin, TX"
+      },
+      "items": [
+        {
+          "id": 1,
+          "product_id": 1,
+          "name": "Royal Canin Adult Cat Food 4kg",
+          "quantity": 2,
+          "formatted_quantity": "Qty: 2",
+          "price": 28.50,
+          "formatted_price": "$28.50",
+          "total": 57.00,
+          "formatted_total": "$57.00",
+          "image": "http://localhost:81/storage/products/cat_food.webp"
+        }
+      ],
+      "pricing": {
+        "subtotal": 80.51,
+        "formatted_subtotal": "$80.51",
+        "delivery_fee": 3.99,
+        "formatted_delivery_fee": "$3.99",
+        "tax": 0.00,
+        "formatted_tax": "$0.00",
+        "total": 84.50,
+        "formatted_total": "$84.50"
+      },
+      "payment": {
+        "method": "card",
+        "method_label": "Card",
+        "status": "paid",
+        "status_label": "Paid"
+      },
+      "available_actions": [
+        "accept",
+        "reject"
+      ]
     }
   }
   ```

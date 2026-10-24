@@ -18,20 +18,18 @@ http:
     type: json
     data: |-
       {
-        "reason": "Item temporarily out of stock."
+        "reason": "Item out of stock at counter"
       }
 
 docs: |-
-  # Reject Order
+  # Reject Store Order
 
-  Merchant declines an incoming order:
-  - Restores deducted inventory stock
-  - Decrements sales counts
-  - Transitions status to `cancelled` with rejection reason
-
-  ## Figma Screen
-  - **Screen:** Incoming Order Modal
-  - **UI Element:** Red "Decline" button with reason prompt.
+  Cancels the incoming order from the store queue:
+  - Updates order status to `cancelled` with `red` status color
+  - Re-credits inventory stock for all order items and decrements sales count
+  - If payment was captured, automatically initiates gateway refund
+  - Purges store order & dashboard caches
+  - Returns updated `VendorOrderDetailsResource`
 
   ---
 
@@ -40,10 +38,10 @@ docs: |-
   - **URL:** `{{base_url}}/v1/vendor/orders/:orderId/reject`
   - **Authentication:** `Bearer {{vendorToken}}`
 
-  ### Request Body Fields
+  ### Request Body
   | Field | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `reason` | string | No | Reason for declining the order |
+  | `reason` | string | No | Reason for rejecting the order (e.g. out of stock, kitchen closed) |
 
   ---
 
@@ -55,7 +53,9 @@ docs: |-
     "data": {
       "id": 1,
       "status": "cancelled",
-      "rejection_reason": "Item temporarily out of stock."
+      "status_label": "Cancelled",
+      "status_color": "red",
+      "rejection_reason": "Item out of stock at counter"
     }
   }
   ```

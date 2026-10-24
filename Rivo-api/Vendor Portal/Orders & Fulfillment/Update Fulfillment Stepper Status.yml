@@ -24,15 +24,16 @@ http:
 docs: |-
   # Fulfillment Stepper Status Transition
 
-  Advances order through fulfillment stages:
+  Advances order through fulfillment stages matching **Figma Screens 4 & 5**:
   - `preparing` -> Prep in progress
-  - `ready_for_pickup` -> Packed and waiting for courier/pickup
-  - `out_for_delivery` -> Courier is en route
-  - `delivered` -> Successfully handed over to customer
+  - `ready_for_pickup` -> Packed and waiting for courier/pickup ("Mark as Ready")
+  - `out_for_delivery` -> Courier is en route ("Mark: Out for Delivery")
+  - `delivered` -> Successfully handed over to customer ("Mark as Delivered")
+  - `cancelled` -> Order cancelled with reason
 
   ## Figma Screen
-  - **Screen:** Order Fulfillment Stepper
-  - **UI Element:** Step transition buttons: "Mark as Ready", "Hand over to Driver", "Mark as Delivered".
+  - **Screen:** Order Fulfillment Stepper & Tracking
+  - **UI Elements:** Stepper progress buttons: "Mark as Ready", "View Fulfillment", "Mark: Out for Delivery", "Mark Delayed".
 
   ---
 
@@ -45,6 +46,7 @@ docs: |-
   | Field | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
   | `status` | string | Yes | `preparing`, `ready_for_pickup`, `out_for_delivery`, `delivered`, `cancelled` |
+  | `reason` | string | No | Reason if transitioning to `cancelled` |
 
   ---
 
@@ -55,7 +57,26 @@ docs: |-
     "message": "Order fulfillment status updated successfully.",
     "data": {
       "id": 1,
-      "status": "ready_for_pickup"
+      "order_number": "ORD-4520",
+      "status": "ready_for_pickup",
+      "status_label": "Ready",
+      "status_color": "purple",
+      "stepper": {
+        "current_step": 3,
+        "steps": [
+          { "key": "new", "label": "New", "step": 1, "is_completed": true, "is_current": false },
+          { "key": "prep", "label": "Prep", "step": 2, "is_completed": true, "is_current": false },
+          { "key": "ready", "label": "Ready", "step": 3, "is_completed": true, "is_current": true },
+          { "key": "done", "label": "Done", "step": 4, "is_completed": false, "is_current": false }
+        ]
+      },
+      "fulfillment_tracking": {
+        "badge": "Ready for Pickup",
+        "steps": [...]
+      },
+      "available_actions": [
+        "out_for_delivery"
+      ]
     }
   }
   ```

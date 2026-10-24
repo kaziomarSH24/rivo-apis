@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{base_url}}/v1/vendor/orders/179/accept"
+  url: "{{base_url}}/v1/vendor/orders/1/accept"
   headers:
     - name: Accept
       value: application/json
@@ -13,24 +13,14 @@ http:
     type: bearer
     token: "{{vendorToken}}"
 
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true
-
 docs: |-
-  # Accept Incoming Order
+  # Accept Store Order
 
-  Merchant accepts incoming order:
-  - Validates order belongs to store
-  - Transitions order status to `preparing`
-  - Notifies customer order is being prepared
-
-  ## Figma Screen
-  - **Screen:** Incoming Order Modal / Order Queue Card
-  - **UI Element:** Green "Accept Order" button with sound/push notification.
+  Moves an incoming new order from `new` status to `preparing` status matching **Figma Screens 1 & 2**:
+  - Updates order status to `preparing`
+  - Stepper advances to Step 2 (`Prep`) with `amber` status color
+  - Automatically invalidates `stores:{store_id}:orders` and `stores:{store_id}:dashboard` caches
+  - Returns updated `VendorOrderDetailsResource`
 
   ---
 
@@ -48,7 +38,30 @@ docs: |-
     "message": "Order accepted and moved to preparing.",
     "data": {
       "id": 1,
-      "status": "preparing"
+      "order_number": "ORD-4521",
+      "status": "preparing",
+      "status_label": "Preparing",
+      "status_color": "amber",
+      "stepper": {
+        "current_step": 2,
+        "steps": [
+          { "key": "new", "label": "New", "step": 1, "is_completed": true, "is_current": false },
+          { "key": "prep", "label": "Prep", "step": 2, "is_completed": true, "is_current": true },
+          { "key": "ready", "label": "Ready", "step": 3, "is_completed": false, "is_current": false },
+          { "key": "done", "label": "Done", "step": 4, "is_completed": false, "is_current": false }
+        ]
+      },
+      "available_actions": [
+        "mark_ready",
+        "view_fulfillment"
+      ]
     }
   }
   ```
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true

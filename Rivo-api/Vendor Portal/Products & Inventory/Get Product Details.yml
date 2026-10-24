@@ -5,13 +5,24 @@ info:
 
 http:
   method: GET
-  url: "{{base_url}}/v1/vendor/products/1"
+  url: "{{base_url}}/v1/vendor/products/:productID"
   headers:
     - name: Accept
       value: application/json
+  params:
+    - name: productID
+      value: "970"
+      type: path
   auth:
     type: bearer
     token: "{{vendorToken}}"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
+  forwardAuthorizationHeader: true
 
 docs: |-
   # Vendor View Product Details
@@ -45,10 +56,3 @@ docs: |-
     }
   }
   ```
-
-settings:
-  encodeUrl: true
-  timeout: 0
-  followRedirects: true
-  maxRedirects: 5
-  forwardAuthorizationHeader: true

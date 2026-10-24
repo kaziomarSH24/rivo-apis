@@ -231,23 +231,23 @@
 ---
 
 ### 📍 ধাপ ৯: ভেন্ডর অর্ডার কিউ ও ফুলফিলমেন্ট স্টেপার (Orders & Fulfillment)
-- [ ] **42. GET** `/api/v1/vendor/orders`
+- [x] **42. GET** `/api/v1/vendor/orders`
   - **ব্রুনো ফাইল:** `Vendor Portal/Orders & Fulfillment/Get Store Orders Queue.yml`
   - **কাজ:** ইনকামিং সব অর্ডারের কিউ (ট্যাব: `new`, `preparing`, `delivered`, `cancelled`)
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`
-- [ ] **43. GET** `/api/v1/vendor/orders/:order`
+- [x] **43. GET** `/api/v1/vendor/orders/:order`
   - **ব্রুনো ফাইল:** `Vendor Portal/Orders & Fulfillment/Get Order Details.yml`
   - **কাজ:** নির্দিষ্ট অর্ডারের কাস্টমার ইনফো, ডেলিভারি ঠিকানা ও আইটেমস দেখা
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`
-- [ ] **44. POST** `/api/v1/vendor/orders/:order/accept`
+- [x] **44. POST** `/api/v1/vendor/orders/:order/accept`
   - **ব্রুনো ফাইল:** `Vendor Portal/Orders & Fulfillment/Accept Order.yml`
   - **কাজ:** নতুন অর্ডার এক্সেপ্ট করা (স্ট্যাটাস সরাসরি `preparing`-এ স্থানান্তরিত হয়)
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`
-- [ ] **45. PATCH** `/api/v1/vendor/orders/:order/status`
+- [x] **45. PATCH** `/api/v1/vendor/orders/:order/status`
   - **ব্রুনো ফাইল:** `Vendor Portal/Orders & Fulfillment/Update Fulfillment Stepper Status.yml`
   - **কাজ:** ফুলফিলমেন্ট স্টেপার আপডেট (`ready_for_pickup` ➔ `out_for_delivery` ➔ `delivered`)
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`
-- [ ] **46. POST** `/api/v1/vendor/orders/:order/reject`
+- [x] **46. POST** `/api/v1/vendor/orders/:order/reject`
   - **ব্রুনো ফাইল:** `Vendor Portal/Orders & Fulfillment/Reject Order.yml`
   - **কাজ:** অর্ডার রিজেক্ট করা (অটো-স্টক রিস্টোর ও স্বয়ংক্রিয় গেটওয়ে রিফান্ড)
   - **প্রত্যাশিত স্ট্যাটাস:** `200 OK`
