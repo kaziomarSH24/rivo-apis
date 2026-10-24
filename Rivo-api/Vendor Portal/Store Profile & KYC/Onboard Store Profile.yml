@@ -7,43 +7,80 @@ http:
   method: POST
   url: "{{base_url}}/v1/vendor/store"
   headers:
-    - name: Content-Type
-      value: application/json
     - name: Accept
       value: application/json
   auth:
     type: bearer
     token: "{{vendorToken}}"
   body:
-    type: json
-    data: |-
-      {
-        "name": "Pawsome Pet Shop",
-        "type": "pet_shop",
-        "owner_name": "Sarah Mitchell",
-        "phone": "+15125550199",
-        "email": "sarah.mitchell@yopmail.com",
-        "street_address": "2401 S Congress Ave",
-        "city": "Austin",
-        "state": "TX",
-        "zip_code": "78704",
-        "latitude": 30.2435,
-        "longitude": -97.7521,
-        "delivery_fee": 0.00,
-        "delivery_time_text": "15-20 min"
-      }
+    type: multipart
+    data:
+      - name: name
+        value: Pawsome Pet Shop
+        type: text
+      - name: type
+        value: pet_shop
+        type: text
+      - name: owner_name
+        value: Sarah Mitchell
+        type: text
+      - name: phone
+        value: "+15125550199"
+        type: text
+      - name: email
+        value: sarah.mitchell@yopmail.com
+        type: text
+      - name: street_address
+        value: 2401 S Congress Ave
+        type: text
+      - name: city
+        value: Austin
+        type: text
+      - name: state
+        value: TX
+        type: text
+      - name: zip_code
+        value: "78704"
+        type: text
+      - name: latitude
+        value: "30.2435"
+        type: text
+      - name: longitude
+        value: "-97.7521"
+        type: text
+      - name: delivery_fee
+        value: "0.00"
+        type: text
+      - name: delivery_time_text
+        value: 15-20 min
+        type: text
+      - name: logo
+        value: "@file"
+        type: file
+      - name: banner
+        value: "@file"
+        type: file
+      - name: registration_certificate
+        value: "@file"
+        type: file
+      - name: business_license
+        value: "@file"
+        type: file
 
 docs: |-
   # Store Onboarding & KYC Registration
 
-  Allows an authenticated vendor (registered via standard auth with `user_type: "vendor"`) to set up their merchant store profile and business details.
+  Allows an authenticated vendor (registered via standard auth with `user_type: "vendor"`) to set up or safely resume/update their merchant store profile and business details.
   - Automatically links store to `$request->user()->id`.
   - Ensures Spatie role `vendor` is attached.
-  - Generates unique URL slug.
+  - Uploads & converts `logo` and `banner` to optimized `.webp` via `FileUploadTrait`.
+  - Attaches uploaded KYC documents (`registration_certificate`, `business_license`).
+  - Automatically invalidates store Redis cache tags (`['stores', 'stores:{id}']`).
+  - Safely handles re-submissions: If store already exists, preserves existing rating, slug, and assets unless newly supplied.
 
   ## Figma Screen
-  - **Screen:** Vendor Onboarding Wizard (Business Details, Location, Operating Type)
-  - **UI Elements:** Store name, category dropdown (Pet Shop, Veterinary Clinic, Grooming, Pharmacy), street address, operating contact.
+  - **Screen:** Vendor Onboarding Wizard (Business Details, Location, Operating Type, Photos & KYC)
+  - **UI Elements:** Store name, category dropdown (Pet Shop, Veterinary Clinic, Grooming, Pharmacy), street address, operating contact, logo upload, banner upload, legal doc uploads.
 
   ---
 
@@ -51,27 +88,33 @@ docs: |-
   - **Method:** `POST`
   - **URL:** `{{base_url}}/v1/vendor/store`
   - **Authentication:** `Bearer {{vendorToken}}`
+  - **Content-Type:** `multipart/form-data`
 
-  ### Request Body Fields
+  ### Request Form-Data Fields
   | Field | Type | Required | Description |
   | :--- | :--- | :--- | :--- |
-  | `name` | string | Yes | Commercial business / store name |
-  | `type` | string | Yes | `pet_shop`, `veterinary`, `grooming`, `pharmacy` |
-  | `owner_name` | string | No | Business owner / manager full name |
-  | `phone` | string | No | Store business telephone |
-  | `email` | string | No | Official store business email |
-  | `street_address` | string | Yes | Physical street address |
-  | `city` | string | No | City |
-  | `state` | string | No | State (e.g. `TX`) |
-  | `zip_code` | string | No | Postal code |
-  | `latitude` | numeric | No | Store GPS Latitude coordinate |
-  | `longitude` | numeric | No | Store GPS Longitude coordinate |
-  | `delivery_fee` | numeric | No | Base delivery charge (default: 0.00) |
-  | `delivery_time_text` | string | No | Estimated delivery time badge (default: `15-20 min`) |
+  | `name` | text | Yes | Commercial business / store name |
+  | `type` | text | Yes | `pet_shop`, `veterinary`, `grooming`, `pharmacy` |
+  | `owner_name` | text | No | Business owner / manager full name |
+  | `phone` | text | No | Store business telephone |
+  | `email` | text | No | Official store business email |
+  | `street_address` | text | Yes | Physical street address |
+  | `city` | text | No | City |
+  | `state` | text | No | State (e.g. `TX`) |
+  | `zip_code` | text | No | Postal code |
+  | `latitude` | text | No | Store GPS Latitude coordinate |
+  | `longitude` | text | No | Store GPS Longitude coordinate |
+  | `delivery_fee` | text | No | Base delivery charge (default: 0.00) |
+  | `delivery_time_text` | text | No | Estimated delivery time badge (default: `15-20 min`) |
+  | `logo` | file | No | Square store logo image (auto-converted to WebP) |
+  | `banner` | file | No | Store hero cover banner image (auto-converted to WebP) |
+  | `registration_certificate` | file | No | PDF / Image registration certificate |
+  | `business_license` | file | No | PDF / Image official business license |
 
   ---
 
-  ## Response Structure (201 Created)
+  ## Response Structure (201 Created or 200 OK)
+  Formatted via `VendorStoreProfileResource`:
   ```json
   {
     "ok": true,
@@ -80,14 +123,39 @@ docs: |-
       "id": 1,
       "user_id": 8,
       "name": "Pawsome Pet Shop",
-      "slug": "pawsome-pet-shop-austin",
+      "slug": "pawsome-pet-shop-w7k82",
       "type": "pet_shop",
+      "owner_name": "Sarah Mitchell",
+      "phone": "+15125550199",
+      "email": "sarah.mitchell@yopmail.com",
+      "street_address": "2401 S Congress Ave",
       "city": "Austin",
       "state": "TX",
+      "zip_code": "78704",
+      "latitude": 30.2435,
+      "longitude": -97.7521,
+      "logo": "http://localhost/storage/stores/logos/1729761234_logo.webp",
+      "banner": "http://localhost/storage/stores/banners/1729761234_banner.webp",
       "rating": 5.0,
+      "reviews_count": 0,
+      "fulfillment_rate": 100.0,
+      "avg_prep_time_minutes": 15,
+      "delivery_fee": 0.0,
+      "delivery_time_text": "15-20 min",
       "is_verified": false,
       "verification_status": "pending",
-      "is_live": true
+      "is_live": true,
+      "documents": [
+        {
+          "id": 1,
+          "store_id": 1,
+          "type": "business_registration_certificate",
+          "file_url": "http://localhost/storage/stores/documents/abc.pdf",
+          "original_name": "pawsome_registration_certificate.pdf",
+          "status": "pending",
+          "rejection_reason": null
+        }
+      ]
     }
   }
   ```

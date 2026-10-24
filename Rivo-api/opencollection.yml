@@ -23,7 +23,7 @@ request:
     - name: live_url
       value: https://rivo.kaziomar.dpdns.org/api
     - name: vendor
-      value: 19|LyqoKqrQj8eGgqYPNzqUxTmsHdaarcgFlZf9U9tDf035a829
+      value: 34|wglmYWZVp4Pk6rpFLcnmsDfJOI9s6BZ0j9vQBgd87c0054dc
 bundled: false
 extensions:
   bruno:

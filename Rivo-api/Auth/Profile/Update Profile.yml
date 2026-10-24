@@ -17,23 +17,27 @@ http:
       - name: name
         type: text
         value: Mehedi
+        disabled: true
       - name: phone_number
         type: text
         value: "01754563214"
+        disabled: true
       - name: company_name
         type: text
         value: Patina Watches
-      - name: avatar
-        type: text
-        value: ""
         disabled: true
+      - name: avatar
+        type: file
+        value:
+          - C:\Users\kazio\Downloads\snapclip_logo_sample_1789885760854.jpg
+        contentType: image/jpeg
       - name: email
         type: text
         value: user@yopmail.com
         disabled: true
   auth:
     type: bearer
-    token: 7|v7N7r6ttgVrKT40LOygPw5EGVFIcB9VYVA7mSOMFf04b28cd
+    token: "{{userToken}}"
 
 settings:
   encodeUrl: true

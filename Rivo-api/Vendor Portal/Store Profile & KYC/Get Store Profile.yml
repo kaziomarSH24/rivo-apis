@@ -16,7 +16,7 @@ http:
 docs: |-
   # Get Vendor Business Profile
 
-  Fetches the authenticated merchant's store details, operating hours, delivery fees, and attached KYC verification documents.
+  Fetches the authenticated merchant's store details, operational parameters, media URLs, and attached KYC verification documents.
 
   ## Figma Screen
   - **Screen:** Merchant Settings / Store Profile Screen
@@ -32,31 +32,52 @@ docs: |-
   ---
 
   ## Response Structure (200 OK)
+  Formatted via `VendorStoreProfileResource`:
   ```json
   {
     "ok": true,
     "message": "Business profile retrieved successfully.",
     "data": {
       "id": 1,
+      "user_id": 8,
       "name": "Pawsome Pet Shop",
+      "slug": "pawsome-pet-shop-w7k82",
       "type": "pet_shop",
+      "owner_name": "Sarah Mitchell",
       "phone": "+15125550199",
       "email": "sarah.mitchell@yopmail.com",
       "street_address": "2401 S Congress Ave",
       "city": "Austin",
       "state": "TX",
-      "delivery_fee": 0,
+      "zip_code": "78704",
+      "latitude": 30.2435,
+      "longitude": -97.7521,
+      "logo": "http://localhost/storage/stores/logos/logo.webp",
+      "banner": "http://localhost/storage/stores/banners/banner.webp",
+      "rating": 5.0,
+      "reviews_count": 0,
+      "fulfillment_rate": 100.0,
+      "avg_prep_time_minutes": 15,
+      "delivery_fee": 0.0,
       "delivery_time_text": "15-20 min",
       "is_verified": true,
+      "verification_status": "verified",
       "is_live": true,
       "documents": [
         {
           "id": 1,
+          "store_id": 1,
           "type": "business_registration_certificate",
+          "file_url": "http://localhost/storage/stores/documents/certificate.pdf",
           "original_name": "pawsome_registration_certificate.pdf",
-          "status": "approved"
+          "status": "approved",
+          "rejection_reason": null,
+          "created_at": "2026-10-20T08:21:00.000000Z",
+          "updated_at": "2026-10-20T08:21:00.000000Z"
         }
-      ]
+      ],
+      "created_at": "2026-10-20T08:21:00.000000Z",
+      "updated_at": "2026-10-20T08:21:00.000000Z"
     }
   }
   ```
